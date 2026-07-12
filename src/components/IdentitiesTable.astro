@@ -1,0 +1,166 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Shield } from "@lucide/astro";
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const identities = [
+  {
+    value: "twilight",
+    label: "Twilight (default)",
+    bg: "var(--color-twilight-950)",
+    primary: "var(--color-amber-400)",
+    accent: "var(--color-amber-600)",
+    glow: "var(--color-amber-glow)",
+  },
+  {
+    value: "daring",
+    label: "Daring Red",
+    bg: "var(--color-daring-bg)",
+    primary: "var(--color-daring-primary)",
+    accent: "var(--color-daring-accent)",
+    glow: "var(--color-daring-primary)",
+  },
+  {
+    value: "ambitious",
+    label: "Ambitious Green",
+    bg: "var(--color-ambitious-bg)",
+    primary: "var(--color-ambitious-primary)",
+    accent: "var(--color-ambitious-accent)",
+    glow: "var(--color-ambitious-primary)",
+  },
+  {
+    value: "clever",
+    label: "Clever Blue",
+    bg: "var(--color-clever-bg)",
+    primary: "var(--color-clever-primary)",
+    accent: "var(--color-clever-accent)",
+    glow: "var(--color-clever-primary)",
+  },
+  {
+    value: "loyal",
+    label: "Loyal Gold",
+    bg: "var(--color-loyal-bg)",
+    primary: "var(--color-loyal-primary)",
+    accent: "var(--color-loyal-accent)",
+    glow: "var(--color-loyal-primary)",
+  },
+] as const;
+---
+
+<div class="identities">
+  <table class="identities__table">
+    <thead>
+      <tr>
+        <th scope="col"><span class="sr-only">Emblem</span></th>
+        <th scope="col">Identity</th>
+        <th scope="col">Background</th>
+        <th scope="col">Primary</th>
+        <th scope="col">Accent</th>
+        <th scope="col">Focus ring</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        identities.map((identity) => (
+          <tr>
+            <td>
+              <span class="identities__emblem-chip" style={`background-color:${identity.bg}`}>
+                <Shield class="identities__emblem" color={identity.primary} fill={identity.primary} size={16} stroke-width={1.5} />
+              </span>
+            </td>
+            <td class="identities__name">{identity.label}</td>
+            <td>
+              <span class="identities__swatch identities__swatch--bg" style={`background-color:${identity.bg}`} />
+            </td>
+            <td>
+              <span class="identities__swatch" style={`background-color:${identity.primary}`} />
+            </td>
+            <td>
+              <span class="identities__swatch identities__swatch--outline" style={`border-color:${identity.accent}`} />
+            </td>
+            <td>
+              <span class="identities__swatch identities__swatch--outline" style={`border-color:${identity.glow}`} />
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .identities {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  .identities__table {
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .identities__table th,
+  .identities__table td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-surface-border);
+  }
+
+  .identities__table th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-surface-text);
+    opacity: 0.7;
+    font-weight: 400;
+  }
+
+  .identities__emblem-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: calc(var(--radius-control) - 0.1rem);
+    border: 1px solid var(--color-surface-border);
+  }
+
+  .identities__emblem {
+    flex-shrink: 0;
+  }
+
+  .identities__name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+  }
+
+  .identities__swatch {
+    display: inline-block;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: calc(var(--radius-control) - 0.1rem);
+    border: 1px solid var(--color-surface-border);
+  }
+
+  .identities__swatch--bg {
+    width: 3.5rem;
+  }
+
+  .identities__swatch--outline {
+    background-color: transparent;
+    border-width: 2px;
+    border-style: solid;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

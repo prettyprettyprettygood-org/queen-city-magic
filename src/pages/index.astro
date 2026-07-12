@@ -1,4 +1,8 @@
 ---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import IdentitiesTable from "@/components/IdentitiesTable.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import ThemeSelect from "@/components/ThemeSelect.astro";
 import "@/styles/global.css";
 ---
 
@@ -8,8 +12,85 @@ import "@/styles/global.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <title>Queen City Magic</title>
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem("qcmm-theme");
+        if (stored && stored !== "twilight") {
+          document.documentElement.dataset.theme = stored;
+        }
+      })();
+    </script>
   </head>
   <body>
-    Queen City Magic
+    <main class="token-check">
+      <div class="token-check__switcher">
+        <ThemeSelect />
+      </div>
+
+      <span class="token-check__eyebrow">a night of mischief &amp; magic</span>
+      <h1 class="token-check__heading">Queen City Mischief &amp; Magic</h1>
+      <p class="token-check__body">
+        This is a scaffold check for PRD 01 — design tokens and typography, not final homepage
+        copy. Switch the theme above to confirm every surface, text, and focus-ring token holds
+        its contrast across all five identities.
+      </p>
+      <button type="button" class="token-check__cta focus-glow">Donate</button>
+
+      <h2 class="token-check__section-heading">All five identities</h2>
+      <IdentitiesTable />
+    </main>
   </body>
 </html>
+
+<style>
+  .token-check {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    background-color: var(--color-surface-bg);
+    color: var(--color-surface-text);
+  }
+
+  .token-check__switcher {
+    align-self: flex-end;
+  }
+
+  .token-check__eyebrow {
+    font-family: var(--font-script);
+    color: var(--color-surface-primary);
+    font-size: 1.25rem;
+  }
+
+  .token-check__heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .token-check__body {
+    max-width: 60ch;
+    line-height: 1.6;
+  }
+
+  .token-check__cta {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius-control);
+    border: none;
+    background-color: var(--color-surface-primary);
+    color: var(--color-surface-on-primary);
+    cursor: pointer;
+  }
+
+  .token-check__section-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 1.5rem 0 0;
+  }
+</style>

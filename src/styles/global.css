@@ -1,1 +1,35 @@
 @import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-surface-bg);
+    color: var(--color-surface-text);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .focus-glow:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-surface-glow),
+      0 0 12px 2px
+      color-mix(in srgb, var(--color-surface-glow) 55%, transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-glow {
+      transition: box-shadow 0.15s ease-out;
+    }
+  }
+}

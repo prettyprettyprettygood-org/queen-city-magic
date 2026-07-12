@@ -1,0 +1,184 @@
+/*
+  QCMM design tokens (PRD 01).
+
+  Two layers:
+  1. Raw palette — every named hex, exposed as Tailwind color utilities (bg-twilight-950, etc.)
+     and checked against WCAG 2.2 in docs/prds/archive/02-design-tokens-typography.md.
+  2. Semantic "surface" tokens (--surface-*) — what components should actually reference.
+     Defaults to the site's own "twilight" identity; [data-theme="…"] below re-points every
+     --surface-* var to one of four house-inspired themes, so a single ThemeSwitcher toggle
+     re-skins every component built against --surface-* with no per-component theme logic.
+
+  Each theme commits to one mode, light or dark — Twilight and Ambitious Green are dark (a
+  subtle, desaturated dark ground + light text), Daring Red/Clever Blue/Loyal Gold are light
+  (a subtle, desaturated light ground + dark text). "Primary" is the theme's saturated brand hue, used for headings,
+  links, and icon tints — it is deliberately NOT the page background; a fully-saturated color
+  as a full-bleed background reads as loud rather than "a subtle color that compliments the
+  theme," so the background is a much lower-saturation tint at the same hue instead.
+*/
+
+@font-face {
+  font-family: "IM Fell English";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/im-fell-english-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IM Fell English";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/im-fell-english-italic-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/eb-garamond-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/eb-garamond-italic-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Marck Script";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/marck-script-400.woff2") format("woff2");
+}
+
+:root {
+  /* semantic surface tokens — default "Twilight" identity (dark mode) */
+  --surface-bg: var(--color-twilight-950);
+  --surface-panel: var(--color-twilight-900);
+  --surface-text: var(--color-parchment-50);
+  --surface-primary: var(--color-amber-400);
+  --surface-on-primary: var(--color-ink-900);
+  --surface-accent: var(--color-amber-600);
+  --surface-glow: var(--color-amber-glow);
+  /*
+    Border stays a low-opacity mix of this theme's own text color — that automatically reads
+    as a soft light hairline on dark-mode themes and a soft dark hairline on light-mode themes,
+    without needing a separate override per theme.
+  */
+  --surface-border: color-mix(in srgb, var(--surface-text) 22%, transparent);
+}
+
+[data-theme="daring"] {
+  /* light mode — scarlet + gold */
+  --surface-bg: var(--color-daring-bg);
+  --surface-panel: var(--color-daring-panel);
+  --surface-text: var(--color-ink-900);
+  --surface-primary: var(--color-daring-primary);
+  --surface-on-primary: var(--color-parchment-50);
+  --surface-accent: var(--color-daring-accent);
+  --surface-glow: var(--color-daring-primary);
+}
+[data-theme="ambitious"] {
+  /* dark mode — green + silver */
+  --surface-bg: var(--color-ambitious-bg);
+  --surface-panel: var(--color-ambitious-panel);
+  --surface-text: var(--color-parchment-50);
+  --surface-primary: var(--color-ambitious-primary);
+  --surface-on-primary: var(--color-ink-900);
+  --surface-accent: var(--color-ambitious-accent);
+  --surface-glow: var(--color-ambitious-primary);
+}
+[data-theme="clever"] {
+  /* light mode — blue + bronze */
+  --surface-bg: var(--color-clever-bg);
+  --surface-panel: var(--color-clever-panel);
+  --surface-text: var(--color-ink-900);
+  --surface-primary: var(--color-clever-primary);
+  --surface-on-primary: var(--color-parchment-50);
+  --surface-accent: var(--color-clever-accent);
+  --surface-glow: var(--color-clever-primary);
+}
+[data-theme="loyal"] {
+  /* light mode — yellow + near-black */
+  --surface-bg: var(--color-loyal-bg);
+  --surface-panel: var(--color-loyal-panel);
+  --surface-text: var(--color-ink-900);
+  --surface-primary: var(--color-loyal-primary);
+  --surface-on-primary: var(--color-parchment-50);
+  --surface-accent: var(--color-loyal-accent);
+  --surface-glow: var(--color-loyal-primary);
+}
+
+@theme {
+  --font-display: "IM Fell English", Cambria, Georgia, serif;
+  --font-script: "Marck Script", "Snell Roundhand", cursive;
+  --font-body: "EB Garamond", "Iowan Old Style", Georgia, serif;
+
+  /* shared radius scale — not theme-dependent, just a token so nothing inlines a raw px/rem */
+  --radius-control: 0.375rem;
+
+  /* jewel-tone base scale (Twilight identity) */
+  --color-twilight-950: #160f2e;
+  --color-twilight-900: #1f1740;
+  --color-twilight-800: #2c2258;
+  --color-plum-950: #2b1730;
+  --color-plum-900: #3d2144;
+  --color-plum-800: #54305d;
+  --color-forest-950: #0e2a1e;
+  --color-forest-900: #173d2a;
+  --color-forest-800: #22563b;
+
+  /* amber accent range (Twilight identity) */
+  --color-amber-300: #f6c877;
+  --color-amber-400: #f2b347;
+  --color-amber-500: #e39a2b;
+  --color-amber-600: #c77f1c;
+  --color-amber-700: #95530f;
+  --color-amber-glow: #c1630b;
+
+  /* light surface + text neutrals, shared across every theme */
+  --color-parchment-50: #f8f1e4;
+  --color-parchment-100: #f0e6d2;
+  --color-parchment-200: #e4d5b8;
+  --color-ink-900: #1c1712;
+  --color-ink-800: #2a231b;
+
+  /*
+    House-inspired switchable themes — de-canoned, original names, own contrast pass.
+    bg/panel are deliberately low-saturation (~6-13%) tints at each theme's hue: a "subtle
+    color that compliments the theme," not the saturated brand color itself. primary is that
+    saturated brand color, used for headings/links/icon tints and reused as the focus-ring
+    color (verified 3:1+ against both bg and panel for every theme).
+  */
+  --color-daring-bg: #faebec;
+  --color-daring-panel: #f0d8d9;
+  --color-daring-primary: #591317;
+  --color-daring-accent: #be8a38;
+
+  --color-ambitious-bg: #131c18;
+  --color-ambitious-panel: #1d2923;
+  --color-ambitious-primary: #519473;
+  --color-ambitious-accent: #75786e;
+
+  --color-clever-bg: #ebeefa;
+  --color-clever-panel: #d8ddf0;
+  --color-clever-primary: #152552;
+  --color-clever-accent: #8f6a38;
+
+  --color-loyal-bg: #faf5eb;
+  --color-loyal-panel: #f0e9d8;
+  --color-loyal-primary: #7a5a0a;
+  --color-loyal-accent: #d6a23b;
+
+  /* semantic aliases — components should reach for these, not the raw scale above */
+  --color-surface-bg: var(--surface-bg);
+  --color-surface-panel: var(--surface-panel);
+  --color-surface-text: var(--surface-text);
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-on-primary: var(--surface-on-primary);
+  --color-surface-accent: var(--surface-accent);
+  --color-surface-glow: var(--surface-glow);
+  --color-surface-border: var(--surface-border);
+}
