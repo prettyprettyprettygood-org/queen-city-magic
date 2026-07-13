@@ -3,12 +3,14 @@
 ## Start-work prompt
 
 > Implement docs/prds/04-ambient-particle-layer.md. Read CLAUDE.md first. Depends on PRD 01
-> for tokens/hooks, and shares a z-index/layer contract with PRD 02 (hero) — read
-> docs/prds/03-hero-diary-effect.md's layer stack (Three.js illustration → particle canvas →
-> ink SVG → static heading) before wiring this in, so the canvas lands in the right place.
-> Build as a reusable `<ParticleField>` island gated by IntersectionObserver, not a
-> hard-coded hero-only effect, since section dividers reuse the same component. When done:
-> sweep for dead code, commit, then archive this file.
+> for tokens/hooks. PRD 02 (hero, docs/prds/03-hero-diary-effect.md) was simplified during
+> its own implementation — there's no Three.js layer or particle canvas in the hero anymore,
+> just a static headline, a fading eyebrow line, and a parallax background image — so this
+> PRD no longer inherits a z-index contract from it; read that PRD's current state before
+> wiring this in so the canvas lands behind the hero's existing content, not a stack that no
+> longer exists. Build as a reusable `<ParticleField>` island gated by IntersectionObserver,
+> not a hard-coded hero-only effect, since section dividers reuse the same component. When
+> done: sweep for dead code, commit, then archive this file.
 
 ## What it does
 
@@ -63,7 +65,7 @@ lighter and easier to gate behind reduced motion.
 ## Dependencies
 
 - PRD 01 (design tokens: particle color, `useReducedMotion` hook).
-- Shares a z-index/layer contract with PRD 02 (Hero Diary Effect) — particles render behind
-  the hero's ink/text layer and the Three.js parallax illustration in hero. Sequencing this
-  right after hero (rather than before) means that contract is already settled when this
-  PRD starts.
+- Needs to render behind PRD 02 (Hero Section)'s content (headline, eyebrow, parallax
+  background image) — no longer a shared Three.js/particle z-index *contract* since PRD 02's
+  Three.js layer was scoped out during its implementation, just a normal "particles sit
+  behind foreground content" stacking requirement.

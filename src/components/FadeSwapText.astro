@@ -1,0 +1,77 @@
+---
+interface Props {
+  /** Shown in sequence, one at a time; the last line is the resting state. */
+  lines: string[];
+  /** How long each line holds before advancing to the next, in ms. */
+  holdMs?: number;
+  /** Fade duration, in ms. */
+  fadeMs?: number;
+  class?: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { lines, holdMs = 2200, fadeMs = 400, class: className } = Astro.props;
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const finalLine = lines[lines.length - 1];
+---
+
+<!--
+  Plain CSS opacity transition + vanilla JS timer, no animation library — the reduced-motion
+  fallback is pure CSS (motion-reduce:/motion-safe:) so it's correct at first paint, before
+  any script runs. Reusable: swap `lines` for any other reveal/disappear/reveal text swap.
+-->
+<span class={className} data-fade-swap data-lines={JSON.stringify(lines)} data-hold={holdMs} data-fade={fadeMs}>
+  <span class="sr-only">{finalLine}</span>
+  <span aria-hidden="true" class="hidden motion-reduce:inline">{finalLine}</span>
+  <span aria-hidden="true" class="fade-swap-text motion-reduce:hidden" style={`--fade-swap-duration:${fadeMs}ms`}>
+    {lines[0]}
+  </span>
+</span>
+
+<style>
+  .fade-swap-text {
+    transition: opacity var(--fade-swap-duration, 400ms) ease;
+  }
+  .fade-swap-text[data-fading="true"] {
+    opacity: 0;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  document.querySelectorAll<HTMLElement>("[data-fade-swap]").forEach((wrapper) => {
+    if (reducedMotionQuery.matches) return;
+
+    const lines: string[] = JSON.parse(wrapper.dataset.lines ?? "[]");
+    const holdMs = Number(wrapper.dataset.hold) || 2200;
+    const fadeMs = Number(wrapper.dataset.fade) || 400;
+    const textEl = wrapper.querySelector<HTMLElement>(".fade-swap-text");
+    if (!textEl || lines.length <= 1) return;
+
+    let index = 0;
+    function next() {
+      if (index >= lines.length - 1 || !textEl) return;
+      textEl.setAttribute("data-fading", "true");
+      setTimeout(() => {
+        index += 1;
+        textEl.textContent = lines[index];
+        textEl.removeAttribute("data-fading");
+        setTimeout(next, holdMs);
+      }, fadeMs);
+    }
+    setTimeout(next, holdMs);
+  });
+</script>

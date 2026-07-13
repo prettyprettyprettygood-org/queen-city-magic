@@ -1,103 +1,101 @@
-# PRD 02 — Hero Diary Effect
+# PRD 02 — Hero Section
 
 ## Start-work prompt
 
 > Implement docs/prds/03-hero-diary-effect.md for the QCMM redesign. Read CLAUDE.md first.
 > Dependency: PRD 01 (docs/prds/02-design-tokens-typography.md) must be done — this PRD
-> consumes its color tokens, display serif, and `useReducedMotion` hook. Scope is already
-> decided (see this PRD's "Decided" section): the headline uses the display serif, not the
-> script face; the one reserved Three.js moment (hero-illustration parallax) lives here,
-> layered behind the particle canvas and ink/handwriting SVG. `assets/images/you-belong-here.jpg`
-> is a candidate source image for this hero — check it before sourcing/commissioning
-> anything new. Still open: final hero copy (use placeholder copy from the current site
-> until provided) and whether the ink dissolve needs full occlusion of the outgoing line.
-> Build the sr-only static heading and the aria-hidden animated layer together from the
-> start, not the animated layer first with accessibility retrofitted. When done: sweep for
-> dead code, commit, then archive this file.
+> consumes its color tokens, display serif/script fonts, and `.focus-glow`/reduced-motion
+> conventions. Scope is intentionally small: a static display-serif headline (unchanged
+> across visits, no per-character animation), a small eyebrow line above it that fades
+> between two lines of copy, and a castle-silhouette background image with simple
+> scroll-linked parallax (plain CSS transform via a scroll listener, not an animation
+> library). No Three.js, no particle canvas, no per-character handwriting reveal, no ink-blot
+> dissolve — those were in the original brief and got scoped out; see "Revision history"
+> below for why. When done: sweep for dead code, commit, then archive this file.
 
 ## What it does
 
-The hero's headline area writes itself in, 2–3 short lines (event dates, tagline, "you
-belong here"), like handwriting rather than a uniform typewriter tick, then each line
-dissolves into an ink blot before the next line appears. The final line writes in and
-stays — a static, fully legible headline at rest.
+The hero shows a small eyebrow line that fades between "a night of mischief & magic" and
+"you belong here," a static headline below it ("Queen City Mischief & Magic"), and a
+castle-silhouette illustration behind both that drifts slightly slower than the page as the
+visitor scrolls — a simple parallax depth cue, not a scroll-triggered animation sequence.
 
 ## Interaction/animation behavior, in plain terms
 
-- Content lives in the DOM twice, for different audiences: a real static `<h1>`/`<p>` for
-  screen readers and no-JS/reduced-motion visitors, and a decorative `aria-hidden` layer
-  that does the writing/dissolving animation for sighted, motion-enabled visitors.
-- Handwriting reveal: built as SVG text (or per-character spans) with a staggered
-  Framer Motion timeline. "Variable speed, not uniform" means per-character delay has
-  jitter (e.g. randomized 30–90ms per character, seeded so it's reproducible rather than
-  actually random each load) plus slightly longer pauses at word boundaries, so it reads
-  as a hand pausing to think rather than a metronome.
-- Ink dissolve: an irregular blob shape (either a handful of pre-drawn SVG blob paths
-  morphed between via interpolation, or an SVG filter using `feTurbulence` +
-  `feDisplacementMap` for an organic edge) expands from a point to cover the line's
-  bounding box, then the next line begins underneath/after it. This is the transition
-  between lines, not a decoration — it needs to fully occlude the outgoing line before the
-  incoming one starts, so there's no overlap/legibility gap.
-- The final line does not dissolve — it writes in and holds, matching the static heading
-  exactly in content and typography.
-- Total animation duration is capped (e.g. under ~4–5s end to end) so visitors who don't
-  wait around aren't stuck looking at an unfinished sentence for a long time.
-- **The one reserved Three.js moment lives here:** a hero illustration renders behind the
-  particle layer and reacts to scroll with a subtle parallax offset (illustration moves at
-  a different rate than the foreground content as the user scrolls past the hero). This is
-  the only Three.js usage on the site — everything else stays DOM/canvas-2D.
+- **Eyebrow fade** (`FadeSwapText.astro`): shows "a night of mischief & magic," fades out,
+  fades in "you belong here," holds there. Plain CSS `opacity` transition driven by a small
+  vanilla-JS timer — no animation library. Built generic/reusable (`lines: string[]`, any
+  number of lines, holds on the last one) since other parts of the site may want the same
+  reveal/disappear/reveal treatment later.
+- **Headline**: a real, static `<h1>` — "Queen City Mischief & Magic." No per-character
+  reveal, no dissolve, no animation. It's just styled in the display serif at rest.
+- **Parallax background** (`HeroParallaxImage.astro`): the castle silhouette is absolutely
+  positioned behind the hero content. A scroll listener (rAF-throttled) offsets it via
+  `transform: translate()` at roughly 12% of scroll speed, so it appears to recede slightly
+  as the visitor scrolls past the hero. Implemented as a plain scroll listener + CSS
+  transform, not `background-attachment: fixed` (unreliable on mobile Safari) and not
+  Framer Motion.
 
 ## Accessibility branch
 
-- The entire animated SVG/canvas layer is `aria-hidden="true"` and `focusable="false"`.
-- A real, static heading is present in the DOM at all times with the final headline
-  content — this is what screen readers and no-JS visitors get, immediately, with no
-  animation dependency.
-- **Design decision needing sign-off:** rather than crossfading between "animated layer"
-  and "static layer" at the end (which risks a visible duplicate-text flash), the proposal
-  is that the animated layer's resting frame *is* the visible legible headline — styled
-  identically to the real heading typography — while the real `<h1>` stays visually
-  `sr-only` (present, accessible, never visually shown). This is the same accepted pattern
-  used for text-scramble/reveal effects elsewhere; flagging it explicitly since the brief's
-  "settle on a final static, fully legible headline" phrasing is consistent with either
-  reading.
-- Under `prefers-reduced-motion: reduce`: skip the handwriting/ink animation entirely. The
-  static heading is shown immediately at full opacity with no motion. If the animated layer
-  mounts at all under reduced motion, it renders directly in its resting frame with no
-  transition — never partially animated.
-- No flashing faster than 3Hz — the ink dissolve must read as a soak/spread, not a strobe.
-- Ink color against hero background must hit body/large-text contrast at the resting frame,
-  tying back to PRD 01's contrast matrix.
-- The parallax illustration's scroll-linked offset is disabled under
-  `prefers-reduced-motion: reduce` — the illustration renders in a fixed position with no
-  scroll-linked movement at all, not a reduced-magnitude version of it.
+- The eyebrow's fading text is `aria-hidden`; a real `sr-only` element always holds the
+  final line ("you belong here") so screen readers get the resting content immediately, with
+  no dependency on the fade ever completing.
+- Reduced motion: the eyebrow's fade is pure CSS (`motion-reduce:`/`motion-safe:` variants),
+  correct at first paint before any script runs — under reduced motion the final line shows
+  immediately, no fade, no flash of the opening line. The parallax scroll listener is never
+  attached at all under `prefers-reduced-motion: reduce` (checked via `matchMedia` before
+  attaching); the image renders in a fixed position with no scroll-linked movement.
+- The static `<h1>` needs no accessibility scaffolding beyond normal heading semantics — it
+  was always real, visible, load-bearing content, never a decorative animated stand-in.
+- Ink/text color against the hero background ties back to PRD 01's contrast matrix
+  (`--color-surface-primary` on `--color-surface-bg`, already verified per-theme).
+- The castle image is `alt=""` / `role="presentation"` — purely decorative background art,
+  not content a screen reader needs to announce.
 
-## Decided
+## Revision history
 
-1. **Script face conflict — resolved.** The diary-effect headline uses the **display
-   serif**, not the script accent face — the headline carries actual information (dates,
-   tagline). The script face is used for a small eyebrow line above the headline (e.g. "A
-   festival of..."), which is decorative framing, not the load-bearing content.
-2. **Three.js placement — resolved.** Lives in the hero, as hero-illustration parallax on
-   scroll. Layer stack (back to front): Three.js illustration → 2D particle canvas →
-   ink/handwriting SVG → sr-only static heading.
+**Original brief (superseded).** The first draft of this PRD described a much bigger
+feature: 2–3 headline lines (dates/tagline/"you belong here") that handwrote themselves in
+character-by-character with jittered timing, each dissolving into an ink blot before the
+next line appeared, plus "the one reserved Three.js moment" — a parallax hero illustration
+layered behind a particle canvas. That version was fully built (`HeroHeadline.tsx` with a
+seeded-jitter character stagger and an SVG-filter ink-dissolve transition, `HeroParallax.astro`
+with a raw-Three.js scene) — the client reviewed it and asked for something much simpler.
+Reverted entirely rather than kept as a later "fancier mode," per the client's direction to
+rewrite this PRD from scratch rather than layer a toggle on top of the discarded version.
 
-## Open questions / assumptions
+**Simplified brief (current).** Client's own framing: "just the hero title like we had, and
+a subtitle text with the simple reveal/disappear/reveal... simple, no animation, no framer
+for now." Concretely: no Three.js, no particle canvas, no per-character handwriting, no ink
+dissolve. The eyebrow fade (originally built with Framer Motion in `FadeSwapText.tsx` as a
+React island) was also rebuilt as a dependency-free `FadeSwapText.astro` (plain CSS
+transition + vanilla JS) to match "no framer." The "one reserved Three.js moment" from PRD
+01's scope-decisions log is **no longer planned** — if a future PRD wants a Three.js moment
+elsewhere, that's a fresh scope decision, not a carryover of this one.
 
-1. **Copy.** Final 2–3 lines (dates/tagline/"you belong here") aren't locked — building
-   against placeholder copy pulled from the current site until the client provides final
-   text. Line length affects animation timing, so real copy should land before final tuning.
-2. Does the dissolve need to fully hide the outgoing line, or is a partial ink-smear over
-   still-legible text acceptable? Assuming full occlusion (cleaner, avoids double-exposure
-   readability issues) unless told otherwise.
-3. `assets/images/you-belong-here.jpg` lines up with the "you belong here" hero line — worth
-   confirming it's meant as the parallax illustration itself (or source art for it) rather
-   than a coincidence, before building placeholder art.
+**Real copy, sourced from the live site.** `https://queencitymagic.com/` was fetched
+directly (client provided the URL) rather than guessing placeholder text. Its own headline
+is literally "YOU BELONG HERE," confirming the hero's closing line. Its event-date copy
+("9.28-29.2024, Staunton, VA") is a stale recap of last year's event, not current — the
+correct upcoming date, September 26–27, 2026, comes from `project_qcmm_scope_decisions`
+memory (confirmed during the Events page PRD work), not the live site's own copy. See
+`reference_qcmm_live_site` memory for the full fetch record.
+
+**Castle background image — trademark flag raised, client proceeded.** The client added
+`src/assets/images/castle-background.png`, a black silhouette of an asymmetric multi-tower
+castle on a cliff. Flagged before use: that specific tower arrangement and cliff base reads
+as a Hogwarts-silhouette stock/clipart asset — more visually recognizable as Harry Potter
+than anything else built in this project so far (more than the house colors or animal
+icons). Client chose to use it as-is. See `feedback_ip_trademark_flagging` memory — this is
+the highest-recognizability asset flagged to date; if further Hogwarts-adjacent imagery gets
+proposed, treat this as the point past which the project is knowingly leaning into the
+literal source material, not just an adjacent color/name choice.
 
 ## Dependencies
 
-- PRD 00 (Project Scaffold) and PRD 01 (design tokens: colors, display serif,
-  `useReducedMotion` hook, focus utilities).
-- Shares a z-index/layer contract with PRD 03 (Ambient Particle Layer) — particles sit
-  behind the hero content, so the two need to agree on stacking order.
-- Hosts the one reserved Three.js signature moment (decided above).
+- PRD 00 (Project Scaffold) and PRD 01 (design tokens: colors, display serif, script face,
+  focus utilities, reduced-motion convention).
+- No dependency on PRD 03 (Ambient Particle Layer) anymore — the particle canvas and
+  Three.js layer that would have shared a z-index contract with it are no longer part of
+  this PRD's scope.

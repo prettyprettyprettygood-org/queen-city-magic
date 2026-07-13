@@ -28,8 +28,8 @@ location for them until that PRD runs.
 |---|-----|----------------------|
 | 00 | [Project Scaffold & Initialization](./01-project-scaffold.md) | True foundation — hard blocker for everything, including PRD 01 |
 | 01 | [Design Tokens & Typography Scaffold](./02-design-tokens-typography.md) | Hard blocker for every feature PRD |
-| 02 | [Hero Diary Effect](./03-hero-diary-effect.md) | High visibility, several open questions |
-| 03 | [Ambient Particle Layer](./04-ambient-particle-layer.md) | Depends on hero's z-index contract |
+| 02 | [Hero Section](./03-hero-diary-effect.md) | High visibility; scope simplified during implementation (no Three.js/particle layer) |
+| 03 | [Ambient Particle Layer](./04-ambient-particle-layer.md) | Needs to render behind hero's content (no longer a shared z-index contract, hero's Three.js layer was scoped out) |
 | 04 | [Scroll Choreography](./05-scroll-choreography.md) | Owns the image-reveal primitive Gallery reuses |
 | 05 | [Gallery Flip Interaction](./06-gallery-flip-interaction.md) | Depends on Scroll Choreography's reveal primitive; soft-depends on Sound Toggle for flip-SFX mute state |
 | 06 | [Sound Toggle](./07-sound-toggle.md) | Otherwise independent, but Gallery now depends on its mute state — build relatively early |
@@ -55,8 +55,8 @@ possibly-inconsistent handling across features:
 
 1. **Project Scaffold & Initialization** — the actual "hard blocker for everything," ahead of design tokens. Nothing else has an app to build inside until this runs.
 2. **Design Tokens & Typography Scaffold** — hard blocker for every feature PRD.
-3. **Hero Diary Effect** — highest-visibility signature moment; also forces the (now-decided) Three.js placement and hero/particle z-index contract.
-4. **Ambient Particle Layer** — shares hero's z-index contract, easiest to sequence right after while that context is fresh. Not a hard dependency, just convenient ordering.
+3. **Hero Section** — highest-visibility moment; scope was simplified during implementation (static headline, fading eyebrow line, simple scroll-parallax background image — no Three.js, no particle canvas, no handwriting/ink-dissolve).
+4. **Ambient Particle Layer** — easiest to sequence right after hero while that context is fresh, but no longer has a shared z-index *contract* to inherit (hero's Three.js/particle layer was cut). Not a hard dependency, just convenient ordering.
 5. **Scroll Choreography** — establishes the shared image-reveal primitive.
 6. **Gallery Flip Interaction** — hard-depends on #5's reveal primitive, soft-depends on Sound Toggle's mute state for its flip SFX.
 7. **Sound Toggle** — no hard dependency on 3–5, but Gallery (#6) now depends on it, so pulling it earlier (even before Gallery) avoids Gallery shipping its SFX half-wired.
@@ -99,9 +99,13 @@ These were open questions that materially changed scope; all are now settled:
 3. **How literal is "page-turn"?** Baseline is a soft `clip-path` wipe (cheaper, safer on
    mobile). A true skeuomorphic page-curl is a possible later stretch goal, not part of this
    build. Decided in PRD 04.
-4. **Where does the one Three.js moment live?** In the hero, as subtle scroll-linked
+4. **Where does the one Three.js moment live?** ~~In the hero, as subtle scroll-linked
    parallax on a hero illustration, layered behind the particle canvas and ink/handwriting
-   SVG. Decided in PRD 02.
+   SVG.~~ **Superseded** — PRD 02's scope was simplified during implementation (static
+   headline, fading eyebrow, plain-CSS scroll-parallax background image, no Three.js, no
+   particle canvas, no handwriting/ink-dissolve). There is currently no reserved Three.js
+   moment anywhere in the build; if one gets proposed later, it's a fresh scope decision, not
+   a revival of this one.
 
 ## New from added assets
 

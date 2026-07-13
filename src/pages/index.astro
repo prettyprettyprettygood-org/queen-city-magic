@@ -1,5 +1,9 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import FadeSwapText from "@/components/FadeSwapText.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import IdentitiesTable from "@/components/IdentitiesTable.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import ThemeSelect from "@/components/ThemeSelect.astro";
@@ -22,75 +26,88 @@ import "@/styles/global.css";
     </script>
   </head>
   <body>
-    <main class="token-check">
-      <div class="token-check__switcher">
-        <ThemeSelect />
-      </div>
+    <main>
+      <section class="hero">
+        <div class="hero__switcher">
+          <ThemeSelect />
+        </div>
 
-      <span class="token-check__eyebrow">a night of mischief &amp; magic</span>
-      <h1 class="token-check__heading">Queen City Mischief &amp; Magic</h1>
-      <p class="token-check__body">
-        This is a scaffold check for PRD 01 — design tokens and typography, not final homepage
-        copy. Switch the theme above to confirm every surface, text, and focus-ring token holds
-        its contrast across all five identities.
-      </p>
-      <button type="button" class="token-check__cta focus-glow">Donate</button>
+        <HeroParallaxImage class="hero__parallax" />
 
-      <h2 class="token-check__section-heading">All five identities</h2>
-      <IdentitiesTable />
+        <div class="hero__content">
+          <FadeSwapText
+            lines={["a night of mischief & magic", "you belong here"]}
+            class="hero__eyebrow"
+          />
+          <h1 class="hero__heading">Queen City Mischief &amp; Magic</h1>
+        </div>
+      </section>
+
+      <section class="reference">
+        <h2 class="reference__heading">All five identities</h2>
+        <IdentitiesTable />
+      </section>
     </main>
   </body>
 </html>
 
 <style>
-  .token-check {
-    min-height: 100vh;
+  .hero {
+    position: relative;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
     padding: 3rem clamp(1.5rem, 5vw, 4rem);
     background-color: var(--color-surface-bg);
     color: var(--color-surface-text);
   }
 
-  .token-check__switcher {
-    align-self: flex-end;
+  .hero__switcher {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 2;
   }
 
-  .token-check__eyebrow {
+  .hero__parallax {
+    z-index: 0;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero__eyebrow {
     font-family: var(--font-script);
     color: var(--color-surface-primary);
     font-size: 1.25rem;
   }
 
-  .token-check__heading {
+  .hero__heading {
     font-family: var(--font-display);
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 400;
     margin: 0;
   }
 
-  .token-check__body {
-    max-width: 60ch;
-    line-height: 1.6;
+  .reference {
+    padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    background-color: var(--color-surface-bg);
+    color: var(--color-surface-text);
   }
 
-  .token-check__cta {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 0.6rem 1.4rem;
-    border-radius: var(--radius-control);
-    border: none;
-    background-color: var(--color-surface-primary);
-    color: var(--color-surface-on-primary);
-    cursor: pointer;
-  }
-
-  .token-check__section-heading {
+  .reference__heading {
     font-family: var(--font-display);
     font-size: 1.5rem;
     font-weight: 400;
-    margin: 1.5rem 0 0;
+    margin: 0 0 1.5rem;
   }
 </style>

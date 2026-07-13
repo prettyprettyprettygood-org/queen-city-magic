@@ -1,0 +1,72 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Image } from "astro:assets";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import castleBackground from "@/assets/images/castle-background.png";
+
+interface Props {
+  class?: string;
+}
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { class: className } = Astro.props;
+---
+
+<!--
+  Simple scroll parallax: a plain scroll listener nudges the image at a fraction of scroll
+  speed via `transform`, not `background-attachment: fixed` (unreliable on mobile Safari) and
+  not an animation library. Disabled under prefers-reduced-motion: image stays fixed in place.
+-->
+<div class={className} data-parallax-image>
+  <Image
+    src={castleBackground}
+    alt=""
+    role="presentation"
+    widths={[640, 1280]}
+    sizes="100vw"
+    data-parallax-layer
+  />
+</div>
+
+<style>
+  [data-parallax-image] {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  [data-parallax-layer] {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 130%;
+    max-width: none;
+    height: auto;
+    transform: translateX(-50%);
+    opacity: 0.85;
+  }
+</style>
+
+<script>
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const layer = document.querySelector<HTMLElement>("[data-parallax-layer]");
+
+  if (layer && !reducedMotionQuery.matches) {
+    let ticking = false;
+    const update = () => {
+      const offset = window.scrollY * 0.12;
+      layer.style.transform = `translate(-50%, ${offset}px)`;
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true },
+    );
+  }
+</script>
