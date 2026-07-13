@@ -37,6 +37,7 @@ location for them until that PRD runs.
 | 08 | [10 Years of Pictures Interstitial](./09-ten-years-interstitial.md) | Fully independent, lowest risk |
 | 09 | [Events Page](./10-events-page.md) | Independent; the date-bucketing logic (timezone-aware, midnight cutover) is the real substance here |
 | 10 | [Pre-Launch Production Readiness Audit](./11-pre-launch-audit.md) | Launch gate, not a build-order item — runs after 00–09 are done |
+| 11 | [Site Layout (Navbar, Footer, Section Shell)](./12-site-layout.md) | Added after PRD 02 shipped hero-only; wraps the hero rather than changing it. Resolves PRD 06's deferred "layout pass" for fixed-UI placement. No hard blocker for 03–09, but the sooner it lands the less retrofitting later pages need |
 
 ## Shared utilities (build once, in the scaffold phases)
 
@@ -72,6 +73,12 @@ against them if that's useful for pacing — but step 7 should land before or al
 **PRD 10 (Pre-Launch Production Readiness Audit) runs last**, once Home, Gallery, the 10
 Years interstitial, Donate, and Events all exist — it's a launch gate, not a step in this
 sequence.
+
+**PRD 11 (Site Layout) was added after this build order was drafted**, once Hero (#3)
+shipped hero-only and it became clear nothing wraps it in shared navbar/footer chrome. No
+other PRD hard-depends on it, but it's lowest-friction landed soon after Hero — every PRD
+after it (Gallery, Sound Toggle, Events, etc.) otherwise risks building against a bare
+`<body>` that later needs retrofitting once real page chrome exists.
 
 ## Explicitly out of scope for this pass (per the original prompt)
 

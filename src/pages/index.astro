@@ -1,12 +1,6 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import FadeSwapText from "@/components/FadeSwapText.astro";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import IdentitiesTable from "@/components/IdentitiesTable.astro";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import ThemeSelect from "@/components/ThemeSelect.astro";
+import Hero from "@/components/Hero.astro";
 import "@/styles/global.css";
 ---
 
@@ -27,87 +21,7 @@ import "@/styles/global.css";
   </head>
   <body>
     <main>
-      <section class="hero">
-        <div class="hero__switcher">
-          <ThemeSelect />
-        </div>
-
-        <HeroParallaxImage class="hero__parallax" />
-
-        <div class="hero__content">
-          <FadeSwapText
-            lines={["a night of mischief & magic", "you belong here"]}
-            class="hero__eyebrow"
-          />
-          <h1 class="hero__heading">Queen City Mischief &amp; Magic</h1>
-        </div>
-      </section>
-
-      <section class="reference">
-        <h2 class="reference__heading">All five identities</h2>
-        <IdentitiesTable />
-      </section>
+      <Hero />
     </main>
   </body>
 </html>
-
-<style>
-  .hero {
-    position: relative;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 3rem clamp(1.5rem, 5vw, 4rem);
-    background-color: var(--color-surface-bg);
-    color: var(--color-surface-text);
-  }
-
-  .hero__switcher {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    z-index: 2;
-  }
-
-  .hero__parallax {
-    z-index: 0;
-  }
-
-  .hero__content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .hero__eyebrow {
-    font-family: var(--font-script);
-    color: var(--color-surface-primary);
-    font-size: 1.25rem;
-  }
-
-  .hero__heading {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 400;
-    margin: 0;
-  }
-
-  .reference {
-    padding: 3rem clamp(1.5rem, 5vw, 4rem);
-    background-color: var(--color-surface-bg);
-    color: var(--color-surface-text);
-  }
-
-  .reference__heading {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 400;
-    margin: 0 0 1.5rem;
-  }
-</style>

@@ -28,22 +28,39 @@ const { class: className } = Astro.props;
 </div>
 
 <style>
+  /*
+    Fills the hero edge-to-edge except a small top gap (open "sky" above the towers).
+    `object-position: top` (not bottom/center) matters: the source is a fixed ~1.93:1 image
+    and most viewport/hero-box ratios need at least some crop to fill both dimensions, and
+    the tallest spire's tip sits only ~4% of the image's own height from its top edge.
+    Anchoring the crop to the top means any trimmed sliver comes off the flat rock base at
+    the bottom instead of the spires.
+  */
   [data-parallax-image] {
     position: absolute;
-    inset: 0;
+    top: clamp(1.5rem, 5vh, 3.5rem);
+    right: 0;
+    bottom: 0;
+    left: 0;
     overflow: hidden;
     pointer-events: none;
   }
 
+  /*
+    Recolored per theme via tokens.css's --surface-parallax-* custom properties (see there
+    for why): dark-mode themes leave the source PNG's black fill untouched, light-mode
+    themes invert it to a light gray and drop the opacity, since a solid black shape at 85%
+    opacity reads as harsh against a near-white background.
+  */
   [data-parallax-layer] {
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 130%;
-    max-width: none;
-    height: auto;
-    transform: translateX(-50%);
-    opacity: 0.85;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    opacity: var(--surface-parallax-opacity);
+    filter: var(--surface-parallax-tint);
   }
 </style>
 
@@ -55,7 +72,7 @@ const { class: className } = Astro.props;
     let ticking = false;
     const update = () => {
       const offset = window.scrollY * 0.12;
-      layer.style.transform = `translate(-50%, ${offset}px)`;
+      layer.style.transform = `translateY(${offset}px)`;
       ticking = false;
     };
     window.addEventListener(

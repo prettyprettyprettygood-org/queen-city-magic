@@ -46,11 +46,11 @@
   src: url("/fonts/eb-garamond-italic-400.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Marck Script";
+  font-family: "Nothing You Could Do";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/fonts/marck-script-400.woff2") format("woff2");
+  src: url("/fonts/nothing-you-could-do-400.woff2") format("woff2");
 }
 
 :root {
@@ -68,6 +68,16 @@
     without needing a separate override per theme.
   */
   --surface-border: color-mix(in srgb, var(--surface-text) 22%, transparent);
+  /*
+    Hero castle silhouette (source PNG is solid black on transparent). Dark-mode themes keep
+    it true black; light-mode themes override `--surface-parallax-tint` to `invert(85%)`,
+    which turns that black fill into a light gray (transparent stays transparent — invert()
+    doesn't touch alpha) instead of a harsh black shape on a near-white background. `-ground`
+    is the hero background gradient's bottom stop the silhouette fades into.
+  */
+  --surface-parallax-tint: none;
+  --surface-parallax-opacity: 0.85;
+  --surface-parallax-ground: var(--color-ink-900);
 }
 
 [data-theme="daring"] {
@@ -79,6 +89,9 @@
   --surface-on-primary: var(--color-parchment-50);
   --surface-accent: var(--color-daring-accent);
   --surface-glow: var(--color-daring-primary);
+  --surface-parallax-tint: invert(85%);
+  --surface-parallax-opacity: 0.35;
+  --surface-parallax-ground: var(--color-daring-panel);
 }
 [data-theme="ambitious"] {
   /* dark mode — green + silver */
@@ -99,6 +112,9 @@
   --surface-on-primary: var(--color-parchment-50);
   --surface-accent: var(--color-clever-accent);
   --surface-glow: var(--color-clever-primary);
+  --surface-parallax-tint: invert(85%);
+  --surface-parallax-opacity: 0.35;
+  --surface-parallax-ground: var(--color-clever-panel);
 }
 [data-theme="loyal"] {
   /* light mode — yellow + near-black */
@@ -109,11 +125,14 @@
   --surface-on-primary: var(--color-parchment-50);
   --surface-accent: var(--color-loyal-accent);
   --surface-glow: var(--color-loyal-primary);
+  --surface-parallax-tint: invert(85%);
+  --surface-parallax-opacity: 0.35;
+  --surface-parallax-ground: var(--color-loyal-panel);
 }
 
 @theme {
   --font-display: "IM Fell English", Cambria, Georgia, serif;
-  --font-script: "Marck Script", "Snell Roundhand", cursive;
+  --font-script: "Nothing You Could Do", "Segoe Script", cursive;
   --font-body: "EB Garamond", "Iowan Old Style", Georgia, serif;
 
   /* shared radius scale — not theme-dependent, just a token so nothing inlines a raw px/rem */
@@ -137,6 +156,16 @@
   --color-amber-600: #c77f1c;
   --color-amber-700: #95530f;
   --color-amber-glow: #c1630b;
+
+  /*
+    Deliberately theme-invariant (unlike --surface-primary, which re-points per theme) — the
+    hero eyebrow line is meant to read as gold on every theme, not each theme's own brand hue.
+    amber-400 (the Twilight accent) only clears ~1.6:1 against the light-mode themes' near-white
+    backgrounds; this shade is deepened until it clears 3:1 (large-text WCAG threshold) against
+    the darkest theme (twilight-950, 4.27:1) and the lightest (clever-bg, 3.72:1) alike — the
+    narrowest of the two constraints, not eyeballed.
+  */
+  --color-magic-gold: #987019;
 
   /* light surface + text neutrals, shared across every theme */
   --color-parchment-50: #f8f1e4;
@@ -181,4 +210,5 @@
   --color-surface-accent: var(--surface-accent);
   --color-surface-glow: var(--surface-glow);
   --color-surface-border: var(--surface-border);
+  --color-surface-parallax-ground: var(--surface-parallax-ground);
 }

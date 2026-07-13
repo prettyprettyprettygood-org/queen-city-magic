@@ -1,0 +1,91 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import FadeSwapText from "@/components/FadeSwapText.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import ThemeSelect from "@/components/ThemeSelect.astro";
+---
+
+<section class="hero">
+  <div class="hero__switcher">
+    <ThemeSelect />
+  </div>
+
+  <HeroParallaxImage class="hero__parallax" />
+
+  <div class="hero__content">
+    <h1 class="hero__heading">Queen City Mischief &amp; Magic</h1>
+    <FadeSwapText lines={["you belong here"]} class="hero__eyebrow" magical />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    /*
+      Fades toward --color-surface-parallax-ground (tokens.css) at the bottom, where the
+      castle silhouette sits, so it blends into the ground instead of reading as a flat
+      rectangle dropped on a solid backdrop. That token is near-black for dark-mode themes
+      (matching the silhouette's true-black fill there) and each light-mode theme's own
+      `panel` tone (matching the light-gray fill those themes recolor it to) — see the
+      silhouette recoloring in HeroParallaxImage.astro. Held at the plain surface-bg through
+      the top ~60% so the headline's contrast against it is unaffected.
+    */
+    background: linear-gradient(
+      to bottom,
+      var(--color-surface-bg) 0%,
+      var(--color-surface-bg) 60%,
+      var(--color-surface-parallax-ground) 100%
+    );
+    color: var(--color-surface-text);
+  }
+
+  .hero__switcher {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 2;
+  }
+
+  .hero__parallax {
+    z-index: 0;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /*
+    :global — this class is rendered by FadeSwapText.astro's own template, so it only carries
+    that component's Astro scope attribute, not this component's. A scoped selector here would
+    compile to `.hero__eyebrow[data-astro-cid-<this-component>]` and never match.
+  */
+  :global(.hero__eyebrow) {
+    display: block;
+    font-family: var(--font-script);
+    /* Fixed gold, not --color-surface-primary — see --color-magic-gold in tokens.css. */
+    color: var(--color-magic-gold);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-top: 0.75rem;
+  }
+
+  .hero__heading {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6.5vw, 4rem);
+    font-weight: 400;
+    margin: 0;
+  }
+</style>
