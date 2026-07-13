@@ -49,13 +49,18 @@ Project conventions for working in this repo. Read this before starting work on 
 
 ## Code hygiene / commits
 
-- Before committing: sweep for dead code, unused imports/variables, leftover
-  `console.log`s, and commented-out blocks.
-- Commit after finishing each PRD. If a PRD is large/exhaustive, commit at sensible
-  checkpoints within it too (a sub-feature working and verified), rather than one giant
-  commit at the end.
-- Only create commits when asked — but when a PRD wraps up, that's the natural moment to
-  surface "ready to commit?" rather than waiting to be asked cold.
+- Before considering a PRD (or any change) done: sweep for dead code, unused
+  imports/variables, leftover `console.log`s, and commented-out blocks.
+- The user makes all commits themselves. Do not run `git commit` — not even when a PRD's own
+  "Start-work prompt" says "commit, then archive this file"; that phrasing predates this rule
+  and no longer authorizes committing. When a PRD (or a sensible checkpoint within a large
+  one) is finished and verified, report that it's ready and let the user decide when to
+  commit — don't wait to be asked cold, but don't run the command either.
+- Archiving a finished PRD (moving the file from `docs/prds/` to `docs/prds/archive/`) is
+  still fine to do without asking — it's a docs-organization move, not a commit.
+- Never run `git push` without separate, explicit approval, even after a commit exists.
+- If the user explicitly asks for a commit to be made, make it — but never add a
+  `Co-Authored-By: Claude` (or similar AI-attribution) trailer to the message in this repo.
 
 ## Performance
 

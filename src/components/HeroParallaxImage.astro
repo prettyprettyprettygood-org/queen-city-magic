@@ -48,9 +48,8 @@ const { class: className } = Astro.props;
 
   /*
     Recolored per theme via tokens.css's --surface-parallax-* custom properties (see there
-    for why): dark-mode themes leave the source PNG's black fill untouched, light-mode
-    themes invert it to a light gray and drop the opacity, since a solid black shape at 85%
-    opacity reads as harsh against a near-white background.
+    for why): every theme is dark mode, so the source PNG's black fill is left untouched
+    everywhere at 85% opacity.
   */
   [data-parallax-layer] {
     position: absolute;

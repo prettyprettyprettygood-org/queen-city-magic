@@ -66,9 +66,14 @@ const finalLine = lines[lines.length - 1];
 
   [data-magical="true"] .fade-swap-text {
     white-space: pre-wrap;
+    /*
+      --color-magic-glow, not --color-surface-glow — the latter is each theme's own saturated
+      primary (tuned for focus-ring contrast), which reads as a busy/clashing halo behind gold
+      script text on some themes instead of a glow.
+    */
     text-shadow:
-      0 0 6px var(--color-surface-glow),
-      0 0 18px color-mix(in srgb, var(--color-surface-glow) 70%, transparent);
+      0 0 6px var(--color-magic-glow),
+      0 0 18px color-mix(in srgb, var(--color-magic-glow) 70%, transparent);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -131,8 +136,8 @@ const finalLine = lines[lines.length - 1];
     const palette = ["#c1630b", "#f2b347"];
     const readPalette = () => {
       const styles = getComputedStyle(wrap);
-      palette[0] = styles.getPropertyValue("--color-surface-glow").trim() || palette[0];
-      palette[1] = styles.getPropertyValue("--color-surface-primary").trim() || palette[1];
+      palette[0] = styles.getPropertyValue("--color-magic-glow").trim() || palette[0];
+      palette[1] = styles.getPropertyValue("--color-surface-eyebrow").trim() || palette[1];
     };
     readPalette();
 

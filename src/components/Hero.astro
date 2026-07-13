@@ -4,8 +4,6 @@ import FadeSwapText from "@/components/FadeSwapText.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import ParticleField from "@/components/ParticleField";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import ThemeSelect from "@/components/ThemeSelect.astro";
 ---
 
@@ -14,7 +12,6 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
     <ThemeSelect />
   </div>
 
-  <ParticleField className="hero__particles" client:idle />
   <HeroParallaxImage class="hero__parallax" />
 
   <div class="hero__content">
@@ -27,10 +24,9 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
   .hero {
     position: relative;
     /*
-      Establishes a stacking context so the children's z-indices (-1/0/1 below) resolve
-      locally. Without this, `position: relative` alone does NOT create a stacking context —
-      a negative-z-index child would escape to the document root's stacking context and paint
-      behind this section's own background instead of in front of it.
+      Establishes a stacking context so the children's z-indices (0/1/2 below) resolve
+      locally rather than competing with unrelated root-level siblings (e.g. the page-level
+      Starfield behind everything, at z-index -1) as more sections land on the page.
     */
     isolation: isolate;
     min-height: 80vh;
@@ -41,18 +37,20 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
     overflow: hidden;
     padding: 3rem clamp(1.5rem, 5vw, 4rem);
     /*
-      Fades toward --color-surface-parallax-ground (tokens.css) at the bottom, where the
-      castle silhouette sits, so it blends into the ground instead of reading as a flat
-      rectangle dropped on a solid backdrop. That token is near-black for dark-mode themes
-      (matching the silhouette's true-black fill there) and each light-mode theme's own
-      `panel` tone (matching the light-gray fill those themes recolor it to) — see the
-      silhouette recoloring in HeroParallaxImage.astro. Held at the plain surface-bg through
-      the top ~60% so the headline's contrast against it is unaffected.
+      Transparent through the top ~60% ("sky") so the fixed page-level Starfield
+      (Starfield.tsx, mounted in index.astro, painted behind everything) shows through —
+      Starfield fills that same area with a plain --color-surface-bg solid, so the transition
+      is seamless whether or not it's actually drawing stars (reduced motion still gets the
+      right flat color, just no twinkle). Fades to the opaque --color-surface-parallax-ground
+      at the bottom, where the castle silhouette's rock base sits, so the "ground" blends into
+      a solid backdrop instead of also revealing the starfield through it — stars read as sky,
+      not as showing through solid ground. That ground token is near-black, matching the
+      silhouette's true-black fill (every theme is dark mode) — see HeroParallaxImage.astro.
     */
     background: linear-gradient(
       to bottom,
-      var(--color-surface-bg) 0%,
-      var(--color-surface-bg) 60%,
+      transparent 0%,
+      transparent 60%,
       var(--color-surface-parallax-ground) 100%
     );
     color: var(--color-surface-text);
@@ -63,19 +61,6 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
     top: 1.5rem;
     right: 1.5rem;
     z-index: 2;
-  }
-
-  /*
-    :global — ParticleField is a React island, not an Astro component, so it never carries
-    this file's scope attribute; a scoped selector here would compile to
-    `.hero__particles[data-astro-cid-<this-component>]` and never match (same issue as
-    `.hero__eyebrow` below).
-    Negative z-index — stacks below the hero's own z-index:0/auto children (parallax image,
-    content) regardless of DOM order, and above the hero section's own gradient background
-    (a negative-z-index child still paints above its stacking context's own box background).
-  */
-  :global(.hero__particles) {
-    z-index: -1;
   }
 
   .hero__parallax {
@@ -99,8 +84,8 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
   :global(.hero__eyebrow) {
     display: block;
     font-family: var(--font-script);
-    /* Fixed gold, not --color-surface-primary — see --color-magic-gold in tokens.css. */
-    color: var(--color-magic-gold);
+    /* Theme-aware gold, not --color-surface-primary — see --surface-eyebrow in tokens.css. */
+    color: var(--color-surface-eyebrow);
     font-size: clamp(1.5rem, 3vw, 2rem);
     margin-top: 0.75rem;
   }

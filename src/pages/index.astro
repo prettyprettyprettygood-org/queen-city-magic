@@ -1,6 +1,8 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Hero from "@/components/Hero.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Starfield from "@/components/Starfield";
 import "@/styles/global.css";
 ---
 
@@ -20,6 +22,7 @@ import "@/styles/global.css";
     </script>
   </head>
   <body>
+    <Starfield client:idle />
     <main>
       <Hero />
     </main>

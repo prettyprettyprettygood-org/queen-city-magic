@@ -9,9 +9,9 @@
      --surface-* var to one of four house-inspired themes, so a single ThemeSwitcher toggle
      re-skins every component built against --surface-* with no per-component theme logic.
 
-  Each theme commits to one mode, light or dark — Twilight and Ambitious Green are dark (a
-  subtle, desaturated dark ground + light text), Daring Red/Clever Blue/Loyal Gold are light
-  (a subtle, desaturated light ground + dark text). "Primary" is the theme's saturated brand hue, used for headings,
+  All four themes commit to dark mode (a subtle, desaturated dark ground + light text) —
+  Twilight, Ambitious Green, Daring Red, Clever Blue, and Loyal Gold all follow the same
+  shape. "Primary" is the theme's saturated brand hue, used for headings,
   links, and icon tints — it is deliberately NOT the page background; a fully-saturated color
   as a full-bleed background reads as loud rather than "a subtle color that compliments the
   theme," so the background is a much lower-saturation tint at the same hue instead.
@@ -63,35 +63,40 @@
   --surface-accent: var(--color-amber-600);
   --surface-glow: var(--color-amber-glow);
   /*
-    Border stays a low-opacity mix of this theme's own text color — that automatically reads
-    as a soft light hairline on dark-mode themes and a soft dark hairline on light-mode themes,
-    without needing a separate override per theme.
+    Border stays a low-opacity mix of this theme's own text color — every theme is dark mode,
+    so this always reads as a soft light hairline; one rule covers all four without a
+    per-theme override.
   */
   --surface-border: color-mix(in srgb, var(--surface-text) 22%, transparent);
   /*
-    Hero castle silhouette (source PNG is solid black on transparent). Dark-mode themes keep
-    it true black; light-mode themes override `--surface-parallax-tint` to `invert(85%)`,
-    which turns that black fill into a light gray (transparent stays transparent — invert()
-    doesn't touch alpha) instead of a harsh black shape on a near-white background. `-ground`
-    is the hero background gradient's bottom stop the silhouette fades into.
+    Hero castle silhouette (source PNG is solid black on transparent). Every theme is dark
+    mode, so it keeps its true-black fill everywhere — no theme needs to invert it to a
+    lighter tint. `-ground` is the hero background gradient's bottom stop the silhouette
+    fades into.
   */
   --surface-parallax-tint: none;
   --surface-parallax-opacity: 0.85;
   --surface-parallax-ground: var(--color-ink-900);
+  /* Hero eyebrow gold — bright dark-mode value; every theme is dark mode, so it applies everywhere. */
+  --surface-eyebrow: var(--color-magic-gold-bright);
+  /*
+    Whether the fixed page-wide starfield (Starfield.tsx) draws its twinkling stars at all —
+    numeric 1/0, read via getComputedStyle since canvas can't consume a CSS boolean directly.
+    A starry-night backdrop only makes sense against a dark ground, which every theme now is,
+    so every theme gets it.
+  */
+  --surface-starfield-visible: 1;
 }
 
 [data-theme="daring"] {
-  /* light mode — scarlet + gold */
+  /* dark mode — scarlet + gold */
   --surface-bg: var(--color-daring-bg);
   --surface-panel: var(--color-daring-panel);
-  --surface-text: var(--color-ink-900);
+  --surface-text: var(--color-parchment-50);
   --surface-primary: var(--color-daring-primary);
-  --surface-on-primary: var(--color-parchment-50);
+  --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-daring-accent);
   --surface-glow: var(--color-daring-primary);
-  --surface-parallax-tint: invert(85%);
-  --surface-parallax-opacity: 0.35;
-  --surface-parallax-ground: var(--color-daring-panel);
 }
 [data-theme="ambitious"] {
   /* dark mode — green + silver */
@@ -104,30 +109,24 @@
   --surface-glow: var(--color-ambitious-primary);
 }
 [data-theme="clever"] {
-  /* light mode — blue + bronze */
+  /* dark mode — blue + bronze */
   --surface-bg: var(--color-clever-bg);
   --surface-panel: var(--color-clever-panel);
-  --surface-text: var(--color-ink-900);
+  --surface-text: var(--color-parchment-50);
   --surface-primary: var(--color-clever-primary);
-  --surface-on-primary: var(--color-parchment-50);
+  --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-clever-accent);
   --surface-glow: var(--color-clever-primary);
-  --surface-parallax-tint: invert(85%);
-  --surface-parallax-opacity: 0.35;
-  --surface-parallax-ground: var(--color-clever-panel);
 }
 [data-theme="loyal"] {
-  /* light mode — yellow + near-black */
+  /* dark mode — yellow + near-black */
   --surface-bg: var(--color-loyal-bg);
   --surface-panel: var(--color-loyal-panel);
-  --surface-text: var(--color-ink-900);
+  --surface-text: var(--color-parchment-50);
   --surface-primary: var(--color-loyal-primary);
-  --surface-on-primary: var(--color-parchment-50);
+  --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-loyal-accent);
   --surface-glow: var(--color-loyal-primary);
-  --surface-parallax-tint: invert(85%);
-  --surface-parallax-opacity: 0.35;
-  --surface-parallax-ground: var(--color-loyal-panel);
 }
 
 @theme {
@@ -160,12 +159,29 @@
   /*
     Deliberately theme-invariant (unlike --surface-primary, which re-points per theme) — the
     hero eyebrow line is meant to read as gold on every theme, not each theme's own brand hue.
-    amber-400 (the Twilight accent) only clears ~1.6:1 against the light-mode themes' near-white
-    backgrounds; this shade is deepened until it clears 3:1 (large-text WCAG threshold) against
-    the darkest theme (twilight-950, 4.27:1) and the lightest (clever-bg, 3.72:1) alike — the
-    narrowest of the two constraints, not eyeballed.
+    Reuses the existing amber-300 step rather than inventing a new hex. Every theme is dark
+    mode, so contrast headroom is ample everywhere (11:1+ against every theme's `bg`) — no
+    need for a dimmer, contrast-constrained variant.
   */
-  --color-magic-gold: #987019;
+  --color-magic-gold-bright: var(--color-amber-300);
+  /*
+    Glow behind the magical eyebrow text (text-shadow + sparkle canvas). Theme-invariant like
+    the gold itself, and deliberately NOT --color-surface-glow — that token is each theme's own
+    saturated primary (tuned for focus-ring contrast), which reads as a busy/clashing halo
+    behind gold script text on some themes. amber-glow is a warm orange that glows
+    convincingly against every theme's dark ground instead.
+  */
+  --color-magic-glow: var(--color-amber-glow);
+
+  /*
+    Starfield (Starfield.tsx) palette — theme-invariant like the eyebrow gold above: real
+    starlight doesn't re-tint per house theme. Mostly cool white with a slight blue or warm
+    variance per star (real stars do vary by color temperature), not a single flat white —
+    that reads as more textured/realistic than a uniform dot grid.
+  */
+  --color-starlight-white: #f4f6ff;
+  --color-starlight-blue: #cddcff;
+  --color-starlight-warm: #fff1d6;
 
   /* light surface + text neutrals, shared across every theme */
   --color-parchment-50: #f8f1e4;
@@ -181,25 +197,25 @@
     saturated brand color, used for headings/links/icon tints and reused as the focus-ring
     color (verified 3:1+ against both bg and panel for every theme).
   */
-  --color-daring-bg: #faebec;
-  --color-daring-panel: #f0d8d9;
-  --color-daring-primary: #591317;
-  --color-daring-accent: #be8a38;
+  --color-daring-bg: #221111;
+  --color-daring-panel: #321a1b;
+  --color-daring-primary: #d65c66;
+  --color-daring-accent: #d0a04e;
 
   --color-ambitious-bg: #131c18;
   --color-ambitious-panel: #1d2923;
   --color-ambitious-primary: #519473;
   --color-ambitious-accent: #75786e;
 
-  --color-clever-bg: #ebeefa;
-  --color-clever-panel: #d8ddf0;
-  --color-clever-primary: #152552;
-  --color-clever-accent: #8f6a38;
+  --color-clever-bg: #111522;
+  --color-clever-panel: #1a2132;
+  --color-clever-primary: #6688d6;
+  --color-clever-accent: #bf8c4a;
 
-  --color-loyal-bg: #faf5eb;
-  --color-loyal-panel: #f0e9d8;
-  --color-loyal-primary: #7a5a0a;
-  --color-loyal-accent: #d6a23b;
+  --color-loyal-bg: #1e1a10;
+  --color-loyal-panel: #2e2819;
+  --color-loyal-primary: #e2bb50;
+  --color-loyal-accent: #d39a45;
 
   /* semantic aliases — components should reach for these, not the raw scale above */
   --color-surface-bg: var(--surface-bg);
@@ -211,4 +227,5 @@
   --color-surface-glow: var(--surface-glow);
   --color-surface-border: var(--surface-border);
   --color-surface-parallax-ground: var(--surface-parallax-ground);
+  --color-surface-eyebrow: var(--surface-eyebrow);
 }
