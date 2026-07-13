@@ -69,3 +69,43 @@ lighter and easier to gate behind reduced motion.
   background image) — no longer a shared Three.js/particle z-index *contract* since PRD 02's
   Three.js layer was scoped out during its implementation, just a normal "particles sit
   behind foreground content" stacking requirement.
+
+## Implementation notes
+
+**Built as `src/components/ParticleField.tsx`, a plain React island** (canvas sprite pool,
+`requestAnimationFrame` loop), currently mounted once in `Hero.astro` as `<ParticleField
+className="hero__particles" client:idle />`. Reusability for section dividers (PRD 12's shell)
+is real — the component takes no hero-specific props — but only proven at one call site so
+far since dividers don't exist yet.
+
+**`client:idle`, not `client:visible`.** The component intentionally SSRs to nothing (renders
+`null` until a post-hydration effect confirms `prefers-reduced-motion` client-side — needed to
+avoid a hydration mismatch between server, which can't read the media query, and client).
+Astro's `client:visible` directive sets up its lazy-hydration `IntersectionObserver` on the
+island's *rendered children* (`astro/dist/runtime/client/visible.js`) — with nothing rendered
+server-side, there's nothing for it to observe, so hydration silently never fires. `client:idle`
+hydrates the island root directly, sidestepping that dependency; the "only animate while
+on-screen" requirement is still met by the component's own internal `IntersectionObserver`,
+which starts/stops the rAF loop independent of the hydration timing directive.
+
+**Ember color: reused `--color-surface-glow` / `--color-surface-primary` / `--color-surface-
+accent`**, not a new dedicated token — same `getComputedStyle` + `MutationObserver`-on-
+`data-theme` pattern `FadeSwapText.astro`'s sparkle canvas already uses. Reads as amber embers
+on the dark Twilight/Ambitious themes and each light theme's own accent hue on the rest,
+rather than clashing amber-on-blue.
+
+**Stacking bug caught during verification, not code review alone.** The original `.hero__particles
+{ z-index: -1 }` silently did nothing — `.hero` had `position: relative` but no property that
+establishes a CSS stacking context, so the negative-z-index canvas escaped to the *document
+root* stacking context and painted behind the hero's own gradient background, fully invisible.
+Fixed by adding `isolation: isolate` to `.hero`. Caught by an actual dev-server + Playwright
+screenshot check (a checksum-based "does the canvas content ever change" assertion doesn't
+catch "renders correctly but is invisible"); a second, independent bug from `class` vs
+`className` (Astro's compiler drops a literal `class="…"` attribute passed to a client-hydrated
+framework island — it's intercepted for scoped-style forwarding and never reaches the component
+as a prop) was caught the same way. Both are documented inline in `ParticleField.tsx` /
+`Hero.astro` for the next component that wires a React island into a scoped-style parent.
+
+**Single motif (amber embers), single global mount point for now** — the two "open questions"
+above weren't revisited; both remain fair follow-ups once a second call site (a divider) exists
+to design against.
