@@ -1,0 +1,55 @@
+---
+/**
+ * Shared section-shell wrapper (PRD 11's convention): consistent horizontal padding/max-width.
+ * Deliberately has no background of its own — stays transparent so the fixed page-level
+ * Starfield shows through; content sits on top in its own panel (see Card.astro), not a
+ * full-bleed section color.
+ */
+interface Props {
+  width?: "prose" | "wide";
+  class?: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { width = "prose", class: className } = Astro.props;
+---
+
+<section class:list={["section", className]} data-width={width}>
+  <div class="section__inner">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+    color: var(--color-surface-text);
+  }
+
+  .section__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+
+  .section[data-width="wide"] .section__inner {
+    max-width: 60rem;
+  }
+
+  /*
+    Body-copy links inside any section: underlined (not color-only) per WCAG 2.2 non-color
+    link identification, and reusing .focus-glow's ring — callers add the class to each <a>.
+    Excludes .button (Button.astro) — those read as buttons, not inline text links.
+  */
+  .section__inner :global(a:not(.button)) {
+    color: inherit;
+    text-decoration: underline;
+    border-radius: var(--radius-control);
+  }
+
+  .section__inner :global(a:not(.button):hover) {
+    color: var(--color-surface-primary);
+  }
+</style>

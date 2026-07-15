@@ -1,10 +1,155 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { BookOpen, CalendarHeart, Heart, ListChecks } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Button from "@/components/Button.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Divider from "@/components/Divider.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Hero from "@/components/Hero.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Queen City Magic" transparentNav>
+<BaseLayout title="Queen City Magic">
   <Hero />
+
+  <Section width="wide">
+    <div class="intro">
+      <div class="intro__icon" aria-hidden="true">
+        <BookOpen size={26} />
+      </div>
+      <h2 class="intro__heading">The magic explained&hellip;</h2>
+      <p class="intro__aside">
+        (to the best of our abilities&ndash;we are pleasantly surprised yearly ourselves)
+      </p>
+      <p class="intro__body">
+        QCMM is a homegrown festival celebrating magic in all forms and from all fandoms. We
+        love, accept and welcome kind humans from everywhere and every persuasion who come
+        for fun, friends, a little mischief and a want to believe in the extra special parts
+        of this existence — from great books to things you have to squint your eyes and
+        concentrate to believe in. We are not affiliated with Warner Brothers or any other
+        corporate entity. We are an army of volunteers who work year around to make sure that
+        thousands of visitors to our town have the best hour or long weekend possible in our
+        delightful, charming and downright magical historic downtown.
+      </p>
+    </div>
+
+    <Divider />
+
+    <Card>
+      <CalendarHeart slot="icon" size={22} aria-hidden="true" />
+      <h2 slot="title">Save the Date</h2>
+      <p>
+        Last year's crowd braved the wetness and turned it into one of our best festivals yet
+        — thank you to every witch, wizard, and muggle who showed up and made the magic
+        happen.
+      </p>
+      <p>
+        Mark your calendars: Queen City Mischief &amp; Magic returns <strong
+          >September 26&ndash;27, 2026</strong
+        >, with more mischief, magic, mystery and mayhem than ever. We can't wait to see you
+        there.
+      </p>
+      <Button slot="cta" href="/events">Plan Your Visit</Button>
+    </Card>
+
+    <Card>
+      <Heart slot="icon" size={22} aria-hidden="true" />
+      <h2 slot="title">YOU (probably) BELONG HERE</h2>
+      <p>
+        The people who work tirelessly on this festival for months do this as a hobby and
+        labor of love. We update as we can and try to keep you as informed as possible but
+        due to the nature of a FREE festival with a MILLION moving parts and things to do, it
+        is hard to keep everyone abreast of everything. Just stay tuned, trust that when you
+        arrive there will be way more things to do than you have time to do it and try to
+        relax and ENJOY your time here&ndash;whether you do and see everything or do and see
+        one thing. All you have to do is arrive and be wow-ed by a place and event that even
+        those of us who live here and work on it can hardly believe exists. Staunton is
+        magic! You will only be sorry if you miss it.
+      </p>
+      <Button slot="cta" href="/donate">Help Us Make the Magic</Button>
+    </Card>
+
+    <Card>
+      <ListChecks slot="icon" size={22} aria-hidden="true" />
+      <h2 slot="title">What to Expect&hellip;and when(ish)</h2>
+      <p>
+        The easiest way for us to update things is our <a
+          href="https://www.facebook.com/queencitymagic"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="focus-glow">FB page</a
+        >. Again, there are 100&ndash;200 people &amp; organizations involved. QCMM acts as
+        the connector, cat-wranglers and communicator for all of this. There will be an FAQ,
+        multiple maps and <a
+          href="https://qcmm25.sched.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="focus-glow">a scheduling app</a
+        > FULL OF FUN released within a month of our start&ndash;and it will likely show up on
+        FB first. We are set in a historic downtown so there is a roster of amazing small
+        businesses who provide facilities, food and fun as well as a large group of local
+        non-profits to paint faces, help with crafts and add to the event. We don't and can't
+        allow vendors. We are grateful to our state tourism corporation for helping us with
+        the task of welcoming 20,000+ visitors for QCMM.
+      </p>
+      <Button slot="cta" href="/faq">Read the FAQ</Button>
+    </Card>
+  </Section>
 </BaseLayout>
+
+<style>
+  h2 {
+    font-size: clamp(1.35rem, 3vw, 1.65rem);
+    font-weight: 400;
+    color: var(--color-surface-primary);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: 38rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .intro__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--color-surface-primary) 18%, transparent);
+    color: var(--color-surface-primary);
+  }
+
+  .intro__heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    margin: 0;
+    color: var(--color-surface-primary);
+  }
+
+  .intro__aside {
+    font-style: italic;
+    opacity: 0.8;
+  }
+
+  .intro__body {
+    font-size: 1.2rem;
+  }
+</style>

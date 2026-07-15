@@ -1,0 +1,46 @@
+---
+/**
+ * Reusable theme-aligned CTA link — the button style cards use to point at other pages.
+ * Mirrors Footer's existing donate CTA visual language so the site has one button look, not
+ * a parallel one-off per component.
+ */
+interface Props {
+  href: string;
+  external?: boolean;
+  class?: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { href, external = false, class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={["button", "focus-glow", className]}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+>
+  <slot />
+</a>
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    color: var(--color-surface-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .button:hover {
+    border-color: var(--color-surface-primary);
+    color: var(--color-surface-primary);
+  }
+</style>

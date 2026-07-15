@@ -5,22 +5,9 @@ import { Menu } from "@lucide/astro";
 import ThemeSelect from "@/components/ThemeSelect.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { navLinks } from "@/lib/navLinks";
-
-interface Props {
-  /** Home page only: start transparent over the hero, solidify once scrolled past it. */
-  transparentOverHero?: boolean;
-}
-
-// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const { transparentOverHero = false } = Astro.props;
 ---
 
-<nav
-  class="navbar"
-  aria-label="Primary"
-  data-navbar
-  data-transparent-hero={transparentOverHero ? "" : undefined}
->
+<nav class="navbar" aria-label="Primary" data-navbar>
   <div class="navbar__bg" aria-hidden="true"></div>
   <div class="navbar__inner">
     <a href="/" class="navbar__wordmark focus-glow">Queen City Magic</a>
@@ -79,15 +66,13 @@ const { transparentOverHero = false } = Astro.props;
     position: absolute;
     inset: 0;
     z-index: 0;
-    background-color: var(--color-surface-panel);
-    opacity: 1;
-  }
-
-  .navbar[data-transparent-hero] .navbar__bg {
+    background-color: var(--color-surface-nav-scrim);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     opacity: 0;
   }
 
-  .navbar[data-transparent-hero].navbar--solid .navbar__bg {
+  .navbar--solid .navbar__bg {
     opacity: 1;
   }
 
@@ -212,8 +197,6 @@ const { transparentOverHero = false } = Astro.props;
   const SCROLL_THRESHOLD = 48;
 
   document.querySelectorAll<HTMLElement>("[data-navbar]").forEach((nav) => {
-    if (nav.dataset.transparentHero === undefined) return;
-
     let ticking = false;
     const update = () => {
       nav.classList.toggle("navbar--solid", window.scrollY > SCROLL_THRESHOLD);

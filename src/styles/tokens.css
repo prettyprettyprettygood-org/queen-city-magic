@@ -69,14 +69,23 @@
   */
   --surface-border: color-mix(in srgb, var(--surface-text) 22%, transparent);
   /*
+    Sticky navbar's scroll-triggered backdrop — a translucent mix of this theme's own bg (not
+    panel, so it reads as "the page background, slightly deepened" rather than a distinct
+    surface), paired with a blur in Navbar.astro. One color-mix formula covers every theme
+    since it derives from --surface-bg, which is already themed.
+  */
+  --surface-nav-scrim: color-mix(in srgb, var(--surface-bg) 78%, transparent);
+  /*
     Hero castle silhouette (source PNG is solid black on transparent). Every theme is dark
     mode, so it keeps its true-black fill everywhere — no theme needs to invert it to a
     lighter tint. `-ground` is the hero background gradient's bottom stop the silhouette
-    fades into.
+    fades into — aliased to this same theme's own --surface-bg (not a fixed near-black) so it
+    matches exactly what the fixed page-level Starfield paints just past the hero's bottom
+    edge; a mismatched hue there is what read as a hard seam/line before.
   */
   --surface-parallax-tint: none;
   --surface-parallax-opacity: 0.85;
-  --surface-parallax-ground: var(--color-ink-900);
+  --surface-parallax-ground: var(--surface-bg);
   /* Hero eyebrow gold — bright dark-mode value; every theme is dark mode, so it applies everywhere. */
   --surface-eyebrow: var(--color-magic-gold-bright);
   /*
@@ -161,17 +170,18 @@
   /*
     Deliberately theme-invariant (unlike --surface-primary, which re-points per theme) — the
     hero eyebrow line is meant to read as gold on every theme, not each theme's own brand hue.
-    Reuses the existing amber-300 step rather than inventing a new hex. Every theme is dark
-    mode, so contrast headroom is ample everywhere (11:1+ against every theme's `bg`) — no
-    need for a dimmer, contrast-constrained variant.
+    Reuses the existing amber-400 step (richer/more saturated than amber-300, which read as too
+    pale/champagne) rather than inventing a new hex. Every theme is dark mode, so contrast
+    headroom is ample everywhere (11:1+ against every theme's `bg`) — no need for a dimmer,
+    contrast-constrained variant.
   */
-  --color-magic-gold-bright: var(--color-amber-300);
+  --color-magic-gold-bright: var(--color-amber-400);
   /*
-    Glow behind the magical eyebrow text (text-shadow + sparkle canvas). Theme-invariant like
-    the gold itself, and deliberately NOT --color-surface-glow — that token is each theme's own
-    saturated primary (tuned for focus-ring contrast), which reads as a busy/clashing halo
-    behind gold script text on some themes. amber-glow is a warm orange that glows
-    convincingly against every theme's dark ground instead.
+    Sparkle-canvas particle color behind the magical eyebrow text. Theme-invariant like the
+    gold itself, and deliberately NOT --color-surface-glow — that token is each theme's own
+    saturated primary (tuned for focus-ring contrast), which reads as a busy/clashing color
+    behind gold script text on some themes. amber-glow reads as warm orange against every
+    theme's dark ground instead.
   */
   --color-magic-glow: var(--color-amber-glow);
 
@@ -191,6 +201,13 @@
   --color-parchment-200: #e4d5b8;
   --color-ink-900: #1c1712;
   --color-ink-800: #2a231b;
+  /*
+    Near-black with a faint cool-violet undertone — deliberately distinct from --color-ink-900
+    (a warm brown-black, which read as a muddy "plum" once alpha-blended with this site's cool
+    violet/indigo backdrops) and from --color-plum-900/950 (an actual warm plum hue). Used for
+    panel surfaces that need to read as neutral near-black regardless of the active house theme.
+  */
+  --color-obsidian-950: #120c1f;
 
   /*
     House-inspired switchable themes — de-canoned, original names, own contrast pass.
@@ -228,6 +245,7 @@
   --color-surface-accent: var(--surface-accent);
   --color-surface-glow: var(--surface-glow);
   --color-surface-border: var(--surface-border);
+  --color-surface-nav-scrim: var(--surface-nav-scrim);
   --color-surface-parallax-ground: var(--surface-parallax-ground);
   --color-surface-eyebrow: var(--surface-eyebrow);
 }

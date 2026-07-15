@@ -37,6 +37,13 @@ builds.
 Per PRD 11's section-shell convention (alternating twilight/plum/forest backgrounds,
 consistent padding/max-width), add these sections in order after the Hero:
 
+0. **Overview / festival hours — verbatim, added 2026-07-15.** A block of general-audience
+   copy ("Staunton is magic! But especially during QCMM...") plus festival hours (Saturday
+   9–9, Sunday 9–5) landed in `docs/content.md` after this PRD was first drafted, appended
+   without a page header. Confirmed with the user 2026-07-15: this is a fifth Home section,
+   placed first (right below the Hero, before the recap). Verbatim port like the rest of this
+   list (not a rewrite) — only typographic cleanup (`--` → em dash, `....` → ellipsis) applied,
+   same standard as the ligature-artifact cleanup elsewhere in this PRD.
 1. **Event recap / save-the-date — rewrite, confirmed 2026-07-14, not a verbatim port.**
    Unlike the rest of this PRD's content (ported as-is per the start-work prompt), this one
    section gets rewritten rather than copied: a thank-you for the fun of last year's event,

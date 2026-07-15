@@ -1,6 +1,6 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import FadeSwapText from "@/components/FadeSwapText.astro";
+import HandwritingReveal from "@/components/HandwritingReveal.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
 ---
@@ -10,7 +10,8 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
 
   <div class="hero__content">
     <h1 class="hero__heading">Queen City Mischief &amp; Magic</h1>
-    <FadeSwapText lines={["you belong here"]} class="hero__eyebrow" magical />
+    <p class="hero__dates">September 26&ndash;27, 2026 &middot; Staunton, VA</p>
+    <HandwritingReveal class="hero__eyebrow" startDelayMs={1300} />
   </div>
 </section>
 
@@ -23,7 +24,7 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
       Starfield behind everything, at z-index -1) as more sections land on the page.
     */
     isolation: isolate;
-    min-height: 80vh;
+    min-height: 62vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,17 +36,21 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
       (Starfield.tsx, mounted in index.astro, painted behind everything) shows through —
       Starfield fills that same area with a plain --color-surface-bg solid, so the transition
       is seamless whether or not it's actually drawing stars (reduced motion still gets the
-      right flat color, just no twinkle). Fades to the opaque --color-surface-parallax-ground
-      at the bottom, where the castle silhouette's rock base sits, so the "ground" blends into
-      a solid backdrop instead of also revealing the starfield through it — stars read as sky,
-      not as showing through solid ground. That ground token is near-black, matching the
-      silhouette's true-black fill (every theme is dark mode) — see HeroParallaxImage.astro.
+      right flat color, just no twinkle). Rises to the opaque --color-surface-parallax-ground
+      (now aliased to that same --color-surface-bg — see tokens.css) around the castle's rock
+      base, then eases back toward transparent over the last stretch before the section's own
+      edge. Without that final ease-out, the section boundary itself became a visible seam: a
+      flat-opaque hero bottom butting straight up against the next section (transparent,
+      revealing the same fixed Starfield) reads as a hard line even when the two colors match,
+      because a solid-to-solid cut is still a cut. Fading out lets the Starfield show through
+      gradually instead, so the hero "bleeds" into the page rather than ending at a ruler edge.
     */
     background: linear-gradient(
       to bottom,
       transparent 0%,
-      transparent 60%,
-      var(--color-surface-parallax-ground) 100%
+      transparent 55%,
+      var(--color-surface-parallax-ground) 78%,
+      transparent 100%
     );
     color: var(--color-surface-text);
   }
@@ -64,17 +69,14 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
   }
 
   /*
-    :global — this class is rendered by FadeSwapText.astro's own template, so it only carries
-    that component's Astro scope attribute, not this component's. A scoped selector here would
-    compile to `.hero__eyebrow[data-astro-cid-<this-component>]` and never match.
+    :global — this class is rendered by HandwritingReveal.astro's own template, so it only
+    carries that component's Astro scope attribute, not this component's. A scoped selector
+    here would compile to `.hero__eyebrow[data-astro-cid-<this-component>]` and never match.
+    Sizing/color are that component's own concern (it renders an SVG, not text) — this rule is
+    just the layout gap under the dates line above it.
   */
   :global(.hero__eyebrow) {
-    display: block;
-    font-family: var(--font-script);
-    /* Theme-aware gold, not --color-surface-primary — see --surface-eyebrow in tokens.css. */
-    color: var(--color-surface-eyebrow);
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    margin-top: 0.75rem;
+    margin-top: 3rem;
   }
 
   .hero__heading {
@@ -82,5 +84,39 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     font-size: clamp(2.5rem, 6.5vw, 4rem);
     font-weight: 400;
     margin: 0;
+  }
+
+  .hero__dates {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3.5vw, 2rem);
+    letter-spacing: 0.02em;
+    margin: 0.6rem 0 0;
+  }
+
+  /*
+    Stagger: title, then dates, then "You belong here" (HandwritingReveal's own pen-draw,
+    started late via its `startDelayMs` prop below) — each runs once on load, no repeat (plain
+    CSS animations aren't `infinite`, so they hold their `forwards` end state). Scoped to
+    motion-safe only, so a reduced-motion visitor sees title and dates plainly visible from
+    first paint instead of animated in.
+  */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__heading,
+    .hero__dates {
+      opacity: 0;
+      transform: translateY(0.75rem);
+      animation: hero-stagger-in 650ms ease forwards;
+    }
+
+    .hero__dates {
+      animation-delay: 550ms;
+    }
+  }
+
+  @keyframes hero-stagger-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

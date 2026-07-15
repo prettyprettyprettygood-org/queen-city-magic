@@ -106,7 +106,15 @@ export default function Starfield({ baseStarCount = 220 }: Props) {
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      stars = Array.from({ length: starCount() }, makeStar);
+      // Only regenerate if the target count actually changed (e.g. a big viewport-area jump
+      // crossing one of starCount()'s clamped bounds) — not on every resize callback, which
+      // fires many times a second while a window is actively being dragged. Existing stars
+      // don't need to be reshuffled just because the canvas resized: their position is already
+      // stored as a fraction (fx/fy) of width/height, so they reflow to the new size for free.
+      const targetCount = starCount();
+      if (stars.length !== targetCount) {
+        stars = Array.from({ length: targetCount }, makeStar);
+      }
     };
 
     const drawFrame = (time: number, animate: boolean) => {

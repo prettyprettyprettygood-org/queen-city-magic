@@ -16,9 +16,18 @@ Project conventions for working in this repo. Read this before starting work on 
 
 - Do not run Playwright/e2e tests proactively. Only run them when explicitly asked, or when
   a change is high-risk enough that skipping verification would be irresponsible (core
-  interaction logic, the donation flow, an accessibility-critical path). Small design/style
-  tweaks don't need a Playwright run — a dev-server visual check is enough.
-- Run typecheck/lint before considering a PRD done.
+  interaction logic, the donation flow, an accessibility-critical path).
+- Do not start the dev server or drive a headless browser (Playwright, chromium-cli, etc.)
+  yourself just to look at a UI/design change. That round-trips rendered screenshots through
+  the model and costs far more in tokens than it's worth — the user can capture a screenshot
+  for a fraction of the cost. This supersedes any general guidance elsewhere (including a
+  skill's default behavior, e.g. `/verify` or a `run` skill) to launch-and-screenshot before
+  reporting a UI change done.
+- Instead: describe what changed and, if visual confirmation matters, explicitly ask the user
+  for a screenshot rather than assuming — don't silently skip verification either. Applies to
+  small tweaks and larger redesigns alike.
+- Typecheck/lint (`astro check`, `biome check`) are still expected before considering a PRD
+  done — those are cheap and stay proactive; they're not what this rule is about.
 
 ## Code structure
 

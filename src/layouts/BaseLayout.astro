@@ -10,8 +10,6 @@ import "@/styles/global.css";
 interface Props {
   title: string;
   description?: string;
-  /** True only for the Home page, where the navbar starts transparent over the hero. */
-  transparentNav?: boolean;
 }
 
 const {
@@ -19,8 +17,6 @@ const {
   title,
   // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
   description = "Queen City Mischief & Magic — a free, volunteer-run magic festival in downtown Staunton, VA.",
-  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-  transparentNav = false,
 } = Astro.props;
 ---
 
@@ -57,7 +53,7 @@ const {
   <body id="top">
     <a href="#main-content" class="skip-link focus-glow">Skip to content</a>
     <Starfield client:idle />
-    <Navbar transparentOverHero={transparentNav} />
+    <Navbar />
     <main id="main-content">
       <slot />
     </main>

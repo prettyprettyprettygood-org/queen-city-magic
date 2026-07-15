@@ -44,6 +44,14 @@ const { class: className } = Astro.props;
     left: 0;
     overflow: hidden;
     pointer-events: none;
+    /*
+      Fades the silhouette's own opaque rock base out near the container's bottom edge instead
+      of letting it end in a hard-edged cutoff right at the hero section's boundary — pairs
+      with Hero.astro's background gradient, which eases back toward transparent over the same
+      stretch so the two layers dissolve together rather than one masking the other's edge.
+    */
+    mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 96%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 96%);
   }
 
   /*

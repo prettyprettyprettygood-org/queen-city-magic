@@ -1,0 +1,45 @@
+---
+/**
+ * Ornamental section divider — a themed line/glyph/line rule for breaking up open-prose
+ * content outside of Card. Purely decorative (role="presentation"); the glyph and lines key
+ * off --color-surface-primary/--color-surface-border, so it reskins automatically with the
+ * house-theme switcher.
+ */
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Sparkle } from "@lucide/astro";
+
+interface Props {
+  class?: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { class: className } = Astro.props;
+---
+
+<div class:list={["divider", className]} role="presentation">
+  <span class="divider__line" aria-hidden="true"></span>
+  <Sparkle class="divider__glyph" size={18} aria-hidden="true" />
+  <span class="divider__line" aria-hidden="true"></span>
+</div>
+
+<style>
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* Extra breathing room beyond Section's own inter-child gap — a divider should read as a
+       real break between sections, not just another item in the stack. */
+    margin-block: clamp(1rem, 3vw, 1.75rem);
+  }
+
+  .divider__line {
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-surface-border);
+  }
+
+  .divider__glyph {
+    flex-shrink: 0;
+    color: var(--color-surface-primary);
+  }
+</style>

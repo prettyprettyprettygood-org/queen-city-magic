@@ -1,17 +1,85 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Image } from "astro:assets";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { HeartHandshake } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import qrCode from "@/assets/images/qr-code.png";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="Donate — Queen City Magic">
-  <section class="stub">
-    <h1>Donate</h1>
-  </section>
+  <Section>
+    <Card>
+      <HeartHandshake slot="icon" size={22} aria-hidden="true" />
+      <h1 slot="title">Help us make the magic!</h1>
+      <p>We need your help to continue making the magic, year after year!</p>
+      <p>
+        Please donate today to keep us going, we depend on our volunteers and generous donors,
+        thank you!
+      </p>
+
+      <div class="venmo">
+        <Image
+          src={qrCode}
+          alt="QR code linking to the QCMM Venmo account, @qcmmsva"
+          width={220}
+          height={220}
+          class="venmo__qr"
+        />
+        <p class="venmo__fallback">
+          Scan this code, or visit{" "}
+          <a
+            href="https://venmo.com/qcmmsva"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="focus-glow">@qcmmsva</a
+          > on Venmo.
+        </p>
+      </div>
+    </Card>
+  </Section>
 </BaseLayout>
 
 <style>
-  .stub {
-    padding: 4rem clamp(1.5rem, 5vw, 4rem);
+  h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 400;
+    margin: 0;
+    color: var(--color-surface-primary);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .venmo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    background-color: color-mix(in srgb, var(--color-surface-bg) 45%, transparent);
     text-align: center;
+  }
+
+  .venmo__qr {
+    width: 220px;
+    height: 220px;
+    border-radius: calc(var(--radius-control) - 0.15rem);
+  }
+
+  .venmo__fallback {
+    font-size: 1.05rem;
+    margin: 0;
   }
 </style>

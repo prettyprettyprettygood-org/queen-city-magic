@@ -1,0 +1,78 @@
+---
+interface Props {
+  class?: string;
+  particleCount?: number;
+  /**
+   * Name of a custom event to wait for (dispatched on this canvas's parent element) before
+   * starting the animation — e.g. so sparkles wait for a reveal animation to finish instead of
+   * appearing immediately. Ignored under `prefers-reduced-motion` (starts immediately there,
+   * since a caller skipping its own reveal animation for reduced motion won't fire the event).
+   */
+  waitForEvent?: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { class: className, particleCount = 40, waitForEvent } = Astro.props;
+---
+
+<canvas
+  class:list={["particle-field", className]}
+  data-particle-field
+  data-particle-count={particleCount}
+  data-wait-for-event={waitForEvent}
+  aria-hidden="true"
+></canvas>
+
+<style>
+  .particle-field {
+    /*
+      Sized to its positioned parent (padded out a touch past the text bounds), not the
+      viewport — so it scrolls with the page as ordinary in-flow content would, with no JS
+      position-tracking needed. A viewport-fixed canvas was tried first but couldn't track the
+      parent's position through scroll without re-measuring every frame.
+    */
+    position: absolute;
+    /*
+      Only top/left plus explicit width/height (via calc()) — not the full `inset` shorthand.
+      All four inset sides *and* an explicit width/height over-constrains the box (5 constraints
+      for 2 degrees of freedom); browsers resolve that by dropping the negative top/left offsets,
+      which silently re-shrunk this canvas back down to its parent's exact size. Also can't rely
+      on plain `inset` + width/height:auto to stretch it instead — `<canvas>` is a replaced
+      element, so auto width/height falls back to its intrinsic 300x150 default rather than
+      filling the containing block (see Starfield.tsx for the same fix on that canvas).
+    */
+    top: -2em;
+    left: -3.5em;
+    width: calc(100% + 7em);
+    height: calc(100% + 4em);
+    /*
+      Sits within whichever ancestor stacking context it's mounted in (e.g. Hero's
+      `.hero__content`, itself z-index: 1 inside `.hero`'s isolated context) — negative here
+      only needs to resolve against that local context's own z-index: auto children (heading,
+      dates, eyebrow text), not the page-level Starfield (z-index: -1 in the root context).
+    */
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import { ParticleField } from "@/scripts/particleField";
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll<HTMLCanvasElement>("[data-particle-field]").forEach((canvas) => {
+      const particleCount = Number(canvas.dataset.particleCount) || 40;
+      const field = new ParticleField(canvas, particleCount);
+
+      const waitForEvent = canvas.dataset.waitForEvent;
+      const parent = canvas.parentElement;
+      if (!reducedMotion && waitForEvent && parent) {
+        parent.addEventListener(waitForEvent, () => field.start(), { once: true });
+      } else {
+        field.start();
+      }
+    });
+  });
+</script>

@@ -1,17 +1,90 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Clock, WandSparkles } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Button from "@/components/Button.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
+<!--
+  Placeholder content moved down from Home while the real Events build (date-bucketed
+  schedule, timezone-aware midnight cutover — see docs/prds/10-events-page.md) is pending.
+  Replace this single card with the real page.
+-->
 <BaseLayout title="Events — Queen City Magic">
-  <section class="stub">
-    <h1>Events</h1>
-  </section>
+  <Section width="wide">
+    <Card>
+      <WandSparkles slot="icon" size={22} aria-hidden="true" />
+      <h1 slot="title">Staunton is magic!</h1>
+      <p>
+        But especially during QCMM&hellip; wizards and muggles from near and far descend upon
+        Staunton, Virginia for our annual Queen City Mischief &amp; Magic festival every
+        September. With a touch of wizardry, the historic downtown is transformed into a scene
+        from your favorite storybooks — themed events and hands-on activities for kids of all
+        ages surrounded by unique shopping, dining and Staunton's stunning Victorian
+        architecture backdrop that makes you feel even more in a land faraway.
+      </p>
+      <p>
+        Experiment with potions. Enjoy delicious treats and libations. Try your hand at wild
+        beast taming or wand dueling. Take a train excursion to a nearby tunnel and second
+        historic train station.
+      </p>
+      <p>
+        Unlock the secrets of Staunton's bewitching history and charm. Meet some of our 100
+        characters! Don't miss the chilling arrival of baddies on our Saturday night train,
+        find a tiny hidden dragon to take home, catch a glowing star, win the rubber duck race
+        and pose till your heart's content at our selfie spots and photogenic everything. Each
+        year we make this festival bigger and better — adding elements to make those who
+        travel from all over the country happy that they made the trek again.
+      </p>
+      <p>
+        Staunton is always magical but this fall weekend is the one you must see to believe!
+        Ask Family Circle magazine! They voted us THE Virginia Family Friendly Festival Not to
+        Miss in Virginia! Also voted Best in Virginia by Virginia Living every year. Come see
+        for yourself what all of the buzz is about!
+      </p>
+      <div class="hours" role="list" aria-label="Festival hours">
+        <span class="chip" role="listitem"><Clock size={14} aria-hidden="true" /> Saturday 9&ndash;9</span>
+        <span class="chip" role="listitem"><Clock size={14} aria-hidden="true" /> Sunday 9&ndash;5</span>
+      </div>
+      <Button slot="cta" href="/gallery">See the Gallery</Button>
+    </Card>
+  </Section>
 </BaseLayout>
 
 <style>
-  .stub {
-    padding: 4rem clamp(1.5rem, 5vw, 4rem);
-    text-align: center;
+  h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 400;
+    color: var(--color-surface-primary);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .hours {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--color-surface-primary) 16%, transparent);
+    color: var(--color-surface-primary);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    white-space: nowrap;
   }
 </style>

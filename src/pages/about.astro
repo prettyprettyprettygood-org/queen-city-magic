@@ -1,0 +1,234 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { ExternalLink, Landmark } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+interface PressLink {
+  publication: string;
+  title: string;
+  url: string;
+}
+
+// History facts sourced from the press coverage below (DCist 2019, WHSV 2023/2025, Arlington
+// Magazine) — not from content.md, since no About copy exists in the client's source content.
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const pressLinks: PressLink[] = [
+  {
+    publication: "Arlington Magazine",
+    title: "Have Yourself a Wizarding Weekend",
+    url: "https://www.arlingtonmagazine.com/mischief-magic-festival-harry-potter-staunton-virginia/",
+  },
+  {
+    publication: "DCist",
+    title:
+      "This Virginia Town Turns Into a 'Harry Potter'-Themed World for One Weekend",
+    url: "https://dcist.com/story/19/09/26/this-virginia-town-turns-into-a-harry-potter-themed-world-for-one-weekend/",
+  },
+  {
+    publication: "WHSV",
+    title:
+      "The 10th Annual Queen City Mischief & Magic Festival Returns to Staunton",
+    url: "https://www.whsv.com/2025/09/28/10th-annual-queen-city-mischief-magic-returns-staunton/",
+  },
+  {
+    publication: "WHSV",
+    title: "Queen City Mischief and Magic Returns to Staunton",
+    url: "https://www.whsv.com/2023/09/20/queen-city-mischief-magic-returns-staunton/",
+  },
+  {
+    publication: "Visit Staunton",
+    title:
+      "Staunton's Queen City Mischief & Magic Festival Welcomes Magic and Fantasy Lovers",
+    url: "https://visitstaunton.com/stauntons-queen-city-mischief-magic-festival-qcmm-welcomes-magic-and-fantasy-lovers/",
+  },
+  {
+    publication: "Visit Staunton",
+    title: "Staunton Is Made of Magic",
+    url: "https://visitstaunton.com/staunton-is-made-of-magic/",
+  },
+  {
+    publication: "Visit Staunton",
+    title: "Queen City Mischief and Magic — Event Guide",
+    url: "https://visitstaunton.com/event/queen-city-mischief-and-magic/",
+  },
+  {
+    publication: "Visit Shenandoah Valley",
+    title: "Queen City Mischief & Magic Festival",
+    url: "https://visitshenandoah.org/epic-100/queen-city-mischief-magic-festival/",
+  },
+  {
+    publication: "Virginia Tourism Corporation",
+    title: "Queen City Mischief & Magic — Event Listing",
+    url: "https://www.virginia.org/event/queen-city-mischief-%26-magic/20515/",
+  },
+];
+---
+
+<BaseLayout title="About — Queen City Magic">
+  <Section>
+    <Card>
+      <Landmark slot="icon" size={22} aria-hidden="true" />
+      <h1 slot="title">How it all started</h1>
+      <p>
+        Queen City Mischief & Magic started small in 2016, when Staunton local Sarah Lynch —
+        owner of Baja Bean — realized her own historic downtown looked a lot like Hogsmeade.
+        She teamed up with Pufferbellies Toys & Books to throw a midnight release party for{" "}
+        <em>Harry Potter and the Cursed Child</em>, and asked nearby shops to dress up for the
+        occasion. Word moved fast: a single Facebook post two weeks out picked up 25,000
+        shares, and the city closed streets downtown to make room for what was coming.
+      </p>
+      <p>
+        What began with around 30 participating businesses has grown into a two-day,
+        block-by-block transformation of downtown Staunton — each street sorted into its own
+        Hogwarts house — with well over a hundred organizations involved and more than 20,000
+        visitors making the trip most years. It's still free to attend, still run almost
+        entirely by volunteers, and still one of the biggest fundraising weekends of the year
+        for Staunton's small nonprofits.
+      </p>
+      <p>
+        QCMM isn't affiliated with Warner Bros. or J.K. Rowling — it's a homegrown fan
+        celebration, built by this town, for anyone who wants to spend a weekend somewhere a
+        little more magical. 2025 marked its tenth year; here's what people have been saying
+        about it along the way.
+      </p>
+    </Card>
+  </Section>
+
+  <Section width="wide">
+    <Card>
+      <h2 slot="title">In the press</h2>
+      <ul class="press-list">
+        {
+          /* `button` class carries no Button.astro styling here (that's scoped to its own
+             component) — it only opts this row-style link out of Section's global inline-link
+             underline via its documented `a:not(.button)` exclusion. */
+        }
+        {
+          pressLinks.map((link) => (
+            <li>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="press-link button focus-glow"
+              >
+                <span class="press-link__text">
+                  <span class="press-link__publication">{link.publication}</span>
+                  <span class="press-link__title">{link.title}</span>
+                </span>
+                <ExternalLink
+                  class="press-link__icon"
+                  aria-hidden="true"
+                  focusable="false"
+                  size={18}
+                />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Card>
+  </Section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 400;
+    margin: 0;
+    color: var(--color-surface-primary);
+  }
+
+  h2 {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-weight: 400;
+    margin: 0;
+    color: var(--color-surface-primary);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .press-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .press-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    color: var(--color-surface-text);
+    text-decoration: none;
+  }
+
+  .press-link:hover,
+  .press-link:focus-visible {
+    border-color: var(--color-surface-primary);
+  }
+
+  .press-link:hover .press-link__title,
+  .press-link:focus-visible .press-link__title {
+    color: var(--color-surface-primary);
+  }
+
+  .press-link__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .press-link__publication {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+  }
+
+  .press-link__title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+
+  .press-link__icon {
+    flex-shrink: 0;
+    opacity: 0;
+    color: var(--color-surface-primary);
+  }
+
+  .press-link:hover .press-link__icon,
+  .press-link:focus-visible .press-link__icon {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .press-link__icon {
+      transform: translate(-4px, 4px);
+      transition:
+        opacity 0.15s ease-out,
+        transform 0.15s ease-out;
+    }
+
+    .press-link:hover .press-link__icon,
+    .press-link:focus-visible .press-link__icon {
+      transform: translate(0, 0);
+    }
+  }
+</style>
