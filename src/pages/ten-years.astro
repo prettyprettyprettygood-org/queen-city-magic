@@ -1,0 +1,17 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="10 Years of Pictures — Queen City Magic">
+  <section class="stub">
+    <h1>10 Years of Pictures</h1>
+  </section>
+</BaseLayout>
+
+<style>
+  .stub {
+    padding: 4rem clamp(1.5rem, 5vw, 4rem);
+    text-align: center;
+  }
+</style>

@@ -4,14 +4,14 @@
 
 > Implement docs/prds/07-sound-toggle.md. Read CLAUDE.md first. Depends only on PRD 01
 > (tokens, `useReducedMotion` for icon animation) — safe to build any time relative to
-> hero/particles, but build it *before or alongside* Gallery (PRD 05) if possible, since
-> Gallery's flip SFX reads this PRD's shared mute state/context. Use
-> `assets/audio/geoffharvey-let-the-mystery-unfold-122118.mp3` as the ambient loop — this is
-> a provisional decision (see "Audio asset — decided (provisional)" below), so keep the
-> audio source swappable from one place, not hardcoded in multiple spots. Export the
-> mute-state as something Gallery's SFX can read (context/store/module-level signal — pick
-> whichever fits the rest of the state approach). When done: sweep for dead code, commit,
-> then archive.
+> hero/particles. Gallery (PRD 05, rewritten 2026-07-14) no longer has a flip SFX and doesn't
+> read this PRD's mute state — that coupling is gone, so this PRD has no downstream
+> dependents to sequence around anymore. Use
+> `public/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3` (re-encoded 2026-07-14,
+> ~134kbps VBR — not the original 256kbps file) as the ambient loop — this is a provisional
+> decision (see "Audio asset — decided (provisional)" below), so keep the audio source
+> swappable from one place, not hardcoded in multiple spots. When done: sweep for dead code,
+> commit, then archive.
 
 ## What it does
 
@@ -21,9 +21,11 @@ starts from an explicit user click, no autoplay attempt.
 
 ## Interaction/animation behavior, in plain terms
 
-- A persistent fixed-position `<button>` (proposing bottom-right corner, pending a layout
-  pass to make sure it doesn't collide with other fixed UI — see open questions) paired with
-  a single looping `<audio>` element carrying the ambient track.
+- A persistent fixed-position `<button>` (bottom-right corner) paired with a single looping
+  `<audio>` element carrying the ambient track. No other fixed-position UI has landed since
+  PRD 12 (Site Layout) shipped, so there's no known collision to design around — just verify
+  the corner placement reads/taps well on small viewports once built (confirmed 2026-07-14:
+  "just make sure mobile looks good," not a specific alternate placement).
 - Default state on load: paused, muted. No `autoplay` attribute, no attempt to start audio
   programmatically before a user gesture — both because the brief asks for it explicitly and
   because browsers block unprompted autoplay anyway.
@@ -59,19 +61,24 @@ explicitly provisional — the client may swap it for something else later if it
 right once it's actually running on the site. Implementation should keep the swap cheap: one
 audio source reference, not something wired in six places.
 
+**Re-encoded 2026-07-14** to cut file size: `public/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3`
+(libmp3lame, VBR `-q:a 5`, ~134kbps actual, 2.1MB vs. the original's 3.8MB at 256kbps CBR).
+Re-encoding an already-lossy MP3 to a lower bitrate is never literally lossless — some data
+is discarded either way — but at VBR ~130kbps a soft ambient background loop played quietly
+behind a page is generally indistinguishable from the 256kbps source to most listeners,
+especially on laptop/phone speakers. **Use the `-128k` file when this PRD is built**, not the
+original — the untouched original stays in the repo in case a future need for higher quality
+comes up. Trimming to a shorter seamless loop point (also mentioned in the original
+size-budget note) still hasn't been done — that requires actually listening for a clean loop
+point, not a mechanical re-encode, so it's left as a manual task for whoever builds this PRD.
+
 ## Open questions / assumptions
 
-- Exact corner placement on mobile, given other fixed UI that may exist (nav, any future
-  fixed gallery controls) — needs a layout pass once other fixed-position elements are known,
-  to avoid overlap.
-- File format/size budget for the loop: `geoffharvey-let-the-mystery-unfold-122118.mp3` is
-  256kbps/3.8MB — larger than ideal for a background loop; if it (or its replacement) ships,
-  it should be re-encoded to a smaller size (e.g. ~128kbps, trimmed to a shorter seamless
-  loop) rather than shipped at source quality.
+None remaining — resolved 2026-07-14, see notes above.
 
 ## Dependencies
 
 - PRD 01 (design tokens: icon styling, focus-glow, `useReducedMotion` for icon animation).
-- No dependency *on* other feature PRDs, but PRD 05 (Gallery) now has a soft dependency *on*
-  this one for its flip SFX's mute state — this is no longer fully isolated the way it was
-  before that connection existed, worth building relatively early as a result.
+- No dependency *on* other feature PRDs. PRD 05 (Gallery)'s soft dependency on this PRD's
+  mute state was cut alongside Gallery's 2026-07-14 rewrite (no flip SFX to gate anymore) —
+  this PRD is fully isolated again, no longer anything else's build-order consideration.

@@ -1,0 +1,86 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Footer from "@/components/Footer.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Navbar from "@/components/Navbar.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Starfield from "@/components/Starfield";
+import "@/styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** True only for the Home page, where the navbar starts transparent over the hero. */
+  transparentNav?: boolean;
+}
+
+const {
+  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+  title,
+  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+  description = "Queen City Mischief & Magic — a free, volunteer-run magic festival in downtown Staunton, VA.",
+  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+  transparentNav = false,
+} = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/im-fell-english-400.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/eb-garamond-variable.woff2"
+      crossorigin
+    />
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem("qcmm-theme");
+        if (stored && stored !== "twilight") {
+          document.documentElement.dataset.theme = stored;
+        }
+      })();
+    </script>
+  </head>
+  <body id="top">
+    <a href="#main-content" class="skip-link focus-glow">Skip to content</a>
+    <Starfield client:idle />
+    <Navbar transparentOverHero={transparentNav} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -3rem;
+    left: 1rem;
+    z-index: 100;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-control);
+    background-color: var(--color-surface-panel);
+    color: var(--color-surface-text);
+    font-family: var(--font-body);
+    text-decoration: none;
+    transition: top 0.15s ease-out;
+  }
+
+  .skip-link:focus-visible {
+    top: 1rem;
+  }
+</style>

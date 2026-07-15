@@ -141,6 +141,8 @@
   --color-twilight-950: #160f2e;
   --color-twilight-900: #1f1740;
   --color-twilight-800: #2c2258;
+  /* Bright violet accent used only for the theme-picker's House Color swatch icon — the amber accent below is already used as the default `--surface-primary`, so the swatch needs its own hue to read as "purple/twilight" rather than duplicating amber. */
+  --color-twilight-shield: #a78bfa;
   --color-plum-950: #2b1730;
   --color-plum-900: #3d2144;
   --color-plum-800: #54305d;

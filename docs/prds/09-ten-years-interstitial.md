@@ -19,18 +19,17 @@ gallery, login required), matches the site's visual language, then hands off.
 ## Interaction/animation behavior, in plain terms
 
 - A mostly static, low-motion page — its job is to set expectations and hand off quickly,
-  not to be a showpiece. Proposing it stay deliberately quiet: site typography and color
-  tokens, maybe a light texture background, but *not* the full particle/ink treatment used
-  on the hero — this is a transactional page, and heavy decoration would work against its
-  purpose. Flagged as a recommendation below, not a locked decision.
+  not to be a showpiece. **Confirmed 2026-07-14: stays deliberately quiet/minimal** — site
+  typography and color tokens, maybe a light texture background, but *not* the full
+  particle/ink treatment used on the hero. No longer just a recommendation.
 - Content: a heading ("10 Years of Pictures" or the client's preferred title), short
   explanatory copy (placeholder for now: "You're about to leave queencitymagic.com — our 10
   years of photos live on Pixieset, a third-party gallery, and you may need the event
-  password to view them."), and one clearly-labeled outbound CTA to the Pixieset gallery
-  URL.
-- Actual copy and access/password policy are pending client input per the brief — this PRD
-  builds the page and its structure now, with placeholder copy, so the final text can be
-  dropped in without a rebuild once confirmed.
+  password to view them."), and one clearly-labeled outbound CTA to the Pixieset gallery URL,
+  opening in a **new tab (confirmed 2026-07-14)**.
+- Actual copy and access/password policy are **still pending client input** as of 2026-07-14
+  ("don't have it yet") — this PRD builds the page and its structure now, with placeholder
+  copy, so the final text can be dropped in without a rebuild once it arrives.
 
 ## Accessibility branch
 
@@ -48,13 +47,8 @@ gallery, login required), matches the site's visual language, then hands off.
 
 ## Open questions / assumptions
 
-- **Final copy and password/access policy** — explicitly pending client input per the brief.
-  Building now with placeholder copy, wiring final copy in once confirmed.
-- **New tab vs. same tab** for the outbound Pixieset link — not yet decided.
-- **How much visual treatment this page gets** — proposing minimal/quiet (recommendation
-  above) since it's a transactional handoff page, not a moment to showcase the design
-  system. Open to the client/user preferring more atmosphere here; flagging it as a
-  deliberate choice rather than an oversight.
+Only one remains: **final copy and password/access policy**, still pending the client as of
+2026-07-14. Build with placeholder copy per above; everything else in this PRD is resolved.
 
 ## Dependencies
 

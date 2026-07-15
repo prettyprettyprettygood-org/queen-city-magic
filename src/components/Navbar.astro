@@ -1,0 +1,249 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Menu } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import ThemeSelect from "@/components/ThemeSelect.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { navLinks } from "@/lib/navLinks";
+
+interface Props {
+  /** Home page only: start transparent over the hero, solidify once scrolled past it. */
+  transparentOverHero?: boolean;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { transparentOverHero = false } = Astro.props;
+---
+
+<nav
+  class="navbar"
+  aria-label="Primary"
+  data-navbar
+  data-transparent-hero={transparentOverHero ? "" : undefined}
+>
+  <div class="navbar__bg" aria-hidden="true"></div>
+  <div class="navbar__inner">
+    <a href="/" class="navbar__wordmark focus-glow">Queen City Magic</a>
+
+    <div class="navbar__end">
+      <ul class="navbar__links navbar__links--desktop">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="navbar__link focus-glow">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="navbar__theme navbar__theme--desktop">
+        <ThemeSelect />
+      </div>
+
+      <details class="navbar__disclosure">
+        <summary class="navbar__toggle focus-glow" aria-label="Open menu">
+          <Menu aria-hidden="true" focusable="false" size={22} />
+        </summary>
+        <div class="navbar__panel">
+          <ul class="navbar__links">
+            {
+              navLinks.map((link) => (
+                <li>
+                  <a href={link.href} class="navbar__link focus-glow">
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="navbar__theme">
+            <ThemeSelect />
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    isolation: isolate;
+    font-family: var(--font-body);
+  }
+
+  .navbar__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-color: var(--color-surface-panel);
+    opacity: 1;
+  }
+
+  .navbar[data-transparent-hero] .navbar__bg {
+    opacity: 0;
+  }
+
+  .navbar[data-transparent-hero].navbar--solid .navbar__bg {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .navbar__bg {
+      transition: opacity 0.2s ease-out;
+    }
+  }
+
+  .navbar__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.85rem clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .navbar__end {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .navbar__wordmark {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--color-surface-text);
+    text-decoration: none;
+    border-radius: var(--radius-control);
+  }
+
+  .navbar__links {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1.25rem;
+  }
+
+  .navbar__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    color: var(--color-surface-text);
+    text-decoration: none;
+    border-radius: var(--radius-control);
+    padding: 0.2rem 0.3rem;
+  }
+
+  .navbar__link:hover {
+    color: var(--color-surface-primary);
+  }
+
+  .navbar__theme {
+    display: none;
+  }
+
+  .navbar__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    background-color: var(--color-surface-panel);
+    color: var(--color-surface-text);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .navbar__toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .navbar__panel {
+    position: absolute;
+    top: 100%;
+    right: clamp(1.5rem, 5vw, 4rem);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 12rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    background-color: var(--color-surface-panel);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .navbar__panel .navbar__links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .navbar__panel .navbar__theme {
+    display: block;
+  }
+
+  /* Desktop: inline links + theme select, hamburger disclosure hidden. */
+  @media (min-width: 56rem) {
+    .navbar__links--desktop {
+      display: flex;
+    }
+
+    .navbar__theme--desktop {
+      display: block;
+    }
+
+    .navbar__disclosure {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const SCROLL_THRESHOLD = 48;
+
+  document.querySelectorAll<HTMLElement>("[data-navbar]").forEach((nav) => {
+    if (nav.dataset.transparentHero === undefined) return;
+
+    let ticking = false;
+    const update = () => {
+      nav.classList.toggle("navbar--solid", window.scrollY > SCROLL_THRESHOLD);
+      ticking = false;
+    };
+
+    update();
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+  });
+
+  document.querySelectorAll<HTMLDetailsElement>(".navbar__disclosure").forEach((details) => {
+    document.addEventListener("click", (event) => {
+      if (details.open && !details.contains(event.target as Node)) {
+        details.removeAttribute("open");
+      }
+    });
+
+    details.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && details.open) {
+        details.removeAttribute("open");
+        details.querySelector("summary")?.focus();
+      }
+    });
+  });
+</script>

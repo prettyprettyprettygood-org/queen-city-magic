@@ -19,12 +19,19 @@ cursor on touch devices and under reduced motion. Decorative only.
   small sparkle particles at the pointer's position, each with a short fade-out/scale-down
   lifecycle (a capped pool — proposing ~15–20 concurrent sparkles — rendered via
   Framer Motion `AnimatePresence` or a lightweight canvas, trailing just behind the actual
-  pointer).
+  pointer). **Confirmed 2026-07-14: a small amber star/dot** matching the accent color, per
+  the sparkle visual already used elsewhere (Gallery's hover sparkle, PRD 05).
 - The system cursor is hidden (`cursor: none`) only within the gated scope described below —
   never globally, so a visitor who doesn't match the gate always keeps a real cursor.
 - Real interactive elements keep their own `:hover`/`:focus-visible` styling entirely
   independent of the sparkle trail — the trail is additive decoration layered on top of
   normal interaction states, never a replacement for them.
+- **Confirmed 2026-07-14: subtle cursor reaction over interactive elements is in scope** —
+  a small extra sparkle burst or soft amber glow when the pointer is over a link/button,
+  layered on top of the trail rather than replacing it. Keep it subtle (a slight
+  intensity/density bump, not a shape or size change to the cursor itself) — this is meant to
+  read as a light magical touch, not a flashy hover state competing with the real
+  `:hover`/`:focus-visible` styling called out above.
 
 ## Accessibility branch
 
@@ -46,13 +53,9 @@ cursor on touch devices and under reduced motion. Decorative only.
 
 ## Open questions / assumptions
 
-- Sparkle visual: proposing a small amber star/dot matching the accent color, not yet
-  designed. Open to direction here.
-- Whether the cursor itself changes appearance over interactive elements (grow, color shift
-  on links, etc.) — the brief doesn't ask for this, so treating it as an optional
-  enhancement, not part of the baseline build.
-- Perf ceiling on lower-end laptops hasn't been tested yet — flagging as a thing to verify
-  once built, not something to over-engineer for up front.
+Resolved (see "confirmed" notes above). One item remains informational only, not a question
+needing an answer: perf ceiling on lower-end laptops hasn't been tested yet — verify once
+built, not something to over-engineer for up front.
 
 ## Dependencies
 

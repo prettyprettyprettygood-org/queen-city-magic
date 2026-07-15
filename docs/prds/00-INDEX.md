@@ -9,6 +9,10 @@ expectations that apply across every PRD, commit cadence, and the archive conven
 Each PRD in this directory opens with a **Start-work prompt** you can hand to an agent to
 begin that PRD with the right context already loaded.
 
+Every PRD's "Open questions / assumptions" section has been consolidated into
+[docs/open-questions.md](../open-questions.md) for one-pass answering — check there rather
+than each PRD individually.
+
 ## Archive convention
 
 Once a PRD is fully implemented, verified, and committed, move its file from `docs/prds/`
@@ -30,14 +34,15 @@ location for them until that PRD runs.
 | 01 | [Design Tokens & Typography Scaffold](./02-design-tokens-typography.md) | Hard blocker for every feature PRD |
 | 02 | [Hero Section](./03-hero-diary-effect.md) | High visibility; scope simplified during implementation (no Three.js/particle layer) |
 | 03 | [Ambient Particle Layer](./04-ambient-particle-layer.md) | Needs to render behind hero's content (no longer a shared z-index contract, hero's Three.js layer was scoped out) |
-| 04 | [Scroll Choreography](./05-scroll-choreography.md) | Owns the image-reveal primitive Gallery reuses |
-| 05 | [Gallery Flip Interaction](./06-gallery-flip-interaction.md) | Depends on Scroll Choreography's reveal primitive; soft-depends on Sound Toggle for flip-SFX mute state |
+| 04 | [Scroll Choreography (Section Transitions)](./05-scroll-choreography.md) | Rewritten 2026-07-14 — now owns only the section-transition wipe; no longer feeds Gallery |
+| 05 | [Gallery](./06-gallery.md) | Rewritten 2026-07-14 — plain grid + hover sparkle, no flip/reveal/ripple; independent of PRD 04 and Sound Toggle |
 | 06 | [Sound Toggle](./07-sound-toggle.md) | Otherwise independent, but Gallery now depends on its mute state — build relatively early |
 | 07 | [Custom Cursor](./08-custom-cursor.md) | Fully independent, low risk |
 | 08 | [10 Years of Pictures Interstitial](./09-ten-years-interstitial.md) | Fully independent, lowest risk |
 | 09 | [Events Page](./10-events-page.md) | Independent; the date-bucketing logic (timezone-aware, midnight cutover) is the real substance here |
 | 10 | [Pre-Launch Production Readiness Audit](./11-pre-launch-audit.md) | Launch gate, not a build-order item — runs after 00–09 are done |
 | 11 | [Site Layout (Navbar, Footer, Section Shell)](./12-site-layout.md) | Added after PRD 02 shipped hero-only; wraps the hero rather than changing it. Resolves PRD 06's deferred "layout pass" for fixed-UI placement. No hard blocker for 03–09, but the sooner it lands the less retrofitting later pages need |
+| 12 | [Content Pages (Home Body, FAQ, Donate, Gallery Copy)](./13-content-pages.md) | Added once `docs/content.md` (real client copy) landed. Depends on PRD 11 for the shell/nav it fills in; independent of 03–09's interaction-heavy work otherwise |
 
 ## Shared utilities (build once, in the scaffold phases)
 
@@ -49,8 +54,8 @@ possibly-inconsistent handling across features:
 - `useHoverCapable()` — reactive wrapper on `(hover: hover) and (pointer: fine)`, built in PRD 01. Consumed by: cursor.
 - `.focus-glow` — shared focus-visible utility (soft amber glow ring), built in PRD 01. Consumed by: every interactive element, every PRD.
 - Contrast-checked color tokens, built in PRD 01 — consumed by: every PRD.
-- Image reveal primitive (desaturate/blur → resolve) — owned by Scroll Choreography (PRD 04), reused by Gallery (PRD 05) for card entrance (distinct from the flip gesture itself).
-- Sound mute-state/context — owned by Sound Toggle (PRD 06), read by Gallery (PRD 05) for its flip sound effect.
+- ~~Image reveal primitive (desaturate/blur → resolve) — owned by Scroll Choreography, reused by Gallery for card entrance.~~ **Cut 2026-07-14** alongside the Gallery simplification — Gallery was its only consumer. Scroll Choreography now owns only the section-transition wipe.
+- Sound mute-state/context — owned by Sound Toggle (PRD 06). No longer read by Gallery (PRD 05) — the flip SFX it used to gate no longer exists after Gallery's rewrite.
 
 ## Recommended build order
 
@@ -58,17 +63,23 @@ possibly-inconsistent handling across features:
 2. **Design Tokens & Typography Scaffold** — hard blocker for every feature PRD.
 3. **Hero Section** — highest-visibility moment; scope was simplified during implementation (static headline, fading eyebrow line, simple scroll-parallax background image — no Three.js, no particle canvas, no handwriting/ink-dissolve).
 4. **Ambient Particle Layer** — easiest to sequence right after hero while that context is fresh, but no longer has a shared z-index *contract* to inherit (hero's Three.js/particle layer was cut). Not a hard dependency, just convenient ordering.
-5. **Scroll Choreography** — establishes the shared image-reveal primitive.
-6. **Gallery Flip Interaction** — hard-depends on #5's reveal primitive, soft-depends on Sound Toggle's mute state for its flip SFX.
-7. **Sound Toggle** — no hard dependency on 3–5, but Gallery (#6) now depends on it, so pulling it earlier (even before Gallery) avoids Gallery shipping its SFX half-wired.
+5. **Scroll Choreography** — section-transition wipes only, as of the 2026-07-14 rewrite. No
+   longer a dependency for anything else in this list.
+6. **Gallery** — as of the 2026-07-14 rewrite, a plain grid with a hover sparkle. No
+   dependency on Scroll Choreography or Sound Toggle; can be built in any order relative to
+   them.
+7. **Sound Toggle** — independent; nothing else in this list depends on it anymore (Gallery's
+   flip SFX coupling was cut alongside its rewrite).
 8. **Custom Cursor** — no dependency on 3–6, could be pulled earlier and built in parallel.
 9. **10 Years of Pictures Interstitial** — no dependency on 3–6, lowest risk, good parallel/filler task.
-10. **Events Page** — no hard dependency on anything but PRD 01; soft-depends on Scroll Choreography's image reveal for card art, ships fine without it and picks that up later. Independent of everything else — good parallel/filler task alongside 10 Years.
+10. **Events Page** — no hard dependency on anything but PRD 01. No longer soft-depends on
+    Scroll Choreography (that image-reveal primitive was cut, not just deferred) — ships with
+    static card images permanently. Independent of everything else — good parallel/filler
+    task alongside 10 Years.
 
-Steps 1 and 2 are true hard blockers for everything. Step 6 hard-depends on step 5 and
-soft-depends on step 7. Steps 7–10 have no hard dependency on 3–5 and can be parallelized
-against them if that's useful for pacing — but step 7 should land before or alongside step
-6, not long after, given the SFX coupling.
+Steps 1 and 2 are true hard blockers for everything. Steps 4–10 no longer have any
+cross-dependencies on each other as of the 2026-07-14 Gallery simplification — all are
+freely parallelizable.
 
 **PRD 10 (Pre-Launch Production Readiness Audit) runs last**, once Home, Gallery, the 10
 Years interstitial, Donate, and Events all exist — it's a launch gate, not a step in this
@@ -80,18 +91,30 @@ other PRD hard-depends on it, but it's lowest-friction landed soon after Hero �
 after it (Gallery, Sound Toggle, Events, etc.) otherwise risks building against a bare
 `<body>` that later needs retrofitting once real page chrome exists.
 
+**PRD 12 (Content Pages) was added 2026-07-14**, once `docs/content.md` (real copy from the
+client's live site) landed with content for Home's body, a new FAQ page, Donate, and the
+Gallery page's supporting copy/links. **Reordered ahead of PRDs 4–8** (Scroll Choreography
+through 10 Years Interstitial) at the client's request: PRD 11 (Site Layout) and PRD 12
+(Content Pages) run next, back-to-back, so the real page/nav structure and real content exist
+before returning to the more design/interaction-heavy PRDs. Depends on PRD 11 landing first
+(fills in the stub routes Site Layout's nav creates); otherwise independent of 4–8's
+interaction work.
+
 ## Explicitly out of scope for this pass (per the original prompt)
 
 - The Formspree + Turnstile contact/join form on Home — this is a standard build task, not a
   design-forward feature area, so it isn't getting its own PRD. It'll be scoped inline when
   the Home page is implemented, using the design tokens and focus/ARIA conventions established here.
-- Pool/ripple memory-reveal effect for gallery images (next phase).
+- ~~Pool/ripple memory-reveal effect for gallery images (next phase).~~ **Cut entirely,
+  2026-07-14** — Gallery was rewritten to a plain grid with a hover sparkle; ripple/pool is no
+  longer a planned future phase, just dropped scope.
 - Final Harry-Potter-lean-in/lean-away decision (client's to make).
 - Final copy/password policy for the 10 Years interstitial (client's to provide).
-- Join us/FAQs/MAPS pages — still deferred, reuse the same design system components later.
-  **Events is no longer on this deferred list** — it was originally grouped with these as
-  "not the focus of the first demo pass," but the client has since asked for it explicitly;
-  see PRD 09.
+- Join us/MAPS pages — still deferred, reuse the same design system components later.
+  **Events and FAQ are no longer on this deferred list.** Events was originally grouped here
+  as "not the focus of the first demo pass," but the client asked for it explicitly (PRD 09).
+  FAQ wasn't part of the original deferred list at all — it surfaced as a full page once
+  `docs/content.md` landed with real FAQ copy; see PRD 12 (Content Pages).
 
 ## Scope decisions — confirmed
 
@@ -100,12 +123,15 @@ These were open questions that materially changed scope; all are now settled:
 1. **Script accent face vs. hero headline.** Diary-effect headline uses the display serif,
    not the script face; the script face is reserved for a small eyebrow line above it.
    Decided in PRD 02.
-2. **What "flip" means in the gallery.** Flip is the *transition mechanic* between
+2. ~~**What "flip" means in the gallery.** Flip is the *transition mechanic* between
    sequential photos, replacing the slider's slide — not a front/back content reveal per
-   card. Decided in PRD 05.
+   card.~~ **Superseded 2026-07-14** — Gallery no longer has a flip mechanic at all; rewritten
+   to a plain grid with a hover sparkle. See PRD 05 (`06-gallery.md`).
 3. **How literal is "page-turn"?** Baseline is a soft `clip-path` wipe (cheaper, safer on
    mobile). A true skeuomorphic page-curl is a possible later stretch goal, not part of this
-   build. Decided in PRD 04.
+   build. Decided in PRD 04 — this now applies only to section transitions (PRD 04's sole
+   remaining scope after the 2026-07-14 rewrite), not to Gallery, which has no page-turn
+   mechanic anymore.
 4. **Where does the one Three.js moment live?** ~~In the hero, as subtle scroll-linked
    parallax on a hero illustration, layered behind the particle canvas and ink/handwriting
    SVG.~~ **Superseded** — PRD 02's scope was simplified during implementation (static
@@ -119,11 +145,11 @@ These were open questions that materially changed scope; all are now settled:
 Real image and audio assets landed in `/assets` after the PRDs above were first drafted;
 they surfaced things not in the original brief:
 
-1. **Gallery flip sound effect.** `assets/audio/spooky-magic.mp3` is attributed as a "sound
-   effect for pensive click on gallery" — not mentioned in the original brief. Added into
-   PRD 05 (Gallery) as supplementary, non-essential audio feedback on flip, gated by PRD 06
-   (Sound Toggle)'s shared mute state so it never plays unexpectedly for a muted-by-default
-   visitor.
+1. ~~**Gallery flip sound effect.**~~ `assets/audio/spooky-magic.mp3` is attributed as a
+   "sound effect for pensive click on gallery." Originally wired to Gallery's flip mechanic,
+   gated by Sound Toggle's mute state — **no longer wired in** as of Gallery's 2026-07-14
+   rewrite (no flip to attach it to). Still a real, attributed asset if a future pass wants a
+   hover/click chime once Sound Toggle exists.
 2. **Ambient loop is melodic, not ambient — resolved (provisional).** `assets/audio/
    geoffharvey-let-the-mystery-unfold-122118.mp3` is a titled music track, diverging from the
    brief's "not anything melodic" instruction. Decided 2026-07-11: use it for now, the client

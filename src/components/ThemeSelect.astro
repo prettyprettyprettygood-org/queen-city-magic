@@ -1,38 +1,43 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { Shield } from "@lucide/astro";
+import { Shield, ShieldQuestionMark } from "@lucide/astro";
 
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const themes = [
   {
     value: "twilight",
-    label: "Twilight (default)",
-    color: "var(--color-amber-400)",
+    label: "House Color",
+    color: "var(--color-twilight-shield)",
     bg: "var(--color-twilight-950)",
+    icon: "shield-question",
   },
   {
     value: "daring",
     label: "Daring Red",
     color: "var(--color-daring-primary)",
     bg: "var(--color-daring-bg)",
+    icon: "shield",
   },
   {
     value: "ambitious",
     label: "Ambitious Green",
     color: "var(--color-ambitious-primary)",
     bg: "var(--color-ambitious-bg)",
+    icon: "shield",
   },
   {
     value: "clever",
     label: "Clever Blue",
     color: "var(--color-clever-primary)",
     bg: "var(--color-clever-bg)",
+    icon: "shield",
   },
   {
     value: "loyal",
     label: "Loyal Gold",
     color: "var(--color-loyal-primary)",
     bg: "var(--color-loyal-bg)",
+    icon: "shield",
   },
 ] as const;
 ---
@@ -40,7 +45,7 @@ const themes = [
 <div class="select" data-theme-select>
   <details class="select-details">
     <summary class="select-trigger focus-glow">
-      <span class="select-trigger-label">Twilight (default)</span>
+      <span class="select-trigger-label">House Color</span>
       <svg
         class="select-chevron"
         viewBox="0 0 24 24"
@@ -69,7 +74,13 @@ const themes = [
                 checked={theme.value === "twilight"}
               />
               <span class="option-icon-chip" style={`background-color:${theme.bg}`}>
-                <Shield class="option-icon" color={theme.color} fill={theme.color} size={14} stroke-width={1.5} />
+                {theme.icon === "shield-question" ? (
+                  // Left unfilled (stroke only) — filling this solid like the others would
+                  // paint over the question-mark glyph in the same color, hiding it.
+                  <ShieldQuestionMark class="option-icon" color={theme.color} size={14} stroke-width={1.5} />
+                ) : (
+                  <Shield class="option-icon" color={theme.color} fill={theme.color} size={14} stroke-width={1.5} />
+                )}
               </span>
               <span class="option-text">{theme.label}</span>
             </label>

@@ -3,15 +3,9 @@
 import FadeSwapText from "@/components/FadeSwapText.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import ThemeSelect from "@/components/ThemeSelect.astro";
 ---
 
 <section class="hero">
-  <div class="hero__switcher">
-    <ThemeSelect />
-  </div>
-
   <HeroParallaxImage class="hero__parallax" />
 
   <div class="hero__content">
@@ -54,13 +48,6 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
       var(--color-surface-parallax-ground) 100%
     );
     color: var(--color-surface-text);
-  }
-
-  .hero__switcher {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    z-index: 2;
   }
 
   .hero__parallax {

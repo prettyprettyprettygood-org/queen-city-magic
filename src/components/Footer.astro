@@ -1,0 +1,336 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { ArrowUp } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { navLinks } from "@/lib/navLinks";
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const year = new Date().getFullYear();
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const socialLinks = [
+  {
+    href: "https://www.facebook.com/queencitymagic",
+    label: "Facebook",
+    icon: "facebook",
+  },
+  {
+    href: "https://www.instagram.com/queencitymagicsva/",
+    label: "Instagram",
+    icon: "instagram",
+  },
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a href="/" class="site-footer__wordmark focus-glow">Queen City Magic</a>
+        <p class="site-footer__tagline">
+          Every fall, downtown Staunton transforms into a scene straight out of your favorite storybooks —
+          themed events and hands-on activities for kids of all ages, set against unique shops, dining, and
+          Staunton's stunning Victorian architecture.
+        </p>
+      </div>
+
+      <div class="site-footer__support">
+        <p class="site-footer__support-heading">Help us make the magic!</p>
+        <p class="site-footer__support-copy">
+          We depend on our volunteers and generous donors to keep the magic going, year after year — every
+          contribution helps.
+        </p>
+        <div class="site-footer__support-actions">
+          <a href="/donate" class="site-footer__cta focus-glow">Donate</a>
+          <div class="site-footer__social">
+            {
+              socialLinks.map((social) => (
+                <a
+                  href={social.href}
+                  class="site-footer__icon-btn focus-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                >
+                  {social.icon === "facebook" ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                      <path d="M22 12.06C22 6.505 17.523 2 12 2S2 6.505 2 12.06c0 5.02 3.657 9.184 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.243 0-1.63.775-1.63 1.57v1.887h2.773l-.443 2.91h-2.33V22c4.78-.756 8.437-4.92 8.437-9.94Z" />
+                    </svg>
+                  ) : (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="5" />
+                      <circle cx="12" cy="12" r="4.2" />
+                      <circle cx="17.35" cy="6.65" r="1.1" fill="currentColor" stroke="none" />
+                    </svg>
+                  )}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <ul>
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="site-footer__nav-link focus-glow">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <hr class="site-footer__divider" />
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__badge-chip">
+        <span aria-hidden="true">🏳️‍🌈</span> Woman-owned &amp; queer-friendly
+      </p>
+
+      <div class="site-footer__legal">
+        <p class="site-footer__copyright">© {year} Queen City Magic — All Rights Reserved.</p>
+        <p class="site-footer__credits">
+          Music:{" "}
+          <a href="https://pixabay.com/users/geoffharvey-9096471/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=122118">
+            Geoff Harvey
+          </a>{" "}
+          via{" "}
+          <a href="https://pixabay.com/music//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=122118">
+            Pixabay
+          </a> · Built with <span aria-hidden="true">✨</span> by{" "}
+          <a href="https://www.prettyprettyprettygood.org/" target="_blank" rel="noopener noreferrer">
+            prettyprettyprettygood.org
+          </a>
+        </p>
+      </div>
+
+      <a href="#top" class="site-footer__icon-btn focus-glow" data-back-to-top aria-label="Back to top">
+        <ArrowUp aria-hidden="true" focusable="false" size={18} />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    background-color: var(--color-surface-panel);
+    color: var(--color-surface-text);
+    font-family: var(--font-body);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    padding: 3rem clamp(1.5rem, 5vw, 4rem) 2rem;
+  }
+
+  .site-footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .site-footer__brand,
+  .site-footer__support {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .site-footer__wordmark {
+    align-self: flex-start;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-surface-primary);
+    text-decoration: none;
+    border-radius: var(--radius-control);
+  }
+
+  .site-footer__tagline,
+  .site-footer__support-copy {
+    margin: 0;
+    max-width: 28rem;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+
+  .site-footer__support-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-surface-primary);
+  }
+
+  .site-footer__support-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .site-footer__social {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .site-footer__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    color: var(--color-surface-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .site-footer__cta:hover {
+    border-color: var(--color-surface-primary);
+    color: var(--color-surface-primary);
+  }
+
+  .site-footer__nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer__nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    color: var(--color-surface-text);
+    text-decoration: none;
+    border-radius: var(--radius-control);
+  }
+
+  .site-footer__nav-link:hover {
+    color: var(--color-surface-primary);
+    text-decoration: underline;
+  }
+
+  .site-footer__divider {
+    border: none;
+    border-top: 1px solid var(--color-surface-border);
+    margin: 0;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .site-footer__badge-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .site-footer__legal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: 40rem;
+  }
+
+  .site-footer__copyright,
+  .site-footer__credits {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.75;
+  }
+
+  .site-footer__credits a {
+    color: inherit;
+  }
+
+  .site-footer__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-surface-border);
+    color: var(--color-surface-text);
+  }
+
+  .site-footer__icon-btn:hover {
+    color: var(--color-surface-primary);
+    border-color: var(--color-surface-primary);
+  }
+
+  .site-footer__icon-btn svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__top {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .site-footer__support {
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .site-footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .site-footer__legal {
+      align-items: center;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>("[data-back-to-top]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion) return;
+
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      history.pushState(null, "", "#top");
+    });
+  });
+</script>

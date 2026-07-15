@@ -26,9 +26,9 @@ those two buckets separate rather than blurring them.
 
 ### 1. Security headers
 - **Code fix:** Content-Security-Policy, `X-Content-Type-Options: nosniff`,
-  `Referrer-Policy`, `Permissions-Policy`, frame-ancestors/`X-Frame-Options`, and HSTS if the
-  host supports it — configured via the hosting platform's headers config (e.g. Netlify
-  `_headers`, Vercel `vercel.json`) or Astro middleware.
+  `Referrer-Policy`, `Permissions-Policy`, frame-ancestors/`X-Frame-Options`, and HSTS —
+  **hosting is confirmed as Vercel (2026-07-14)**, so this is `vercel.json`'s `headers` config
+  specifically, not a multi-platform "whichever is chosen" decision anymore.
 - CSP needs to allowlist exactly the third-party origins actually in use (built from
   category 3's inventory, not guessed at).
 
@@ -52,12 +52,17 @@ those two buckets separate rather than blurring them.
   checkout/redirect or a vetted embeddable widget (Stripe Checkout, PayPal donate button,
   Givebutter, etc.) — never build a custom card-collection form. Confirm the Donate page
   never touches card data directly (PCI scope stays entirely with the processor).
-- **Client must confirm — high priority:** which payment/donation processor to use (not
-  specified anywhere in the original brief); whether donations go to a registered 501(c)(3),
-  a fiscal sponsor, or an individual/informal account, since that determines whether
-  "tax-deductible" language is legally allowed on the page at all; who owns/reconciles the
-  receiving account. This is a real legal/tax question for a volunteer-run festival — route
-  it to the client's accountant, don't assume an answer.
+- **Confirmed 2026-07-14: mechanism is settled** — the Donate page is a Venmo QR/link
+  (`@qcmmsva`) only, no hosted checkout, no card-collection form, no processor integration to
+  audit here. This resolves the "which processor" half of the original question.
+- **Client must confirm — high priority, still genuinely open:** nonprofit/tax status. Per the
+  user (not a confirmed answer, a stated guess): "don't think they are non-profit, but their
+  event is free" — `content.md`'s FAQ mentions participating non-profits as *other*
+  organizations at the festival, distinct from QCMM itself, so QCMM's own status is still
+  unknown. This determines whether "tax-deductible" language is ever legally usable on the
+  Donate page — don't add any such language without this confirmed by the client (ideally
+  with their accountant), and don't assume "free festival" implies nonprofit status one way
+  or the other. Also still open: who owns/reconciles the `@qcmmsva` Venmo account.
 
 ### 5. Accessibility / WCAG issues
 - **Code fix:** a full-site automated pass (axe-core or Lighthouse a11y audit) plus a manual
@@ -92,12 +97,15 @@ those two buckets separate rather than blurring them.
 
 ### 9. Robots / sitemap
 - **Code fix:** `robots.txt`, `sitemap.xml` (Astro's sitemap integration), and explicit
-  noindex on anything that shouldn't be publicly indexed — e.g. a staging/preview deployment
-  URL, if this redesign is previewed anywhere before going live on the real domain.
+  noindex on anything that shouldn't be publicly indexed. **Confirmed 2026-07-14: there is a
+  public staging URL**, `https://queen-city-magic.vercel.app/` — this specific Vercel preview
+  domain needs `noindex`/`nofollow` (e.g. `X-Robots-Tag` header in `vercel.json`, scoped to
+  that deployment) before the real domain goes live, so the preview doesn't get indexed
+  alongside or instead of the production domain.
 
 ### 10. Account ownership
 - **Client must confirm — high priority:** who owns the domain registrar login, the hosting
-  account (Netlify/Vercel/whichever is chosen), the Formspree account, the Turnstile/
+  account (**confirmed Vercel, 2026-07-14**), the Formspree account, the Turnstile/
   Cloudflare account, the Pixieset account, any font licenses, and the GitHub repo itself.
   For a volunteer-run org, the real risk is a personal account — an individual volunteer's
   login — becoming the org's single point of failure. Recommend everything live under an
@@ -129,13 +137,12 @@ buried in commit messages where it'll get lost.
 
 ## Open questions / assumptions
 
-- Hosting platform isn't chosen yet — affects exactly how security headers get configured
-  (Netlify `_headers` vs. Vercel `vercel.json` vs. something else).
-- Payment/donation processor isn't chosen yet (category 4) — this is the single
-  highest-leverage unknown in this whole PRD and is worth resolving with the client well
-  before this audit runs, not discovered at audit time.
-- Whether this redesign gets a public staging URL before going live — affects category 9's
-  noindex needs.
+Resolved 2026-07-14 — hosting is Vercel, staging URL is
+`https://queen-city-magic.vercel.app/`, and the donation mechanism is Venmo-only (see
+categories 1, 4, 9, 10 above). The one item that remains genuinely open is exactly what
+category 4 and 11 already flag as client-owned: QCMM's own nonprofit/tax status — not
+resolved by this pass, correctly a "client must confirm" item, not something to guess at
+further.
 
 ## Dependencies
 

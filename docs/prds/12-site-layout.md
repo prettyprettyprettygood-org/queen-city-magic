@@ -5,10 +5,14 @@
 > Implement docs/prds/12-site-layout.md for the QCMM redesign. Read CLAUDE.md first.
 > Depends on PRD 01 (tokens) for colors/type/focus-glow, and structurally wraps PRD 02
 > (Hero) — the hero becomes the first `<section>` inside this PRD's page shell rather than
-> the whole `<body>`. Before writing markup, resolve the open questions below (nav link set,
-> ThemeSelect's new home, mobile nav pattern) — they change the shape of the shell. Reuses
-> `src/content/attribution.md` as the footer's credits content instead of duplicating it.
-> When done: sweep for dead code, commit, then move this file to docs/prds/archive/.
+> the whole `<body>`. Open questions are resolved as of 2026-07-14 against `docs/content.md`
+> — see "Open questions / assumptions — resolved 2026-07-14" below before writing markup;
+> only the sticky-nav-background question is still genuinely open. Nav links to the full
+> six-page set; any page whose content PRD hasn't landed yet gets a minimal stub route so
+> nothing 404s (PRD 13 fills those in immediately after). Reuses `src/content/attribution.md`
+> as part of the footer's credits content instead of duplicating it.
+> When done: sweep for dead code, report ready for commit, then move this file to
+> docs/prds/archive/ once the user has committed.
 
 ## Why this exists
 
@@ -69,28 +73,55 @@ This is that pass.
   (already reused there instead of a from-scratch implementation) if the two can share an
   approach, or the standard `aria-expanded`/`aria-controls` button pattern if not.
 
-## Open questions / assumptions
+## Open questions / assumptions — resolved 2026-07-14
 
-- **Nav link set.** PRD 00-INDEX lists Home, Gallery, the 10 Years interstitial, Donate,
-  and Events as the eventual page set — but only Home exists right now. Proposing the
-  navbar render links for pages that exist yet and gracefully omit/placeholder the rest,
-  rather than linking to routes that 404. Confirm before building.
-- **Mobile nav pattern.** Hamburger/off-canvas vs. a simple inline-wrapping link list —
-  depends on how many nav items actually ship (small list may not need a hamburger at all).
-  Decide once the link set above is confirmed.
-- **Is the navbar fixed/sticky or does it scroll away?** Sticky nav would sit on top of the
-  hero's parallax image at all times (fine, `z-index` already establishes `.hero__switcher`
-  above the parallax layer) but needs a background treatment for when it's overlaid on
-  varying section background colors as the page scrolls beneath it — transparent-over-hero
-  fading to solid-on-scroll is a common pattern but is a real design decision, not
-  assumed here.
-- **Footer content beyond attribution.** Social links, contact info, a real copyright line
-  — none of this exists in the codebase or assets yet. Proposing the footer ship with just
-  the attribution credits for now and grow as that content becomes available, rather than
-  inventing placeholder links.
-- **Wordmark/logo.** No logo asset exists in `src/assets/`. Proposing the navbar use styled
-  text (display-serif "Queen City Magic") matching the hero heading's font, not a graphic,
-  until a real logo file is provided.
+`docs/content.md` (client-provided copy, verbatim from the live site) landed and settles most
+of what this section originally left open. Resolved against it, per user decision:
+
+- **Nav link set — confirmed final: Home, Gallery, FAQ, Events, 10 Years, Donate.** FAQ is
+  new — it wasn't in PRD 00-INDEX's page list before `content.md` surfaced it as a full page
+  of its own. Render all six as real nav links now rather than "omit until the page exists":
+  the full page set is confirmed, and PRD 13 (Content Pages, immediately following this one)
+  plus PRD 09 (Events) and PRD 08 (10 Years) land the actual routes right after. Any route
+  that doesn't have its content PRD landed yet gets a minimal stub page (`BaseLayout` +
+  heading only) in this PRD purely so nav links resolve instead of 404ing — not final content,
+  just enough for the link to be real. Content PRDs replace the stub, they don't create the
+  route from scratch.
+- **Mobile nav pattern — resolved: disclosure/hamburger, not inline wrap.** Six links plus the
+  relocated `ThemeSelect` control is too much for a small viewport to wrap inline without
+  crowding tap targets. Use the same `<details>`-based disclosure convention `ThemeSelect`
+  already established (native-semantic, no ARIA authoring needed) for the mobile toggle,
+  per this PRD's own accessibility branch.
+- **Footer content beyond attribution — resolved, real content available.** From
+  `content.md`: a copyright line ("Queen City Magic — All Rights Reserved," current year
+  computed at build/render time, not hardcoded — the source site's own `{current_year}`
+  placeholder confirms they already treat this as dynamic), a Facebook link
+  (facebook.com/queencitymagic) and Instagram link (instagram.com/queencitymagicsva/) each
+  with an icon, and a "woman-owned & queer-friendly" badge. The badge is a value statement
+  from the client, not a design placeholder — render it as real accessible text/icon (not
+  literally just the 🏳️‍🌈 emoji standing alone, which screen readers announce inconsistently),
+  same contrast/target-size bar as everything else in the footer. Attribution credits
+  (`src/content/attribution.md`) still render alongside these, unchanged from the original
+  plan.
+- **Wordmark/logo — unchanged.** No logo asset has landed. Still styled text (display-serif
+  "Queen City Magic"), not a graphic, until a real logo file is provided.
+
+**OQ-12-2 resolved 2026-07-14: port `content.md`'s terminology as-is, don't tone it down.**
+Per the user: this is the client's own direct copy from their live site, so the project's
+usual trademark-flagging caution is relaxed *for this specific ported content* — the client
+may already have their own read on the risk ("for all I know, they have permission or
+something"), and will be asked directly about toning anything down later rather than this
+redesign pre-emptively softening their own words. This does **not** relax the flagging
+pattern for genuinely *new* wizarding-world-adjacent choices this redesign might introduce on
+its own initiative (new color palettes, new imagery, new naming) — see
+`feedback_ip_trademark_flagging` — only for verbatim client-authored copy being carried
+forward as-is.
+
+**OQ-12-1 resolved 2026-07-15: sticky, transparent-over-hero → solid-on-scroll.** Confirmed
+the recommended treatment — the navbar stays fixed to the top at all times, transparent while
+the hero is behind it, then gains a solid background (opacity-only, GPU-composited) once
+scrolled past it. Only opted into on Home; every other page's navbar is solid immediately
+since there's no hero to sit over.
 
 ## Dependencies
 
