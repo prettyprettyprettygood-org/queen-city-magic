@@ -55,6 +55,31 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     color: var(--color-surface-text);
   }
 
+  /* Full-width sunset backlight behind the capped castle artwork. */
+  .hero::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    content: "";
+    background:
+      radial-gradient(
+        ellipse 24% 20% at 50% 30%,
+        color-mix(in srgb, var(--color-magic-glow) 10%, transparent) 0%,
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 26% 44% at 5% 48%,
+        color-mix(in srgb, var(--color-magic-glow) 18%, transparent) 0%,
+        transparent 80%
+      ),
+      radial-gradient(
+        ellipse 26% 44% at 95% 48%,
+        color-mix(in srgb, var(--color-magic-glow) 18%, transparent) 0%,
+        transparent 80%
+      );
+    pointer-events: none;
+  }
+
   .hero__parallax {
     z-index: 0;
   }
@@ -66,6 +91,7 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     flex-direction: column;
     align-items: center;
     text-align: center;
+    transform: translateY(clamp(0.75rem, 2vh, 1.5rem));
   }
 
   /*

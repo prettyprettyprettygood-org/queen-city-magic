@@ -95,20 +95,12 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     gap: 1rem;
     padding: 1.75rem;
     border-radius: calc(var(--radius-control) * 2);
-    /*
-      No border — the darker background plus drop shadow below are enough to read as a panel
-      against the starfield; the hover glow and sparkle motes carry the interactive cue instead
-      of a static outline.
-      Mixed toward --color-obsidian-950 (not --color-surface-bg or --color-ink-900): the fixed
-      Starfield behind the page paints --color-surface-bg as its own base fill, so a translucent
-      mix of that same color over that same backdrop blends to the identical opaque color at any
-      alpha — no visible darkening or see-through. --color-ink-900 fixed that but reads muddy
-      ("plum") once its warm brown-black blends with this site's cool violet backdrops;
-      --color-obsidian-950 is a near-black with a cool undertone instead, so the card reads as a
-      neutral blackish panel rather than a warm tint. The low blur keeps the Starfield's small
-      star points visible through the panel instead of smearing into haze.
-    */
-    background-color: color-mix(in srgb, var(--color-obsidian-950) 82%, transparent);
+    /* Card color is a house token, so light and house-tinted dark cards need no component overrides. */
+    background-color: var(--color-surface-card);
+    color: var(--color-surface-card-text);
+    /* Descendants keep using the same semantic roles, but resolve them for this card surface. */
+    --surface-primary: var(--surface-card-heading);
+    --surface-border: color-mix(in srgb, var(--surface-card-text) 24%, transparent);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
@@ -122,7 +114,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     opacity: 0;
     pointer-events: none;
     /* Deliberately faint — the sparkle motes are the primary hover cue, this is just ambient support. */
-    box-shadow: 0 0 22px 2px color-mix(in srgb, var(--color-surface-primary) 14%, transparent);
+    box-shadow: 0 0 22px 2px color-mix(in srgb, var(--color-surface-accent) 14%, transparent);
   }
 
   .card__motes {
@@ -144,8 +136,8 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
        than a stamped circle. */
     background: radial-gradient(
       circle,
-      var(--color-surface-primary) 0%,
-      color-mix(in srgb, var(--color-surface-primary) 45%, transparent) 45%,
+      var(--color-surface-accent) 0%,
+      color-mix(in srgb, var(--color-surface-accent) 45%, transparent) 45%,
       transparent 75%
     );
     opacity: 0;
@@ -203,15 +195,24 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     height: 2.75rem;
     flex-shrink: 0;
     border-radius: 999px;
-    background-color: color-mix(in srgb, var(--color-surface-primary) 18%, transparent);
-    color: var(--color-surface-primary);
+    background-color: color-mix(in srgb, var(--color-surface-accent) 18%, transparent);
+    color: color-mix(in srgb, var(--color-surface-text) 72%, transparent);
   }
 
   .card__icon:empty {
     display: none;
   }
 
+  .card:hover .card__icon,
+  .card:focus-within .card__icon {
+    color: var(--color-surface-primary);
+  }
+
   @media (prefers-reduced-motion: no-preference) {
+    .card__icon {
+      transition: color 0.2s ease-out;
+    }
+
     .card:hover .card__icon :global(svg),
     .card:focus-within .card__icon :global(svg) {
       animation: card-icon-wiggle 0.5s ease-in-out;
@@ -239,6 +240,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
   .card__title :global(h2),
   .card__title :global(h3) {
     margin: 0;
+    color: var(--color-surface-card-heading);
   }
 
   .card__body {

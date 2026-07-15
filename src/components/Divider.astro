@@ -2,7 +2,7 @@
 /**
  * Ornamental section divider — a themed line/glyph/line rule for breaking up open-prose
  * content outside of Card. Purely decorative (role="presentation"); the glyph and lines key
- * off --color-surface-primary/--color-surface-border, so it reskins automatically with the
+ * off --color-surface-primary/--color-surface-secondary, so it reskins automatically with the
  * house-theme switcher.
  */
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -35,7 +35,7 @@ const { class: className } = Astro.props;
   .divider__line {
     flex: 1;
     height: 1px;
-    background-color: var(--color-surface-border);
+    background-color: var(--color-surface-secondary);
   }
 
   .divider__glyph {

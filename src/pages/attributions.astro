@@ -1,0 +1,56 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
+import attribution from "@/content/attribution.md?raw";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const attributionHtml = attribution
+  .trim()
+  .split(/\n\s*\n/)
+  .map((entry) => `<p>${entry}</p>`)
+  .join("");
+---
+
+<BaseLayout title="Attributions — Queen City Magic">
+  <Section>
+    <Card>
+      <h1 slot="title">Attributions</h1>
+      <div class="attributions" set:html={attributionHtml} />
+      <p class="attributions__note">
+        House icons are used under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer" class="focus-glow">CC BY 3.0</a> and have not been modified.
+      </p>
+    </Card>
+  </Section>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 400;
+    color: var(--color-surface-primary);
+  }
+
+  .attributions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    line-height: 1.6;
+  }
+
+  .attributions :global(a),
+  .attributions__note a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .attributions__note {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+</style>

@@ -5,10 +5,10 @@ Save the date for next year's event, bringing more mischief, magic, mystery and 
 The magic explained...(to the best of our abilities–we are pleasantly surprised yearly ourselves)
 QCMM is a homegrown festival celebrating magic in all forms and from all fandoms. We love, accept and welcome kind humans from everywhere and every persuasion who come for fun, friends, a little mischief and a want to believe in the extra special parts of this existence--from great books to things you have to squint your eyes and concentrate to believe in. We are not affiliated with Warner Brothers or any other corporate entity. We are an army of volunteers who work year around to make sure that thousands of visitors to our town have the best hour or long weekend possible in our delightful, charming and downright magical historic downtown.
 
-YOU (probably) BELONG HERE
+You Belong Here
 The people who work tirelessly on this festival for months do this as a hobby and labor of love. We update as we can and try to keep you as informed as possible but due to the nature of a FREE festival with a MILLION moving parts and things to do, it is hard to keep everyone abreast of everything. Just stay tuned, trust that when you arrive there will be way more things to do than you have time to do it and try to relax and ENJOY your time here-whether you do and see everything or do and see one thing. All you have to do is arrive and be wow-ed by a place and event that even those of us who live here and work on it can hardly believe exists. Staunton is magic! You will only be sorry if you miss it.
 
-What to Expect...and when(ish)
+Learn More
 The easiest way for us to update things is our FB page. Again, there are 100-200 people & organizations involved. QCMM acts as the connector, cat-wranglers and communicator for all of this. There will be an FAQ, multiple maps and a scheduling app FULL OF FUN released within a month of our start–and it will likely show up on FB first. We are set in a historic downtown so there is a roster of amazing small businesses who provide facilities, food and fun as well as a large group of local non-profits to paint faces, help with crafts and add to the event. We don't and can't allow vendors. We are grateful to our state tourism corporation for helping us with the task of welcoming 20,000+ visitors for QCMM.
 
 Footer: Copyright © {current_year} Queen City Magic - All Rights Reserved.

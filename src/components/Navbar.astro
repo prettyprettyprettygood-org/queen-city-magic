@@ -5,6 +5,9 @@ import { Menu } from "@lucide/astro";
 import ThemeSelect from "@/components/ThemeSelect.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { navLinks } from "@/lib/navLinks";
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const currentPath = Astro.url.pathname;
 ---
 
 <nav class="navbar" aria-label="Primary" data-navbar>
@@ -17,7 +20,11 @@ import { navLinks } from "@/lib/navLinks";
         {
           navLinks.map((link) => (
             <li>
-              <a href={link.href} class="navbar__link focus-glow">
+              <a
+                href={link.href}
+                class="navbar__link focus-glow"
+                aria-current={currentPath === link.href ? "page" : undefined}
+              >
                 {link.label}
               </a>
             </li>
@@ -37,7 +44,11 @@ import { navLinks } from "@/lib/navLinks";
             {
               navLinks.map((link) => (
                 <li>
-                  <a href={link.href} class="navbar__link focus-glow">
+                  <a
+                    href={link.href}
+                    class="navbar__link focus-glow"
+                    aria-current={currentPath === link.href ? "page" : undefined}
+                  >
                     {link.label}
                   </a>
                 </li>
@@ -125,7 +136,11 @@ import { navLinks } from "@/lib/navLinks";
   }
 
   .navbar__link:hover {
-    color: var(--color-surface-primary);
+    color: var(--color-surface-accent);
+  }
+
+  .navbar__link[aria-current="page"] {
+    color: var(--color-surface-accent);
   }
 
   .navbar__theme {

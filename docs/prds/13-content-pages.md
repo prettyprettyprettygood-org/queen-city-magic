@@ -58,7 +58,7 @@ consistent padding/max-width), add these sections in order after the Hero:
    in the source copy, appearing at both the top and body of the page.
 4. **"What to expect...and when(ish)"** — the FB-page/logistics paragraph, verbatim, with the
    `qcmm25.sched.com` link kept as a real external link (opens in a new tab, `rel="noopener
-   noreferrer"`).
+noreferrer"`).
 
 Each section is static Astro markup — no client-side JS needed, per CLAUDE.md's
 Astro-by-default rule.

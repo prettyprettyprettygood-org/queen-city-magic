@@ -1,6 +1,6 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { BookOpen, CalendarHeart, Heart, ListChecks } from "@lucide/astro";
+import { CalendarHeart, CircleQuestionMark, Heart } from "@lucide/astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Button from "@/components/Button.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -9,6 +9,8 @@ import Card from "@/components/Card.astro";
 import Divider from "@/components/Divider.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Hero from "@/components/Hero.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import HouseSectionIcon from "@/components/HouseSectionIcon.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -21,7 +23,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   <Section width="wide">
     <div class="intro">
       <div class="intro__icon" aria-hidden="true">
-        <BookOpen size={26} />
+        <HouseSectionIcon />
       </div>
       <h2 class="intro__heading">The magic explained&hellip;</h2>
       <p class="intro__aside">
@@ -60,7 +62,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
     <Card>
       <Heart slot="icon" size={22} aria-hidden="true" />
-      <h2 slot="title">YOU (probably) BELONG HERE</h2>
+      <h2 slot="title">Don't miss out</h2>
       <p>
         The people who work tirelessly on this festival for months do this as a hobby and
         labor of love. We update as we can and try to keep you as informed as possible but
@@ -76,8 +78,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     </Card>
 
     <Card>
-      <ListChecks slot="icon" size={22} aria-hidden="true" />
-      <h2 slot="title">What to Expect&hellip;and when(ish)</h2>
+      <CircleQuestionMark slot="icon" size={22} aria-hidden="true" />
+      <h2 slot="title">Learn more</h2>
       <p>
         The easiest way for us to update things is our <a
           href="https://www.facebook.com/queencitymagic"
@@ -129,8 +131,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 5.5rem;
+    height: 5.5rem;
     border-radius: 999px;
     background-color: color-mix(in srgb, var(--color-surface-primary) 18%, transparent);
     color: var(--color-surface-primary);

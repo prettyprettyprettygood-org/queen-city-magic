@@ -9,12 +9,9 @@
      --surface-* var to one of four house-inspired themes, so a single ThemeSwitcher toggle
      re-skins every component built against --surface-* with no per-component theme logic.
 
-  All four themes commit to dark mode (a subtle, desaturated dark ground + light text) —
-  Twilight, Ambitious Green, Daring Red, Clever Blue, and Loyal Gold all follow the same
-  shape. "Primary" is the theme's saturated brand hue, used for headings,
-  links, and icon tints — it is deliberately NOT the page background; a fully-saturated color
-  as a full-bleed background reads as loud rather than "a subtle color that compliments the
-  theme," so the background is a much lower-saturation tint at the same hue instead.
+  Page backgrounds stay independent from the house treatments below. Each house maps its
+  heading, card, small accent, and secondary accent once; components consume those semantic
+  roles rather than carrying house-specific overrides.
 */
 
 @font-face {
@@ -61,6 +58,14 @@
   --surface-primary: var(--color-amber-400);
   --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-amber-600);
+  --surface-secondary: var(--color-amber-300);
+  --surface-card: color-mix(
+    in srgb,
+    var(--color-obsidian-950) 82%,
+    transparent
+  );
+  --surface-card-text: var(--color-parchment-50);
+  --surface-card-heading: var(--color-amber-400);
   --surface-glow: var(--color-amber-glow);
   /*
     Border stays a low-opacity mix of this theme's own text color — every theme is dark mode,
@@ -98,43 +103,59 @@
 }
 
 [data-theme="daring"] {
-  /* dark mode — scarlet + gold */
+  /* Gryffindor / Daring Red: gold titles, red only for compact interactive accents. */
   --surface-bg: var(--color-daring-bg);
   --surface-panel: var(--color-daring-panel);
   --surface-text: var(--color-parchment-50);
-  --surface-primary: var(--color-daring-primary);
+  --surface-primary: var(--color-daring-heading);
   --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-daring-accent);
+  --surface-secondary: var(--color-daring-secondary);
+  --surface-card: var(--color-daring-card);
+  --surface-card-text: var(--color-parchment-50);
+  --surface-card-heading: var(--color-daring-heading);
   --surface-glow: var(--color-daring-primary);
 }
 [data-theme="ambitious"] {
-  /* dark mode — green + silver */
+  /* Slytherin / Ambitious Green: dark green cards with silver detail. */
   --surface-bg: var(--color-ambitious-bg);
   --surface-panel: var(--color-ambitious-panel);
   --surface-text: var(--color-parchment-50);
   --surface-primary: var(--color-ambitious-primary);
   --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-ambitious-accent);
+  --surface-secondary: var(--color-ambitious-secondary);
+  --surface-card: var(--color-ambitious-card);
+  --surface-card-text: var(--color-parchment-50);
+  --surface-card-heading: var(--color-ambitious-primary);
   --surface-glow: var(--color-ambitious-primary);
 }
 [data-theme="clever"] {
-  /* dark mode — blue + bronze */
+  /* Ravenclaw / Clever Blue: dark blue cards with bronze detail. */
   --surface-bg: var(--color-clever-bg);
   --surface-panel: var(--color-clever-panel);
   --surface-text: var(--color-parchment-50);
   --surface-primary: var(--color-clever-primary);
   --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-clever-accent);
+  --surface-secondary: var(--color-clever-secondary);
+  --surface-card: var(--color-clever-card);
+  --surface-card-text: var(--color-parchment-50);
+  --surface-card-heading: var(--color-clever-primary);
   --surface-glow: var(--color-clever-primary);
 }
 [data-theme="loyal"] {
-  /* dark mode — yellow + near-black */
+  /* Hufflepuff / Loyal Gold: dark gold-tinted cards with the existing gold treatment. */
   --surface-bg: var(--color-loyal-bg);
   --surface-panel: var(--color-loyal-panel);
   --surface-text: var(--color-parchment-50);
   --surface-primary: var(--color-loyal-primary);
   --surface-on-primary: var(--color-ink-900);
   --surface-accent: var(--color-loyal-accent);
+  --surface-secondary: var(--color-loyal-secondary);
+  --surface-card: var(--color-loyal-card);
+  --surface-card-text: var(--color-parchment-50);
+  --surface-card-heading: var(--color-loyal-primary);
   --surface-glow: var(--color-loyal-primary);
 }
 
@@ -218,23 +239,33 @@
   */
   --color-daring-bg: #221111;
   --color-daring-panel: #321a1b;
-  --color-daring-primary: #d65c66;
-  --color-daring-accent: #d0a04e;
+  --color-daring-primary: #a92c35;
+  --color-daring-heading: #d3a625;
+  --color-daring-accent: #a92c35;
+  --color-daring-secondary: #d3a625;
+  --color-daring-card: #190a0b;
 
   --color-ambitious-bg: #131c18;
   --color-ambitious-panel: #1d2923;
   --color-ambitious-primary: #519473;
   --color-ambitious-accent: #75786e;
+  --color-ambitious-secondary: #c4c7c3;
+  /* Deliberately darker than #131c18 (the Ambitious page background). */
+  --color-ambitious-card: #0b1510;
 
   --color-clever-bg: #111522;
   --color-clever-panel: #1a2132;
   --color-clever-primary: #6688d6;
   --color-clever-accent: #bf8c4a;
+  --color-clever-secondary: #bf8c4a;
+  --color-clever-card: #17243a;
 
   --color-loyal-bg: #1e1a10;
   --color-loyal-panel: #2e2819;
   --color-loyal-primary: #e2bb50;
   --color-loyal-accent: #d39a45;
+  --color-loyal-secondary: #d39a45;
+  --color-loyal-card: #15120a;
 
   /* semantic aliases — components should reach for these, not the raw scale above */
   --color-surface-bg: var(--surface-bg);
@@ -243,6 +274,10 @@
   --color-surface-primary: var(--surface-primary);
   --color-surface-on-primary: var(--surface-on-primary);
   --color-surface-accent: var(--surface-accent);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-text: var(--surface-card-text);
+  --color-surface-card-heading: var(--surface-card-heading);
   --color-surface-glow: var(--surface-glow);
   --color-surface-border: var(--surface-border);
   --color-surface-nav-scrim: var(--surface-nav-scrim);
