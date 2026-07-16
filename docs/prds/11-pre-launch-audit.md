@@ -150,13 +150,77 @@ than blurring them.
   practice already covers it; any volunteer liability/waiver links, if the org has them
   elsewhere and wants them referenced from the new site.
 
+### 11. Code hygiene & structure
+- **Code fix:** run `npm run typecheck` (`astro check`) and `npm run lint` (`biome check .`)
+  clean before considering this pass done — cheap, already expected proactively per
+  CLAUDE.md, but worth a final confirming run here across the whole site rather than trusting
+  every individual PRD's own pass caught everything. Sweep for dead code, unused
+  imports/variables/exports, leftover `console.log`s, and commented-out blocks.
+- Biome's `recommended` preset (`biome.json`) does catch unused imports/variables for
+  plain JS/TS, but every `.astro` file in this repo carries `// biome-ignore
+  lint/correctness/noUnusedImports`/`noUnusedVariables` comments on frontmatter values that
+  are only referenced from the template — Biome's Astro analysis doesn't see markup usage, so
+  it can't verify these itself. Spot-check that each of those suppression comments still
+  points at something genuinely used in the template below it, rather than trusting the
+  comment blindly — a copy-pasted suppression next to something that actually became dead
+  would slip past `biome check` silently.
+- **File size — CLAUDE.md's ~200–300 line guideline.** Verified against current line counts
+  (`wc -l`), these components exceed it and are worth a real split-or-justify look, not just a
+  guideline check: `Gallery.astro` (452 lines), `EventCard.astro` (417), `Navbar.astro`
+  (384), `Footer.astro` (364). `ThemeSelect.astro` (293) and `Card.astro` (278) are borderline
+  — fine if each is still doing one cohesive thing, worth a second look if not. Page files
+  (`schedule.astro` at 383, `about.astro` at 278) are less clear-cut since pages are expected
+  to carry more content than components, but still worth checking whether any section inside
+  them should be pulled out as its own component rather than left inline.
+- **Repeated hardcoded value found:** the exact same panel drop-shadow,
+  `box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35)`, is duplicated verbatim in `Card.astro`,
+  `ThemeSelect.astro`, and `Navbar.astro` — a real instance of the "don't inline a one-off
+  hex/px value, add it to the token set" rule in CLAUDE.md's Design tokens section being
+  missed. Promote it to a shared token (e.g. `--shadow-panel`) and reference it from all
+  three instead of three independent copies that can drift.
+- Beyond that one, no other hardcoded hex/rgb colors turned up in component `<style>` blocks
+  outside `tokens.css` as of 2026-07-16 — token discipline is otherwise holding up; treat the
+  shadow value above as the one concrete fix, not evidence of a wider problem.
+- **Reuse check:** confirm no parallel/duplicate implementation of `Card`, `Button`,
+  `Section`, `Divider`, `PageHeader`, or `EmblemIcon`'s replacement (`Shield` via
+  `@lucide/astro`) exists anywhere a page could have composed the existing one instead.
+
+### 12. Test coverage
+- **No test runner exists yet** — `package.json` has no `vitest`/test script, and there are no
+  `*.test.*`/`*.spec.*` files anywhere in `src/`. This is a real gap to close here, not
+  something to assume is out of scope.
+- **Code fix, kept deliberately small:** add a minimal Vitest setup and a handful of unit
+  tests for the pure-logic helpers that are easy to get subtly wrong and hard to notice
+  visually — the Events page's date-bucketing logic (timezone-aware, DST-crossing, midnight
+  cutover into Upcoming/Happening Now/Past) is the clearest candidate, and `EventCountdown`'s
+  date math is a close second. Don't chase broad coverage, component-render tests, or e2e —
+  Playwright stays reserved for explicit/high-risk-change requests per CLAUDE.md's testing
+  section; this category is about a few cheap, high-value unit tests for logic that would
+  fail silently, not a general test-suite buildout.
+
+### 13. Performance / Lighthouse prerequisites
+- **The user checks Lighthouse scores directly** — this category isn't asking whoever
+  implements this PRD to run Lighthouse themselves, only to verify the code-level things that
+  feed into that score are actually in place.
+- **Code fix found:** the Vimeo iframe on the Gallery page (`player.vimeo.com`, the highlight
+  video) has no `loading="lazy"` attribute — it's below the fold behind the photo grid, so
+  it's currently loaded eagerly for no reason. Add `loading="lazy"` (and confirm the same for
+  any other below-the-fold iframe/image that isn't already going through Astro's `<Image>`
+  optimization).
+- Everything else in this category is already required elsewhere and just needs a final
+  confirming check, not new work: animations restricted to `opacity`/`transform`/`filter`
+  (CLAUDE.md Performance section), images through Astro's image pipeline rather than raw
+  drops into `public/`, and fonts self-hosted as `woff2` rather than a render-blocking
+  Google Fonts CDN link (already true per the design-tokens PRD).
+
 ## Process
 
 This isn't a fully automated CI check — it's a structured, mostly-manual pass run once,
 after the in-scope pages exist, before DNS cutover/launch. The automatable pieces
-(`npm audit`, Lighthouse/axe, header checks) can be scripted; the ownership and legal items
-are inherently conversations, not scans, and shouldn't be treated as checkboxes to silently
-tick off.
+(`npm audit`, typecheck/lint, axe/header checks) can be scripted; the ownership and legal
+items are inherently conversations, not scans, and shouldn't be treated as checkboxes to
+silently tick off. Lighthouse itself is explicitly the user's own check, not part of this
+PRD's automatable set — category 13 only covers the code prerequisites feeding into it.
 
 Output is a written report with two parts: a "fixed in code" list (with commit/PR
 references) and a separate "client action needed" checklist (categories 4, 9, and 10
@@ -165,11 +229,12 @@ buried in commit messages where it'll get lost.
 
 ## Open questions / assumptions
 
-Resolved 2026-07-14 — hosting is Vercel, staging URL is
-`https://queen-city-magic.vercel.app/`, and the donation mechanism is Venmo-only (see
-categories 1, 4, 8, 9 above). One item remains genuinely open: QCMM's own nonprofit/tax
-status (categories 4 and 10) — not resolved by this pass, correctly a "client must confirm"
-item, not something to guess at further.
+None remaining as of 2026-07-16. Hosting/staging/donation mechanism were resolved 2026-07-14
+(categories 1, 4, 8, 9), and QCMM's nonprofit status was resolved 2026-07-16 — **confirmed
+not a nonprofit** (category 4). The category-level "client must confirm" items (Venmo account
+ownership, domain/hosting logins, lawyer-reviewed policy content, photo-consent policy) are
+expected, ongoing outputs of running this audit, not unresolved questions about the PRD's own
+scope — don't conflate the two.
 
 ## Dependencies
 
