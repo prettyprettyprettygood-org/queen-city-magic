@@ -1,0 +1,211 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { ChevronDown } from "@lucide/astro";
+import type { ScheduleDay } from "@/data/schedule2025";
+
+interface Props {
+  days: ScheduleDay[];
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { days } = Astro.props;
+---
+
+<div class="schedule-timeline">
+  {
+    days.map((day) => (
+      <section class="timeline-day">
+        <h3 class="timeline-day__heading">{day.day}</h3>
+
+        {day.stages.map((stage) => (
+          <details class="timeline-stage" open>
+            <summary class="timeline-stage__summary focus-glow">
+              <span>{stage.name ?? "Festival Schedule"}</span>
+              <ChevronDown
+                class="timeline-stage__chevron"
+                size={18}
+                aria-hidden="true"
+                focusable="false"
+              />
+            </summary>
+            <ol class="timeline-list">
+              {stage.events.map((event) => (
+                <li class="timeline-event">
+                  <span class="timeline-event__dot" aria-hidden="true" />
+                  <p class="timeline-event__time">{event.time}</p>
+                  <p class="timeline-event__title">
+                    {event.title}
+                    {event.location && (
+                      <span class="timeline-event__location"> ({event.location})</span>
+                    )}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </details>
+        ))}
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .schedule-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .timeline-day__heading {
+    display: inline-block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-surface-gold);
+    letter-spacing: 0.02em;
+    margin: 0 0 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--color-surface-gold);
+  }
+
+  /* Vertical rail + dot timeline. The <ol> is the grid — one shared pair of column tracks
+     (time / title) sized to the widest cell in the WHOLE list — and each <li> uses
+     `subgrid` to line its own two children up against those shared tracks, so every row's
+     title starts at the same x position instead of each row sizing its own columns
+     independently. The rail is one continuous line drawn on the <ol>, with each dot
+     positioned to line up against it via a fixed negative offset back into the list's own
+     left padding. */
+  .timeline-list {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(6.5rem, auto) 1fr;
+    column-gap: 0.85rem;
+    row-gap: 0.85rem;
+    margin: 0;
+    padding: 0 0 0 1.5rem;
+    list-style: none;
+  }
+
+  .timeline-list::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    width: 1px;
+    background: var(--color-surface-border);
+  }
+
+  .timeline-event {
+    position: relative;
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    column-gap: 0.85rem;
+    row-gap: 0.15rem;
+    border-radius: var(--radius-control);
+  }
+
+  .timeline-event::after {
+    content: "";
+    position: absolute;
+    inset: -0.2rem -0.5rem -0.2rem -1.75rem;
+    z-index: -1;
+    border-radius: var(--radius-control);
+    background-color: color-mix(in srgb, var(--color-surface-gold) 10%, transparent);
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline-event::after {
+      transition: opacity 0.15s ease-out;
+    }
+  }
+
+  .timeline-event:hover::after {
+    opacity: 1;
+  }
+
+  .timeline-event__dot {
+    position: absolute;
+    top: 0.4rem;
+    left: -1.3rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--color-surface-gold);
+  }
+
+  .timeline-event__time {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .timeline-event__title {
+    margin: 0;
+    font-size: 0.95rem;
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 30rem) {
+    .timeline-event__title {
+      grid-column: 2;
+    }
+  }
+
+  .timeline-event__location {
+    opacity: 0.75;
+  }
+
+  .timeline-stage {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--color-surface-border);
+  }
+
+  .timeline-day .timeline-stage:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .timeline-stage__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 2.75rem;
+    padding: 0.15rem 0.25rem;
+    list-style: none;
+    cursor: pointer;
+    color: var(--color-surface-gold);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .timeline-stage__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .timeline-stage__summary:hover {
+    color: var(--color-surface-gold-active);
+  }
+
+  .timeline-stage__chevron {
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline-stage__chevron {
+      transition: transform 0.15s ease-out;
+    }
+  }
+
+  .timeline-stage[open] > .timeline-stage__summary .timeline-stage__chevron {
+    transform: rotate(180deg);
+  }
+
+  .timeline-stage .timeline-list {
+    margin-top: 0.75rem;
+  }
+</style>

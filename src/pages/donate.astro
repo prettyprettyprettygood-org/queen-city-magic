@@ -4,9 +4,13 @@ import { Image } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import qrCode from "@/assets/images/qr-code.png";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import PageHeader from "@/components/PageHeader.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import SocialLinks from "@/components/SocialLinks.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
@@ -15,32 +19,44 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   <PageHeader width="wide">Help us make the magic!</PageHeader>
 
   <Section width="wide" class="donate-section">
-    <div class="donate-intro">
-      <p>We need your help to continue making the magic, year after year!</p>
-      <p>
-        Please donate today to keep us going, we depend on our volunteers and generous donors,
-        thank you!
-      </p>
-    </div>
+    <Card class="donate-card">
+      <div class="donate-intro">
+        <p>We need your help to continue making the magic, year after year!</p>
+        <p>
+          Queen City Mischief & Magic is free to attend and run almost entirely by volunteers
+          — but putting on a two-day, city-wide festival takes real resources, and every
+          donation helps make it happen.
+        </p>
+        <p>
+          Please donate today to keep us going. We depend on our volunteers and generous
+          donors like you — thank you!
+        </p>
+      </div>
 
-    <div class="venmo">
-      <Image
-        src={qrCode}
-        alt="QR code linking to the QCMM Venmo account, @qcmmsva"
-        width={260}
-        height={260}
-        class="venmo__qr"
-      />
-      <p class="venmo__fallback">
-        Scan this code, or visit{" "}
-        <a
-          href="https://venmo.com/qcmmsva"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="focus-glow">@qcmmsva</a
-        > on Venmo.
-      </p>
-    </div>
+      <div class="venmo">
+        <Image
+          src={qrCode}
+          alt="QR code linking to the QCMM Venmo account, @qcmmsva"
+          width={260}
+          height={260}
+          class="venmo__qr"
+        />
+        <p class="venmo__fallback">
+          Scan this code, or visit{" "}
+          <a
+            href="https://venmo.com/qcmmsva"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="focus-glow">@qcmmsva</a
+          > on Venmo.
+        </p>
+      </div>
+
+      <div class="donate-socials">
+        <p class="donate-socials__label">Follow the festival</p>
+        <SocialLinks />
+      </div>
+    </Card>
   </Section>
 </BaseLayout>
 
@@ -53,9 +69,13 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     gap: 1.5rem;
   }
 
+  :global(.donate-card .card__body) {
+    gap: 2.5rem;
+  }
+
   p {
     margin: 0;
-    font-size: clamp(1rem, 2vw, 1.15rem);
+    font-size: clamp(1.1rem, 2.4vw, 1.3rem);
     line-height: 1.6;
     text-align: center;
   }
@@ -63,7 +83,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   .donate-intro {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .venmo {
@@ -73,10 +93,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     gap: 1rem;
     max-width: 24rem;
     margin: 0 auto;
-    padding: 1.25rem;
-    border-radius: var(--radius-control);
-    border: 1px solid var(--color-surface-border);
-    background-color: color-mix(in srgb, var(--color-surface-bg) 45%, transparent);
     text-align: center;
   }
 
@@ -89,5 +105,20 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   .venmo__fallback {
     font-size: 1.05rem;
     margin: 0;
+  }
+
+  .donate-socials {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .donate-socials__label {
+    margin: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
   }
 </style>

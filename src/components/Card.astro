@@ -8,12 +8,29 @@
  * some cards skip the CTA — both wrapper elements collapse via `:empty` when unused, so
  * callers don't need a prop to opt out.
  */
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import FeaturedCardGlow from "@/components/FeaturedCardGlow";
+
 interface Props {
   class?: string;
+  /**
+   * Persistent themed outline + an ambient animated aura for a card that should stand out
+   * from its siblings (e.g. a featured CTA). Uses --color-surface-featured (each house's own
+   * hue), not the site-wide gold every heading already uses, so it reads as distinct.
+   */
+  featured?: boolean;
+  /** Centers the header, body, and CTA content instead of the default left/end alignment. */
+  center?: boolean;
 }
 
-// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const { class: className } = Astro.props;
+const {
+  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+  class: className,
+  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+  featured = false,
+  // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+  center = false,
+} = Astro.props;
 
 interface Mote {
   x: number;
@@ -57,8 +74,9 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
 });
 ---
 
-<div class:list={["card", className]}>
+<div class:list={["card", { "card--featured": featured, "card--center": center }, className]}>
   <div class="card__glow" aria-hidden="true"></div>
+  {featured && <FeaturedCardGlow client:visible />}
   <div class="card__motes" aria-hidden="true">
     {
       motes.map((mote) => (
@@ -185,10 +203,55 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     opacity: 1;
   }
 
+  .card--featured {
+    /* Soft, low-opacity edge instead of a crisp line — the box-shadow glow layers below do
+       the actual "this card is lit up" work. Faint at rest, brighter on hover/focus. */
+    border: 1px solid color-mix(in srgb, var(--color-surface-featured) 25%, transparent);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.35),
+      0 0 12px 1px color-mix(in srgb, var(--color-surface-featured) 20%, transparent),
+      0 0 28px 6px color-mix(in srgb, var(--color-surface-featured) 9%, transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card--featured {
+      transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+    }
+  }
+
+  .card--featured:hover,
+  .card--featured:focus-within {
+    border-color: color-mix(in srgb, var(--color-surface-featured) 55%, transparent);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.35),
+      0 0 18px 3px color-mix(in srgb, var(--color-surface-featured) 55%, transparent),
+      0 0 44px 12px color-mix(in srgb, var(--color-surface-featured) 28%, transparent);
+  }
+
+  /* The ambient FeaturedCardGlow canvas replaces this hover-only halo for featured cards —
+     without this, the two would stack into a doubled-up glow on hover. */
+  .card--featured .card__glow {
+    display: none;
+  }
+
   .card__header {
     display: flex;
     align-items: center;
     gap: 0.85rem;
+  }
+
+  .card--center .card__header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .card--center .card__body {
+    align-items: center;
+    text-align: center;
+  }
+
+  .card--center .card__cta {
+    justify-content: center;
   }
 
   .card__media:empty {

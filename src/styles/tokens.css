@@ -100,6 +100,14 @@
   */
   --surface-gold-active: var(--color-magic-gold-active);
   /*
+    Featured-card emphasis (currently just the schedule page's 2026 CTA) — deliberately the
+    OPPOSITE of --surface-gold/--surface-primary: this should read as "this house's own living
+    color," not the site-wide gold every heading already uses. Twilight has no house color of
+    its own (it's the de-canoned default), so it borrows the theme-picker swatch's violet
+    rather than falling back to amber, which would just look like --surface-gold again.
+  */
+  --surface-featured: var(--color-twilight-shield);
+  /*
     Whether the fixed page-wide starfield (Starfield.tsx) draws its twinkling stars at all —
     numeric 1/0, read via getComputedStyle since canvas can't consume a CSS boolean directly.
     A starry-night backdrop only makes sense against a dark ground, which every theme now is,
@@ -121,6 +129,7 @@
   --surface-card-text: var(--color-parchment-50);
   --surface-card-heading: var(--color-daring-heading);
   --surface-glow: var(--color-daring-primary);
+  --surface-featured: var(--color-daring-primary);
 }
 [data-theme="ambitious"] {
   /* Slytherin / Ambitious Green: dark green cards with silver detail. */
@@ -135,6 +144,7 @@
   --surface-card-text: var(--color-parchment-50);
   --surface-card-heading: var(--color-ambitious-primary);
   --surface-glow: var(--color-ambitious-primary);
+  --surface-featured: var(--color-ambitious-primary);
 }
 [data-theme="clever"] {
   /* Ravenclaw / Clever Blue: dark blue cards with bronze detail. */
@@ -149,6 +159,7 @@
   --surface-card-text: var(--color-parchment-50);
   --surface-card-heading: var(--color-clever-primary);
   --surface-glow: var(--color-clever-primary);
+  --surface-featured: var(--color-clever-primary);
 }
 [data-theme="loyal"] {
   /* Hufflepuff / Loyal Yellow: dark gold-tinted cards with the existing gold treatment. */
@@ -163,6 +174,7 @@
   --surface-card-text: var(--color-parchment-50);
   --surface-card-heading: var(--color-loyal-primary);
   --surface-glow: var(--color-loyal-primary);
+  --surface-featured: var(--color-loyal-primary);
 }
 
 @theme {
@@ -277,7 +289,12 @@
   --color-clever-primary: #6b8fdf;
   --color-clever-accent: #bf8c4a;
   --color-clever-secondary: #bf8c4a;
-  --color-clever-card: #17243a;
+  /*
+    Deliberately darker than #111522 (the Clever page background) — the previous #17243a was
+    lighter than the bg it sits on, the only theme where the card stood out as a pale mismatched
+    box instead of reading as a recessed dark panel like every other house's card.
+  */
+  --color-clever-card: #0c1220;
 
   --color-loyal-bg: #1e1a10;
   --color-loyal-panel: #2e2819;
@@ -303,4 +320,5 @@
   --color-surface-parallax-ground: var(--surface-parallax-ground);
   --color-surface-gold: var(--surface-gold);
   --color-surface-gold-active: var(--surface-gold-active);
+  --color-surface-featured: var(--surface-featured);
 }
