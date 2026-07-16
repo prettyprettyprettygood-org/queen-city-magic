@@ -33,8 +33,8 @@ const PUSH_DISTANCE = 16;
 const LERP_FACTOR = 0.16;
 const MIN_RADIUS = 0.6;
 const MAX_RADIUS = 2;
-const MIN_ALPHA = 0.55;
-const MAX_ALPHA = 0.95;
+const MIN_ALPHA = 0.7;
+const MAX_ALPHA = 1;
 const TWINKLE_MIN_SPEED = 0.002;
 const TWINKLE_MAX_SPEED = 0.005;
 const TWINKLE_MIN_AMP = 0.25;
@@ -130,10 +130,15 @@ export class ParticleField {
 
   private readColor(): void {
     const styles = getComputedStyle(this.canvas);
-    // A step lighter than the eyebrow text's own --color-magic-gold-bright — a whiter gold
-    // for the sparkles rather than matching the text exactly.
+    // Mostly the warm-white parchment token with just a hint of the eyebrow text's own gold
+    // mixed in — reads as subtle white sparkle dust rather than matching the gold text
+    // exactly (the old, more-saturated amber-300-only mix read too yellow).
+    const white = styles.getPropertyValue("--color-parchment-50").trim();
+    const gold = styles.getPropertyValue("--color-amber-300").trim();
     this.color =
-      styles.getPropertyValue("--color-amber-300").trim() || this.color;
+      white && gold
+        ? `color-mix(in srgb, ${white} 75%, ${gold} 25%)`
+        : this.color;
   }
 
   private createParticles(): void {

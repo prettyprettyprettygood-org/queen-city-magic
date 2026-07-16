@@ -10,12 +10,17 @@ import ParticleField from "@/components/ParticleField.astro";
 
 interface Props {
   class?: string;
-  /** Delay, in ms, before the pen starts drawing — lets a caller stagger this after other content. */
+  /**
+   * Delay, in ms, before the pen starts drawing. Applied from page load if `waitForEvent` is
+   * unset, or after that event fires (as a small breathing-room buffer) if it is.
+   */
   startDelayMs?: number;
+  /** Name of a `document`-dispatched event to wait for before the delay above starts counting — lets a caller sequence this after another animation of unknown/variable duration finishes, rather than guessing a fixed delay. */
+  waitForEvent?: string;
 }
 
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const { class: className, startDelayMs = 0 } = Astro.props;
+const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
 ---
 
 <!--
@@ -31,7 +36,7 @@ const { class: className, startDelayMs = 0 } = Astro.props;
   render (no JS, or reduced motion) is the solid glyph with no clip at all — the script only
   adds the clip-path once it confirms it's here and motion is safe.
 -->
-<span class={className} data-handwriting data-start-delay={startDelayMs}>
+<span class={className} data-handwriting data-start-delay={startDelayMs} data-wait-for-event={waitForEvent}>
   <svg
     class="handwriting-svg"
     viewBox={HERO_EYEBROW_VIEW_BOX}
@@ -40,7 +45,7 @@ const { class: className, startDelayMs = 0 } = Astro.props;
   >
     <path class="handwriting-path" d={HERO_EYEBROW_PATH_D}></path>
   </svg>
-  <ParticleField waitForEvent="handwriting-complete" />
+  <ParticleField waitForEvent="handwriting-complete" particleCount={24} />
 </span>
 
 <style>
@@ -85,6 +90,7 @@ const { class: className, startDelayMs = 0 } = Astro.props;
     if (reducedMotionQuery.matches) return;
 
     const startDelayMs = Number(wrapper.dataset.startDelay) || 0;
+    const waitForEvent = wrapper.dataset.waitForEvent;
     const svg = wrapper.querySelector<SVGSVGElement>(".handwriting-svg");
     const pathEl = wrapper.querySelector<SVGPathElement>(".handwriting-path");
     if (!svg || !pathEl) return;
@@ -109,24 +115,32 @@ const { class: className, startDelayMs = 0 } = Astro.props;
     svg.appendChild(clipPath);
     pathEl.setAttribute("clip-path", `url(#${clipId})`);
 
-    setTimeout(() => {
-      const start = performance.now();
+    const beginDraw = () => {
+      setTimeout(() => {
+        const start = performance.now();
 
-      const frame = (now: number) => {
-        const t = Math.min(1, (now - start) / DRAW_MS);
-        const eased = easeInOutSine(t);
-        rect.setAttribute("width", String(eased * (maxX - minX)));
+        const frame = (now: number) => {
+          const t = Math.min(1, (now - start) / DRAW_MS);
+          const eased = easeInOutSine(t);
+          rect.setAttribute("width", String(eased * (maxX - minX)));
 
-        if (t < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          // ParticleField listens for this on `wrapper` (its own parent element) to hold off
-          // sparkling until the pen-draw reveal finishes, rather than appearing underneath it
-          // mid-draw.
-          wrapper.dispatchEvent(new CustomEvent("handwriting-complete"));
-        }
-      };
-      requestAnimationFrame(frame);
-    }, startDelayMs);
+          if (t < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            // ParticleField listens for this on `wrapper` (its own parent element) to hold off
+            // sparkling until the pen-draw reveal finishes, rather than appearing underneath it
+            // mid-draw.
+            wrapper.dispatchEvent(new CustomEvent("handwriting-complete"));
+          }
+        };
+        requestAnimationFrame(frame);
+      }, startDelayMs);
+    };
+
+    if (waitForEvent) {
+      document.addEventListener(waitForEvent, beginDraw, { once: true });
+    } else {
+      beginDraw();
+    }
   });
 </script>

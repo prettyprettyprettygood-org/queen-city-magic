@@ -1,5 +1,7 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import EventCountdown from "@/components/EventCountdown.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import HandwritingReveal from "@/components/HandwritingReveal.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
@@ -11,7 +13,8 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
   <div class="hero__content">
     <h1 class="hero__heading">Queen City Mischief &amp; Magic</h1>
     <p class="hero__dates">September 26&ndash;27, 2026 &middot; Staunton, VA</p>
-    <HandwritingReveal class="hero__eyebrow" startDelayMs={1300} />
+    <EventCountdown class="hero__countdown" startDelayMs={1200} />
+    <HandwritingReveal class="hero__eyebrow" waitForEvent="countdown-complete" startDelayMs={150} />
   </div>
 </section>
 
@@ -95,14 +98,20 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
   }
 
   /*
-    :global — this class is rendered by HandwritingReveal.astro's own template, so it only
-    carries that component's Astro scope attribute, not this component's. A scoped selector
-    here would compile to `.hero__eyebrow[data-astro-cid-<this-component>]` and never match.
-    Sizing/color are that component's own concern (it renders an SVG, not text) — this rule is
-    just the layout gap under the dates line above it.
+    :global — these classes are rendered by EventCountdown.astro/HandwritingReveal.astro's own
+    templates, so they only carry those components' Astro scope attributes, not this
+    component's. A scoped selector here would compile to `.hero__countdown[data-astro-cid-<this
+    component>]` and never match. Sizing/color is each component's own concern — these rules
+    are just the layout gaps between stacked hero elements. Tightened from the eyebrow's
+    original 3rem now that the countdown sits between the dates and "You belong here," so the
+    whole stack still fits the hero's vertical budget.
   */
+  :global(.hero__countdown) {
+    margin-top: 2rem;
+  }
+
   :global(.hero__eyebrow) {
-    margin-top: 3rem;
+    margin-top: 2.75rem;
   }
 
   .hero__heading {
@@ -120,10 +129,13 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
   }
 
   /*
-    Stagger: title, then dates, then "You belong here" (HandwritingReveal's own pen-draw,
-    started late via its `startDelayMs` prop below) — each runs once on load, no repeat (plain
-    CSS animations aren't `infinite`, so they hold their `forwards` end state). Scoped to
-    motion-safe only, so a reduced-motion visitor sees title and dates plainly visible from
+    Stagger: title, then dates, then the countdown's count-up (EventCountdown's own
+    `startDelayMs`, starting once the dates finish fading in), then finally "You belong here"
+    (HandwritingReveal's pen-draw) — which doesn't run on a fixed delay at all, it waits for
+    EventCountdown's `countdown-complete` event so the handwriting always kicks off right as
+    the numbers finish landing, however long that took. Each runs once on load, no repeat
+    (plain CSS animations aren't `infinite`, so they hold their `forwards` end state). Scoped
+    to motion-safe only, so a reduced-motion visitor sees title and dates plainly visible from
     first paint instead of animated in.
   */
   @media (prefers-reduced-motion: no-preference) {

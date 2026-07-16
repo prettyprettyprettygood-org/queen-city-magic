@@ -1,0 +1,209 @@
+---
+/**
+ * Split-flap-style countdown to QCMM's festival dates (matches the dates in Hero.astro — no
+ * shared date module exists yet, see PRD 09/10-events-page.md for the eventual timezone-aware
+ * date utility once Events gets its real build). Rendered once at build time so there's a
+ * sensible value before JS runs, then corrected client-side on load in case the static page
+ * has been live a while since its last build.
+ */
+interface Props {
+  class?: string;
+  /** Delay, in ms, before the digits start counting up — lets a caller stagger this after other content. */
+  startDelayMs?: number;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { class: className, startDelayMs = 0 } = Astro.props;
+
+const FESTIVAL_START = "2026-09-26T00:00:00";
+const FESTIVAL_END = "2026-09-28T00:00:00"; // exclusive — the moment the festival is over
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+function festivalStatus(): "upcoming" | "live" | "past" {
+  const now = Date.now();
+  if (now < new Date(FESTIVAL_START).getTime()) return "upcoming";
+  if (now < new Date(FESTIVAL_END).getTime()) return "live";
+  return "past";
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const status = festivalStatus();
+const days = Math.max(
+  Math.ceil((new Date(FESTIVAL_START).getTime() - Date.now()) / MS_PER_DAY),
+  0,
+);
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const digits = days.toString().padStart(5, "0").split("");
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief & Magic`;
+---
+
+<div
+  class:list={["countdown", className]}
+  data-countdown
+  data-festival-start={FESTIVAL_START}
+  data-festival-end={FESTIVAL_END}
+  data-start-delay={startDelayMs}
+>
+  <div
+    class="countdown__digits"
+    data-countdown-upcoming
+    data-countdown-digits
+    role="img"
+    aria-label={daysLabel}
+    hidden={status !== "upcoming"}
+  >
+    {
+      digits.map((digit) => (
+        <span class="countdown__cell" data-digit aria-hidden="true">
+          {digit}
+        </span>
+      ))
+    }
+  </div>
+
+  <p class="countdown__message" data-countdown-live hidden={status !== "live"}>
+    The magic is happening right now!
+  </p>
+  <p class="countdown__message" data-countdown-past hidden={status !== "past"}>
+    See you next year!
+  </p>
+
+  <p class="countdown__label" data-countdown-upcoming hidden={status !== "upcoming"}>
+    Days Until the Magic Returns
+  </p>
+</div>
+
+<script>
+  const FESTIVAL_START = "2026-09-26T00:00:00";
+  const FESTIVAL_END = "2026-09-28T00:00:00";
+  const MS_PER_DAY = 1000 * 60 * 60 * 24;
+  const COUNT_UP_MS = 2200;
+
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Ease-out quintic (steeper than cubic) — numbers arrive quickly at first, then slow
+  // noticeably more as they approach the final value, reading as a mechanical counter
+  // settling into place rather than a linear tick.
+  const easeOutQuint = (x: number) => 1 - (1 - x) ** 5;
+
+  function festivalStatus(): "upcoming" | "live" | "past" {
+    const now = Date.now();
+    if (now < new Date(FESTIVAL_START).getTime()) return "upcoming";
+    if (now < new Date(FESTIVAL_END).getTime()) return "live";
+    return "past";
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-countdown]").forEach((root) => {
+    const status = festivalStatus();
+
+    const upcomingEls = root.querySelectorAll<HTMLElement>("[data-countdown-upcoming]");
+    const liveEl = root.querySelector<HTMLElement>("[data-countdown-live]");
+    const pastEl = root.querySelector<HTMLElement>("[data-countdown-past]");
+
+    for (const el of upcomingEls) el.toggleAttribute("hidden", status !== "upcoming");
+    liveEl?.toggleAttribute("hidden", status !== "live");
+    pastEl?.toggleAttribute("hidden", status !== "past");
+
+    if (status !== "upcoming") {
+      // Nothing to count up to (festival is live or over) — let anything downstream waiting
+      // on this (the hero's "You belong here" reveal) proceed immediately.
+      document.dispatchEvent(new CustomEvent("countdown-complete"));
+      return;
+    }
+
+    const days = Math.max(Math.ceil((new Date(FESTIVAL_START).getTime() - Date.now()) / MS_PER_DAY), 0);
+    const digitEls = root.querySelectorAll<HTMLElement>("[data-digit]");
+    const targetChars = days.toString().padStart(digitEls.length, "0");
+
+    root
+      .querySelector("[data-countdown-digits]")
+      ?.setAttribute("aria-label", `${days} day${days === 1 ? "" : "s"} until Queen City Mischief & Magic`);
+
+    if (reducedMotionQuery.matches) {
+      // Build-time markup already renders the correct final digits — nothing to animate.
+      document.dispatchEvent(new CustomEvent("countdown-complete"));
+      return;
+    }
+
+    // Zero out for the count-up's starting point (only once motion-safe JS has confirmed it
+    // will animate back up to the real value — a no-JS visitor never sees this, only the
+    // build-time-correct digits above).
+    digitEls.forEach((el) => {
+      el.textContent = "0";
+    });
+
+    const startDelayMs = Number(root.dataset.startDelay) || 0;
+
+    setTimeout(() => {
+      const start = performance.now();
+
+      const frame = (now: number) => {
+        const t = Math.min(1, (now - start) / COUNT_UP_MS);
+        const current = Math.round(easeOutQuint(t) * days);
+        const currentChars = current.toString().padStart(digitEls.length, "0");
+        digitEls.forEach((el, i) => {
+          el.textContent = currentChars[i] ?? "0";
+        });
+
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          digitEls.forEach((el, i) => {
+            el.textContent = targetChars[i] ?? "0";
+          });
+          document.dispatchEvent(new CustomEvent("countdown-complete"));
+        }
+      };
+      requestAnimationFrame(frame);
+    }, startDelayMs);
+  });
+</script>
+
+<style>
+  .countdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .countdown__digits {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .countdown__cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 3.5rem;
+    border: 1px solid var(--color-surface-border);
+    border-radius: var(--radius-control);
+    /* Theme-invariant gold (same token as the hero eyebrow) — the digits read as gold on
+       every house theme, not each theme's own re-pointed brand color. */
+    color: var(--color-surface-eyebrow);
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown__message {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: var(--color-surface-primary);
+    margin: 0;
+  }
+
+  .countdown__label {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+</style>

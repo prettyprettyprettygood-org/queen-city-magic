@@ -37,13 +37,16 @@ builds.
 Per PRD 11's section-shell convention (alternating twilight/plum/forest backgrounds,
 consistent padding/max-width), add these sections in order after the Hero:
 
-0. **Overview / festival hours — verbatim, added 2026-07-15.** A block of general-audience
-   copy ("Staunton is magic! But especially during QCMM...") plus festival hours (Saturday
-   9–9, Sunday 9–5) landed in `docs/content.md` after this PRD was first drafted, appended
-   without a page header. Confirmed with the user 2026-07-15: this is a fifth Home section,
-   placed first (right below the Hero, before the recap). Verbatim port like the rest of this
-   list (not a rewrite) — only typographic cleanup (`--` → em dash, `....` → ellipsis) applied,
-   same standard as the ligature-artifact cleanup elsewhere in this PRD.
+0. ~~**Overview / festival hours — verbatim, added 2026-07-15.**~~ **Superseded 2026-07-15,
+   same day:** the client didn't want body copy in this slot after all. The "Staunton is
+   magic..." paragraphs + festival-hours copy stayed on the Events page's placeholder card
+   (`src/pages/events.astro`, pending PRD 09/10-events-page.md's real build) rather than
+   porting to Home. In its place, this slot is now `EventCountdown.astro`: a plain row of
+   bordered split-flap digit cells (no outer card/border, no icon cells — both cut after
+   iteration, the latter following an IP/trademark flag on film-prop-specific icon options)
+   counting down to the festival dates. Also relocated from a standalone Home section into
+   the Hero itself, directly below the "You belong here" line — see
+   `src/components/EventCountdown.astro` and `src/components/Hero.astro`.
 1. **Event recap / save-the-date — rewrite, confirmed 2026-07-14, not a verbatim port.**
    Unlike the rest of this PRD's content (ported as-is per the start-work prompt), this one
    section gets rewritten rather than copied: a thank-you for the fun of last year's event,
@@ -134,8 +137,11 @@ themselves.
 
 ## Open questions / assumptions
 
-None remaining — all resolved 2026-07-14, see "confirmed" notes above. QR code asset:
-`src/assets/images/qr-code.webp` exists and was converted to `qr-code.png` — use the PNG.
+None remaining — all resolved 2026-07-14/15, see "confirmed"/"superseded" notes above. QR
+code asset: `src/assets/images/qr-code.webp` exists and was converted to `qr-code.png` — use
+the PNG. Home's "You Belong Here" section heading was initially implemented as the paraphrase
+"Don't miss out" — fixed 2026-07-15 to the verbatim `content.md` heading, since this PRD calls
+that section out specifically as an intentional echo of the hero's closing line.
 
 ## Dependencies
 
