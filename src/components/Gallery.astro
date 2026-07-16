@@ -2,7 +2,7 @@
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { Image } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { Sparkles } from "@lucide/astro";
+import { Maximize2 } from "@lucide/astro";
 
 import cityStreet from "@/assets/images/city-street.jpg";
 import games from "@/assets/images/games.jpg";
@@ -54,7 +54,7 @@ const photos: Photo[] = [
           loading="lazy"
           class="gallery__image"
         />
-        <Sparkles class="gallery__sparkle" size={20} stroke-width={1.75} aria-hidden="true" />
+        <Maximize2 class="gallery__expand" size={22} stroke-width={1.75} aria-hidden="true" />
       </button>
     ))}
   </div>
@@ -189,6 +189,16 @@ const photos: Photo[] = [
     overflow: hidden;
   }
 
+  .gallery__trigger::after {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-obsidian-950) 28%, transparent);
+    content: "";
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+    pointer-events: none;
+  }
+
   .gallery__image {
     display: block;
     width: 100%;
@@ -197,14 +207,15 @@ const photos: Photo[] = [
     transition: filter 0.2s ease-out;
   }
 
-  .gallery__sparkle {
+  .gallery__expand {
     position: absolute;
-    top: 0.65rem;
-    right: 0.65rem;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
     color: var(--color-amber-300);
-    filter: drop-shadow(0 0 0.35rem var(--color-magic-glow));
     opacity: 0;
     transform: scale(0.7);
+    filter: drop-shadow(0 0 0.35rem var(--color-magic-glow));
     transition: opacity 0.2s ease-out, transform 0.2s ease-out;
     pointer-events: none;
   }
@@ -214,20 +225,32 @@ const photos: Photo[] = [
     filter: brightness(1.08);
   }
 
-  .gallery__trigger:hover .gallery__sparkle,
-  .gallery__trigger:focus-visible .gallery__sparkle {
+  .gallery__trigger:hover::after,
+  .gallery__trigger:focus-visible::after,
+  .gallery__trigger:hover .gallery__expand,
+  .gallery__trigger:focus-visible .gallery__expand {
     opacity: 1;
-    transform: scale(1);
+  }
+
+  .gallery__trigger:hover .gallery__expand,
+  .gallery__trigger:focus-visible .gallery__expand {
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    box-sizing: border-box;
     width: min(92vw, 72rem);
     max-width: none;
+    max-height: calc(100vh - 2rem);
+    margin: auto;
     padding: 0;
     border: 1px solid var(--color-surface-border);
     border-radius: calc(var(--radius-control) * 2);
     background: var(--color-obsidian-950);
     color: var(--color-surface-text);
+    overflow: auto;
   }
 
   .gallery-lightbox::backdrop {
@@ -324,7 +347,11 @@ const photos: Photo[] = [
 
   @media (prefers-reduced-motion: reduce) {
     .gallery__image,
-    .gallery__sparkle {
+    .gallery__expand {
+      transition: none;
+    }
+
+    .gallery__trigger::after {
       transition: none;
     }
   }
