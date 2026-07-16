@@ -1,6 +1,8 @@
 ---
+import { getImage } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { ClientRouter } from "astro:transitions";
+import ogImageSource from "@/assets/images/og-landing.png";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Footer from "@/components/Footer.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -20,6 +22,12 @@ const {
   // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
   description = "Queen City Mischief & Magic — a free, volunteer-run magic festival in downtown Staunton, VA.",
 } = Astro.props;
+
+const ogImage = await getImage({ src: ogImageSource, format: "png" });
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const ogImageUrl = new URL(ogImage.src, Astro.site).toString();
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <html lang="en">
@@ -28,7 +36,23 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     <title>{title}</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Queen City Mischief & Magic" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content={String(ogImage.attributes.width)} />
+    <meta property="og:image:height" content={String(ogImage.attributes.height)} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
     <ClientRouter />
     <link
       rel="preload"
