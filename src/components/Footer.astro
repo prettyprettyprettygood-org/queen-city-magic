@@ -112,6 +112,11 @@ const year = new Date().getFullYear();
     gap: 0.5rem;
   }
 
+  /* Keep the stacked mobile footer focused; the support CTA returns with the desktop columns. */
+  .site-footer__support {
+    display: none;
+  }
+
   .site-footer__wordmark {
     font-family: var(--font-display);
     font-size: 1.5rem;
@@ -275,6 +280,7 @@ const year = new Date().getFullYear();
     }
 
     .site-footer__support {
+      display: flex;
       align-items: flex-end;
       text-align: right;
       justify-self: end;
@@ -307,14 +313,18 @@ const year = new Date().getFullYear();
 </style>
 
 <script>
-  document.querySelectorAll<HTMLAnchorElement>("[data-back-to-top]").forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReducedMotion) return;
+  const initializeBackToTop = () => document.querySelectorAll<HTMLAnchorElement>("[data-back-to-top]").forEach((link) => {
+    if (link.dataset.backToTopInitialized === "true") return;
+    link.dataset.backToTopInitialized = "true";
 
+    link.addEventListener("click", (event) => {
       event.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
       history.pushState(null, "", "#top");
     });
   });
+
+  initializeBackToTop();
+  document.addEventListener("astro:page-load", initializeBackToTop);
 </script>

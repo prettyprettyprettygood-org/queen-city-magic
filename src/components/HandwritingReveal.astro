@@ -86,7 +86,13 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
   const DRAW_MS = 3400;
   let clipIdCounter = 0;
 
-  document.querySelectorAll<HTMLElement>("[data-handwriting]").forEach((wrapper) => {
+  const initializeHandwritingReveals = () => {
+    const returningHome = sessionStorage.getItem("qcmm-home-visited") === "true";
+
+    document.querySelectorAll<HTMLElement>("[data-handwriting]").forEach((wrapper) => {
+    if (wrapper.dataset.handwritingInitialized === "true") return;
+    wrapper.dataset.handwritingInitialized = "true";
+
     if (reducedMotionQuery.matches) return;
 
     const startDelayMs = Number(wrapper.dataset.startDelay) || 0;
@@ -94,6 +100,12 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
     const svg = wrapper.querySelector<SVGSVGElement>(".handwriting-svg");
     const pathEl = wrapper.querySelector<SVGPathElement>(".handwriting-path");
     if (!svg || !pathEl) return;
+
+    if (returningHome) {
+      wrapper.classList.add("handwriting--settled");
+      queueMicrotask(() => wrapper.dispatchEvent(new CustomEvent("handwriting-complete")));
+      return;
+    }
 
     const viewBox = svg.viewBox.baseVal;
     const minX = viewBox.x;
@@ -142,5 +154,9 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
     } else {
       beginDraw();
     }
-  });
+    });
+  };
+
+  initializeHandwritingReveals();
+  document.addEventListener("astro:page-load", initializeHandwritingReveals);
 </script>

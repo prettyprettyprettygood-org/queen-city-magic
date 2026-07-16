@@ -2,10 +2,15 @@
 @import "./tokens.css";
 
 @layer base {
+  html {
+    /* Keep the page's fallback ground behind the fixed negative-layer Starfield canvas. */
+    background-color: var(--color-surface-bg);
+  }
+
   body {
     font-family: var(--font-body);
     font-size: 1.0625rem;
-    background-color: var(--color-surface-bg);
+    background-color: transparent;
     color: var(--color-surface-text);
   }
 

@@ -17,16 +17,15 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     <p class="hero__dates">September 26&ndash;27, 2026 &middot; Staunton, VA</p>
     <EventCountdown class="hero__countdown" startDelayMs={1200} />
     <HandwritingReveal class="hero__eyebrow" waitForEvent="countdown-complete" startDelayMs={150} />
+    <button
+      type="button"
+      class="hero__scroll-cue focus-glow"
+      aria-label="Scroll to next section"
+      data-hero-scroll-cue
+    >
+      <ChevronDown aria-hidden="true" focusable="false" size={28} />
+    </button>
   </div>
-
-  <button
-    type="button"
-    class="hero__scroll-cue focus-glow"
-    aria-label="Scroll to next section"
-    data-hero-scroll-cue
-  >
-    <ChevronDown aria-hidden="true" focusable="false" size={28} />
-  </button>
 </section>
 
 <style>
@@ -108,6 +107,13 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     transform: translateY(clamp(0.75rem, 2vh, 1.5rem));
   }
 
+  .hero--settled .hero__heading,
+  .hero--settled .hero__dates {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
   /*
     :global — these classes are rendered by EventCountdown.astro/HandwritingReveal.astro's own
     templates, so they only carry those components' Astro scope attributes, not this
@@ -176,16 +182,15 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     would otherwise land on a control they can't see.
   */
   .hero__scroll-cue {
-    position: absolute;
-    left: 50%;
-    bottom: clamp(12rem, 24vh, 18rem);
+    position: relative;
     z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    transform: translateX(-50%);
+    margin-top: 1.5rem;
+    transform: none;
     border: none;
     border-radius: var(--radius-control);
     background: transparent;
@@ -220,19 +225,30 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
   @keyframes hero-scroll-bounce {
     0%,
     100% {
-      transform: translate(-50%, 0);
+      transform: translateY(0);
     }
     50% {
-      transform: translate(-50%, 0.4rem);
+      transform: translateY(0.4rem);
     }
   }
 </style>
 
 <script>
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const HOME_VISITED_KEY = "qcmm-home-visited";
 
-  document.querySelectorAll<HTMLButtonElement>("[data-hero-scroll-cue]").forEach((button) => {
+  const initializeHeroScrollCues = () => {
+    const returningHome = sessionStorage.getItem(HOME_VISITED_KEY) === "true";
+
+    document.querySelectorAll<HTMLButtonElement>("[data-hero-scroll-cue]").forEach((button) => {
+    if (button.dataset.heroScrollCueInitialized === "true") return;
+    button.dataset.heroScrollCueInitialized = "true";
+
     const hero = button.closest(".hero");
+    if (returningHome) {
+      hero?.classList.add("hero--settled");
+      button.classList.add("hero__scroll-cue--visible");
+    }
     // HandwritingReveal.astro dispatches "handwriting-complete" on its own root element (the
     // "You belong here" wrapper) once its pen-draw finishes — waiting for that means the cue
     // fades in only after the rest of the hero's entrance stagger has settled, rather than
@@ -250,10 +266,15 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     }
 
     button.addEventListener("click", () => {
-      hero?.nextElementSibling?.scrollIntoView({
+      document.getElementById("magic-explained")?.scrollIntoView({
         behavior: reducedMotionQuery.matches ? "auto" : "smooth",
         block: "start",
       });
     });
-  });
+    });
+  };
+
+  initializeHeroScrollCues();
+  document.addEventListener("astro:page-load", initializeHeroScrollCues);
+  sessionStorage.setItem(HOME_VISITED_KEY, "true");
 </script>

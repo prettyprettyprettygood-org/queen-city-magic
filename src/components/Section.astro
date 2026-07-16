@@ -6,15 +6,16 @@
  * full-bleed section color.
  */
 interface Props {
+  id?: string;
   width?: "prose" | "wide";
   class?: string;
 }
 
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const { width = "prose", class: className } = Astro.props;
+const { id, width = "prose", class: className } = Astro.props;
 ---
 
-<section class:list={["section", className]} data-width={width}>
+<section id={id} class:list={["section", className]} data-width={width}>
   <div class="section__inner">
     <slot />
   </div>

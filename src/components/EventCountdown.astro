@@ -92,7 +92,13 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
     return "past";
   }
 
-  document.querySelectorAll<HTMLElement>("[data-countdown]").forEach((root) => {
+  const initializeCountdowns = () => {
+    const returningHome = sessionStorage.getItem("qcmm-home-visited") === "true";
+
+    document.querySelectorAll<HTMLElement>("[data-countdown]").forEach((root) => {
+    if (root.dataset.countdownInitialized === "true") return;
+    root.dataset.countdownInitialized = "true";
+
     const status = festivalStatus();
 
     const upcomingEls = root.querySelectorAll<HTMLElement>("[data-countdown-upcoming]");
@@ -106,7 +112,7 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
     if (status !== "upcoming") {
       // Nothing to count up to (festival is live or over) — let anything downstream waiting
       // on this (the hero's "You belong here" reveal) proceed immediately.
-      document.dispatchEvent(new CustomEvent("countdown-complete"));
+      queueMicrotask(() => document.dispatchEvent(new CustomEvent("countdown-complete")));
       return;
     }
 
@@ -120,7 +126,14 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
 
     if (reducedMotionQuery.matches) {
       // Build-time markup already renders the correct final digits — nothing to animate.
-      document.dispatchEvent(new CustomEvent("countdown-complete"));
+      queueMicrotask(() => document.dispatchEvent(new CustomEvent("countdown-complete")));
+      return;
+    }
+
+    if (returningHome) {
+      // Returning to the home page should restore the settled hero immediately rather than
+      // replaying the countdown before the handwriting and sparkles can resume.
+      queueMicrotask(() => document.dispatchEvent(new CustomEvent("countdown-complete")));
       return;
     }
 
@@ -155,7 +168,11 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
       };
       requestAnimationFrame(frame);
     }, startDelayMs);
-  });
+    });
+  };
+
+  initializeCountdowns();
+  document.addEventListener("astro:page-load", initializeCountdowns);
 </script>
 
 <style>
