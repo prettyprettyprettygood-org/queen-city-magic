@@ -1,16 +1,28 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Image } from "astro:assets";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import youBelongWall from "@/assets/images/disclaimer/you-belong-wall.jpg";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import PageHeader from "@/components/PageHeader.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
+import attribution from "@/content/attribution.md?raw";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const attributionHtml = attribution
+  .trim()
+  .split(/\n\s*\n/)
+  .map((entry) => `<p>${entry}</p>`)
+  .join("");
 ---
 
-<BaseLayout title="Legal — Queen City Magic">
-  <PageHeader width="wide">Legal</PageHeader>
+<BaseLayout title="Legal & Attributions — Queen City Magic">
+  <PageHeader width="wide">Legal &amp; Attributions</PageHeader>
 
   <Section width="wide">
     <Card>
@@ -33,6 +45,35 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
         non-commercial community event.
       </p>
     </Card>
+
+    <Card class="commitment-card">
+      <Image
+        slot="media"
+        src={youBelongWall}
+        alt="A community wall reading 'You Belong Here'"
+        width={1239}
+        height={575}
+        class="commitment-card__banner"
+      />
+      <h2 slot="title">Our Commitment</h2>
+      <p>
+        As we listen more thoughtfully than ever to our LGBTQIA+ fans and community members of
+        color, we are changed. The road ahead is long, challenging, and not soon over. But we
+        believe it is worth it. We stand for inclusivity and equal rights.
+      </p>
+      <p>
+        QCMM loves and values all people in its magical community. We support trans/non-binary
+        bodies, the LGBTQIA+ community, and believe that Black Lives Matter.
+      </p>
+    </Card>
+
+    <Card>
+      <h2 slot="title">Attributions</h2>
+      <div class="attributions" set:html={attributionHtml} />
+      <p class="attributions__note">
+        House icons are used under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer" class="focus-glow">CC BY 3.0</a> and have not been modified.
+      </p>
+    </Card>
   </Section>
 </BaseLayout>
 
@@ -51,5 +92,30 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
   p:last-child {
     margin-bottom: 0;
+  }
+
+  .commitment-card__banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-control);
+  }
+
+  .attributions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .attributions :global(a),
+  .attributions__note a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .attributions__note {
+    margin: 0;
   }
 </style>

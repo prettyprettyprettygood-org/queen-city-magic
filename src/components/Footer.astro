@@ -38,6 +38,9 @@ const year = new Date().getFullYear();
                 </li>
               ))
             }
+            <li>
+              <a href="/legal" class="site-footer__nav-link focus-glow">Attributions &amp; Disclaimer</a>
+            </li>
           </ul>
         </nav>
 
@@ -55,23 +58,21 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="site-footer__bottom">
-      <p class="site-footer__badge-chip">
+      <a href="/legal" class="site-footer__badge-chip focus-glow">
         <span aria-hidden="true">🏳️‍🌈</span> Woman-owned &amp; queer-friendly
-      </p>
+      </a>
 
       <div class="site-footer__legal">
-        <p class="site-footer__copyright">© {year} Queen City Magic — All Rights Reserved.</p>
+        <p class="site-footer__legal-line">
+          © {year} Queen City Magic — All Rights Reserved.
+          <span class="site-footer__legal-dot" aria-hidden="true">·</span>
+          Not affiliated with Warner Bros., J.K. Rowling, or the Wizarding World.
+        </p>
         <p class="site-footer__credits">
           Built with <span aria-hidden="true">✨</span> by{" "}
           <a href="https://www.prettyprettyprettygood.org/" target="_blank" rel="noopener noreferrer">
             prettyprettyprettygood.org
           </a>
-          {" "}&mdash;{" "}
-          <a href="/attributions" class="focus-glow">Attributions</a>
-        </p>
-        <p class="site-footer__disclaimer">
-          Not affiliated with Warner Bros., J.K. Rowling, or the Wizarding World.{" "}
-          <a href="/legal" class="focus-glow">Full disclaimer</a>.
         </p>
       </div>
 
@@ -191,8 +192,15 @@ const year = new Date().getFullYear();
     padding: 0.35rem 0.75rem;
     border-radius: var(--radius-control);
     border: 1px solid var(--color-surface-border);
+    color: inherit;
     font-size: 0.85rem;
+    text-decoration: none;
     white-space: nowrap;
+  }
+
+  .site-footer__badge-chip:hover {
+    color: var(--color-surface-gold-active);
+    border-color: var(--color-surface-gold-active);
   }
 
   .site-footer__nav-group {
@@ -205,25 +213,28 @@ const year = new Date().getFullYear();
   .site-footer__legal {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    align-items: center;
+    gap: 0.5rem;
     max-width: 40rem;
   }
 
-  .site-footer__disclaimer,
-  .site-footer__copyright,
-  .site-footer__credits {
+  .site-footer__legal-line {
     margin: 0;
     font-size: 0.8rem;
     opacity: 0.75;
   }
 
-  .site-footer__disclaimer a {
-    color: inherit;
-    text-decoration: underline;
+  .site-footer__legal-dot {
+    margin: 0 0.4rem;
+    opacity: 0.6;
   }
 
-  .site-footer__disclaimer a:hover {
-    color: var(--color-surface-gold-active);
+  .site-footer__credits {
+    margin: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-surface-border);
+    font-size: 0.75rem;
+    opacity: 0.55;
   }
 
   .site-footer__credits a {
@@ -271,6 +282,11 @@ const year = new Date().getFullYear();
     }
 
     .site-footer__nav-group {
+      /* Capped only up to the 64rem breakpoint below — narrower than that, an unconstrained
+         nav row forces the grid's auto column wide and squeezes the brand/support columns
+         down to a word-per-line mess. At 64rem+ there's enough room for the row to sit
+         uncapped, so the cap lifts there. */
+      max-width: 22rem;
       justify-self: center;
       align-self: center;
     }
@@ -308,6 +324,12 @@ const year = new Date().getFullYear();
 
     .site-footer__back-to-top {
       justify-self: end;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__nav-group {
+      max-width: none;
     }
   }
 </style>

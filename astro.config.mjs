@@ -9,6 +9,9 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   site: "https://queen-city-magic.vercel.app",
   integrations: [react(), sitemap()],
+  redirects: {
+    "/attributions": "/legal",
+  },
   legacy: {
     collectionsBackwardsCompat: true,
   },
