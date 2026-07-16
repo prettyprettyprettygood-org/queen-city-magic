@@ -82,14 +82,14 @@ const image = {
     border-radius: var(--radius-control);
   }
 
-  :global(.event-card:has(.event-card__image)) {
+  :global(.event-card.event-card:has(.event-card__image)) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr) auto;
     column-gap: 1.5rem;
   }
 
-  :global(.event-card:has(.event-card__image) .card__media) {
+  :global(.event-card.event-card:has(.event-card__image) .card__media) {
     grid-column: 1;
     grid-row: 1 / 4;
     min-width: 0;
@@ -97,19 +97,19 @@ const image = {
     border-radius: var(--radius-control);
   }
 
-  :global(.event-card:has(.event-card__image) .card__header) {
+  :global(.event-card.event-card:has(.event-card__image) .card__header) {
     grid-column: 2;
     grid-row: 1;
     align-self: start;
   }
 
-  :global(.event-card:has(.event-card__image) .card__body) {
+  :global(.event-card.event-card:has(.event-card__image) .card__body) {
     grid-column: 2;
     grid-row: 2;
     align-self: start;
   }
 
-  :global(.event-card:has(.event-card__image) .card__cta) {
+  :global(.event-card.event-card:has(.event-card__image) .card__cta) {
     grid-column: 2;
     grid-row: 3;
     align-self: end;
@@ -212,14 +212,14 @@ const image = {
   }
 
   @media (max-width: 46rem) {
-    :global(.event-card:has(.event-card__image)) {
+    :global(.event-card.event-card:has(.event-card__image)) {
       grid-template-columns: 1fr;
     }
 
-    :global(.event-card:has(.event-card__image) .card__media),
-    :global(.event-card:has(.event-card__image) .card__header),
-    :global(.event-card:has(.event-card__image) .card__body),
-    :global(.event-card:has(.event-card__image) .card__cta) {
+    :global(.event-card.event-card:has(.event-card__image) .card__media),
+    :global(.event-card.event-card:has(.event-card__image) .card__header),
+    :global(.event-card.event-card:has(.event-card__image) .card__body),
+    :global(.event-card.event-card:has(.event-card__image) .card__cta) {
       grid-column: 1;
       grid-row: auto;
     }
