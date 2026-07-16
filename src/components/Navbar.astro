@@ -16,7 +16,7 @@ const currentPath = Astro.url.pathname;
   data-navbar
 >
   <div class="navbar__bg" aria-hidden="true"></div>
-  <audio transition:persist="sound-audio" data-sound-audio loop preload="none" muted>
+  <audio transition:persist="sound-audio" data-sound-audio preload="none" muted>
     <source src="/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3" type="audio/mpeg" />
   </audio>
   <div class="navbar__inner">
@@ -306,6 +306,70 @@ const currentPath = Astro.url.pathname;
   } else if (audio) {
     let soundEnabled = localStorage.getItem(SOUND_STORAGE_KEY) === "on";
     let fadeFrame = 0;
+    let loopFadeFrame = 0;
+    let loopAudio: HTMLAudioElement | undefined;
+    let activeAudio = audio;
+    let crossfadeStarted = false;
+    const targetVolume = 0.35;
+    const loopCrossfadeDuration = 1600;
+
+    const cancelLoopFade = () => {
+      cancelAnimationFrame(loopFadeFrame);
+      loopFadeFrame = 0;
+    };
+
+    const fadeBetweenTracks = (outgoing: HTMLAudioElement, incoming: HTMLAudioElement) => {
+      cancelLoopFade();
+      const startedAt = performance.now();
+      const step = (now: number) => {
+        const progress = Math.min((now - startedAt) / loopCrossfadeDuration, 1);
+        outgoing.volume = targetVolume * (1 - progress);
+        incoming.volume = targetVolume * progress;
+        if (progress < 1) {
+          loopFadeFrame = requestAnimationFrame(step);
+        } else {
+          outgoing.pause();
+          outgoing.currentTime = 0;
+          activeAudio = incoming;
+          crossfadeStarted = false;
+        }
+      };
+      loopFadeFrame = requestAnimationFrame(step);
+    };
+
+    const startNextLoop = () => {
+      if (!soundEnabled || crossfadeStarted || !loopAudio || !Number.isFinite(activeAudio.duration)) {
+        return;
+      }
+
+      const incoming = activeAudio === audio ? loopAudio : audio;
+      crossfadeStarted = true;
+      incoming.currentTime = 0;
+      incoming.volume = 0;
+      incoming.muted = false;
+      incoming.play().then(
+        () => fadeBetweenTracks(activeAudio, incoming),
+        () => {
+          crossfadeStarted = false;
+        },
+      );
+    };
+
+    const watchForLoopPoint = () => {
+      if (!soundEnabled || !loopAudio || crossfadeStarted) return;
+      if (activeAudio.duration - activeAudio.currentTime <= loopCrossfadeDuration / 1000) {
+        startNextLoop();
+      }
+    };
+
+    const prepareLoopAudio = () => {
+      if (loopAudio) return;
+      loopAudio = new Audio(audio.currentSrc || "/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3");
+      loopAudio.preload = "auto";
+      loopAudio.volume = 0;
+      loopAudio.addEventListener("timeupdate", watchForLoopPoint);
+      loopAudio.addEventListener("ended", startNextLoop);
+    };
 
     const syncSoundToggles = () => {
       document.querySelectorAll<HTMLButtonElement>("[data-sound-toggle]").forEach((toggle) => {
@@ -317,18 +381,19 @@ const currentPath = Astro.url.pathname;
 
     const fadeVolume = (target: number, onComplete?: () => void) => {
       cancelAnimationFrame(fadeFrame);
+      const fadingAudio = activeAudio;
       if (soundPrefersReducedMotion) {
-        audio.volume = target;
+        fadingAudio.volume = target;
         onComplete?.();
         return;
       }
 
-      const start = audio.volume;
+      const start = fadingAudio.volume;
       const startedAt = performance.now();
       const duration = 180;
       const step = (now: number) => {
         const progress = Math.min((now - startedAt) / duration, 1);
-        audio.volume = start + (target - start) * progress;
+        fadingAudio.volume = start + (target - start) * progress;
         if (progress < 1) {
           fadeFrame = requestAnimationFrame(step);
         } else {
@@ -340,10 +405,16 @@ const currentPath = Astro.url.pathname;
 
     const tryPlayback = () => {
       if (!soundEnabled || !audio.paused) return;
+      prepareLoopAudio();
+      activeAudio = audio;
+      crossfadeStarted = false;
       audio.volume = 0;
       audio.muted = false;
+      audio.loop = false;
+      audio.addEventListener("timeupdate", watchForLoopPoint);
+      audio.addEventListener("ended", startNextLoop);
       const playback = audio.play();
-      playback?.then(() => fadeVolume(0.35)).catch(() => {
+      playback?.then(() => fadeVolume(targetVolume)).catch(() => {
         audio.pause();
         audio.muted = true;
       });
@@ -353,9 +424,17 @@ const currentPath = Astro.url.pathname;
       soundEnabled = false;
       localStorage.setItem(SOUND_STORAGE_KEY, "off");
       syncSoundToggles();
+      cancelLoopFade();
+      loopAudio?.pause();
+      loopAudio?.load();
+      crossfadeStarted = false;
       fadeVolume(0, () => {
         audio.pause();
+        loopAudio?.pause();
+        loopAudio && (loopAudio.volume = 0);
         audio.muted = true;
+        if (loopAudio) loopAudio.muted = true;
+        activeAudio = audio;
       });
     };
 

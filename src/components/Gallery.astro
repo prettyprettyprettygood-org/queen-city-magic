@@ -154,6 +154,8 @@ const photos: Photo[] = [
 </dialog>
 
 <script>
+  import { lockScroll, unlockScroll } from "@/lib/scrollLock";
+
   const galleryDialog = document.querySelector<HTMLDialogElement>("[data-gallery-dialog]");
   const galleryTriggers = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-gallery-trigger]"),
@@ -189,6 +191,7 @@ const photos: Photo[] = [
     const openGallery = (index: number, trigger: HTMLButtonElement) => {
       lastTrigger = trigger;
       showImage(index);
+      lockScroll();
       galleryDialog.showModal();
       galleryClose.focus();
     };
@@ -208,6 +211,7 @@ const photos: Photo[] = [
     });
 
     galleryDialog.addEventListener("close", () => {
+      unlockScroll();
       lastTrigger?.focus();
     });
 
@@ -299,8 +303,10 @@ const photos: Photo[] = [
     box-sizing: border-box;
     width: min(92vw, 72rem);
     height: min(88vh, 48rem);
+    height: min(88dvh, 48rem);
     max-width: none;
     max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
     margin: auto;
     padding: 0;
     border: 1px solid var(--color-surface-border);
@@ -410,6 +416,7 @@ const photos: Photo[] = [
     .gallery-lightbox {
       width: calc(100vw - 1rem);
       height: calc(100vh - 1rem);
+      height: calc(100dvh - 1rem);
     }
 
     .gallery-lightbox__panel {

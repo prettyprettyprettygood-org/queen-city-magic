@@ -3,7 +3,7 @@
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { CalendarDays, ExternalLink, MapPin, Maximize2 } from "@lucide/astro";
+import { CalendarDays, ExternalLink, MapPin } from "@lucide/astro";
 import fireboltFlyer from "@/assets/images/events/firebolt-5k-flyer.jpg";
 import ghostTour from "@/assets/images/events/ghost-tour.jpg";
 import puffsAudition from "@/assets/images/events/puffs-audition.jpeg";
@@ -32,88 +32,38 @@ const image = {
 }[data.image ?? ""];
 ---
 
-<div class="event-card-shell" data-event-image-shell>
-  <Card class="event-card">
-    {image && (
-      <button
-        type="button"
-        slot="media"
-        class="event-image-trigger focus-glow"
-        data-event-image-trigger
-        aria-label={`View larger: ${data.title}`}
-      >
-        <Image class="event-card__image" src={image} alt={`Image for ${data.title}`} />
-        <span class="event-image-trigger__scrim" aria-hidden="true"></span>
-        <Maximize2 class="event-image-trigger__expand" size={22} stroke-width={1.75} aria-hidden="true" />
-      </button>
-    )}
-    <div class="event-card__meta" aria-label="Event details">
-      {!isPast && <span><CalendarDays size={16} aria-hidden="true" />{data.dateLabel}</span>}
-      <span class="event-card__location-chip"><MapPin size={16} aria-hidden="true" />{data.location}</span>
+<Card class="event-card">
+  {image && <Image slot="media" class="event-card__image" src={image} alt={`Image for ${data.title}`} />}
+  <div class="event-card__meta" aria-label="Event details">
+    {!isPast && <span><CalendarDays size={16} aria-hidden="true" />{data.dateLabel}</span>}
+    <span class="event-card__location-chip"><MapPin size={16} aria-hidden="true" />{data.location}</span>
+  </div>
+  {isPast ? (
+    <div slot="title" class="event-card__title-row">
+      <h3>{data.title}</h3>
+      <span class="event-card__date-chip">{data.dateLabel}</span>
     </div>
-    {isPast ? (
-      <div slot="title" class="event-card__title-row">
-        <h3>{data.title}</h3>
-        <span class="event-card__date-chip">{data.dateLabel}</span>
-      </div>
-    ) : (
-      <h3 slot="title">{data.title}</h3>
-    )}
-    <p>{data.description}</p>
-    {data.primaryLink && (
-      <div slot="cta" class="event-card__actions">
-        <Button href={data.primaryLink.url} external={isExternal}>
-          {data.primaryLink.label}
-          {isExternal && <span class="sr-only"> (opens external site)</span>}
-          {isExternal && <ExternalLink class="event-card__external-icon" size={16} aria-hidden="true" />}
-        </Button>
-        {data.secondaryLink && (
-          <Button href={data.secondaryLink.url} external>
-            {data.secondaryLink.label}
-            <span class="sr-only"> (opens external site)</span>
-            <ExternalLink class="event-card__external-icon" size={16} aria-hidden="true" />
-          </Button>
-        )}
-      </div>
-    )}
-  </Card>
-
-  {image && (
-    <dialog class="event-image-dialog" data-event-image-dialog aria-labelledby={`event-image-title-${event.id}`}>
-      <div class="event-image-dialog__panel">
-        <h2 id={`event-image-title-${event.id}`} class="event-image-dialog__title">{data.title}</h2>
-        <button type="button" class="event-image-dialog__close focus-glow" data-event-image-close aria-label="Close photo view">
-          <span aria-hidden="true">×</span>
-        </button>
-        <div class="event-image-dialog__content">
-          <Image src={image} alt={`Image for ${data.title}`} width={1600} class="event-image-dialog__image" />
-        </div>
-      </div>
-    </dialog>
+  ) : (
+    <h3 slot="title">{data.title}</h3>
   )}
-</div>
-
-<script>
-  document.querySelectorAll<HTMLButtonElement>("[data-event-image-trigger]").forEach((trigger) => {
-    const shell = trigger.closest<HTMLElement>("[data-event-image-shell]");
-    const dialog = shell?.querySelector<HTMLDialogElement>("[data-event-image-dialog]");
-    const close = dialog?.querySelector<HTMLButtonElement>("[data-event-image-close]");
-
-    if (!dialog || !close) return;
-
-    let lastTrigger: HTMLButtonElement | undefined;
-    trigger.addEventListener("click", () => {
-      lastTrigger = trigger;
-      dialog.showModal();
-      close.focus();
-    });
-    close.addEventListener("click", () => dialog.close());
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) dialog.close();
-    });
-    dialog.addEventListener("close", () => lastTrigger?.focus());
-  });
-</script>
+  <p>{data.description}</p>
+  {data.primaryLink && (
+    <div slot="cta" class="event-card__actions">
+      <Button href={data.primaryLink.url} external={isExternal}>
+        {data.primaryLink.label}
+        {isExternal && <span class="sr-only"> (opens external site)</span>}
+        {isExternal && <ExternalLink class="event-card__external-icon" size={16} aria-hidden="true" />}
+      </Button>
+      {data.secondaryLink && (
+        <Button href={data.secondaryLink.url} external>
+          {data.secondaryLink.label}
+          <span class="sr-only"> (opens external site)</span>
+          <ExternalLink class="event-card__external-icon" size={16} aria-hidden="true" />
+        </Button>
+      )}
+    </div>
+  )}
+</Card>
 
 <style>
   :global(.event-card) {
@@ -130,58 +80,6 @@ const image = {
     height: 100%;
     object-fit: cover;
     border-radius: var(--radius-control);
-  }
-
-  .event-image-trigger {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-control);
-    background: var(--color-surface-bg);
-    color: inherit;
-    cursor: pointer;
-    overflow: hidden;
-  }
-
-  .event-image-trigger__scrim {
-    position: absolute;
-    inset: 0;
-    background: color-mix(in srgb, var(--color-obsidian-950) 58%, transparent);
-    opacity: 0;
-    transition: opacity 0.2s ease-out;
-  }
-
-  .event-image-trigger__expand {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-    color: var(--color-surface-gold);
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
-    filter: drop-shadow(0 0 0.35rem var(--color-magic-glow));
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-    pointer-events: none;
-  }
-
-  .event-image-trigger:hover .event-card__image,
-  .event-image-trigger:focus-visible .event-card__image {
-    filter: brightness(1.08);
-  }
-
-  .event-image-trigger:hover .event-image-trigger__scrim,
-  .event-image-trigger:focus-visible .event-image-trigger__scrim,
-  .event-image-trigger:hover .event-image-trigger__expand,
-  .event-image-trigger:focus-visible .event-image-trigger__expand {
-    opacity: 1;
-  }
-
-  .event-image-trigger:hover .event-image-trigger__expand,
-  .event-image-trigger:focus-visible .event-image-trigger__expand {
-    transform: translate(-50%, -50%) scale(1);
   }
 
   :global(.event-card:has(.event-card__image)) {
@@ -313,76 +211,6 @@ const image = {
     border: 0;
   }
 
-  .event-image-dialog {
-    position: fixed;
-    inset: 0;
-    box-sizing: border-box;
-    width: min(92vw, 72rem);
-    height: min(88vh, 48rem);
-    max-width: none;
-    max-height: calc(100vh - 2rem);
-    margin: auto;
-    padding: 0;
-    border: 1px solid var(--color-surface-border);
-    border-radius: calc(var(--radius-control) * 2);
-    background: var(--color-obsidian-950);
-    color: var(--color-surface-text);
-    overflow: hidden;
-  }
-
-  .event-image-dialog::backdrop {
-    background: color-mix(in srgb, var(--color-obsidian-950) 82%, transparent);
-  }
-
-  .event-image-dialog__panel {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 1rem;
-    height: 100%;
-    padding: 1.25rem;
-    box-sizing: border-box;
-  }
-
-  .event-image-dialog__title {
-    margin: 0;
-    color: var(--color-surface-gold);
-    font-size: 1.25rem;
-    font-weight: 400;
-  }
-
-  .event-image-dialog__close {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    display: grid;
-    width: 2.5rem;
-    height: 2.5rem;
-    place-items: center;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--color-surface-text);
-    font-size: 1.75rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  .event-image-dialog__content {
-    display: grid;
-    min-width: 0;
-    min-height: 0;
-    place-items: center;
-    overflow: hidden;
-  }
-
-  .event-image-dialog__image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
   @media (max-width: 46rem) {
     :global(.event-card:has(.event-card__image)) {
       grid-template-columns: 1fr;
@@ -401,11 +229,6 @@ const image = {
       aspect-ratio: 4 / 3;
     }
 
-    .event-image-dialog {
-      width: calc(100vw - 1rem);
-      height: calc(100vh - 1rem);
-    }
-
     .event-card__title-row {
       flex-direction: column;
       align-items: flex-start;
@@ -420,8 +243,6 @@ const image = {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .event-image-trigger__scrim,
-    .event-image-trigger__expand,
     .event-card__external-icon {
       transition: none;
     }

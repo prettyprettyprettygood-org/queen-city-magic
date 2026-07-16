@@ -251,7 +251,10 @@ const themes = [
 <script>
   const STORAGE_KEY = "qcmm-theme";
 
-  document.querySelectorAll<HTMLElement>("[data-theme-select]").forEach((select) => {
+  const initializeThemeSelects = () => document.querySelectorAll<HTMLElement>("[data-theme-select]").forEach((select) => {
+    if (select.dataset.themeInitialized === "true") return;
+    select.dataset.themeInitialized = "true";
+
     const details = select.querySelector<HTMLDetailsElement>(".select-details");
     const summaryLabel = select.querySelector<HTMLElement>(".select-trigger-label");
     const radios = select.querySelectorAll<HTMLInputElement>(".option-radio");
@@ -263,7 +266,7 @@ const themes = [
       if (text) summaryLabel.textContent = text;
     };
 
-    const current = document.documentElement.dataset.theme ?? "twilight";
+    const current = localStorage.getItem(STORAGE_KEY) ?? document.documentElement.dataset.theme ?? "twilight";
     const initial = select.querySelector<HTMLInputElement>(`.option-radio[value="${current}"]`);
     if (initial) initial.checked = true;
     syncLabel();
@@ -290,4 +293,7 @@ const themes = [
       }
     });
   });
+
+  initializeThemeSelects();
+  document.addEventListener("astro:page-load", initializeThemeSelects);
 </script>

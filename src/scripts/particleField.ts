@@ -22,6 +22,15 @@ interface Particle {
   twinklePhase: number;
   twinkleSpeed: number;
   twinkleAmp: number;
+  // Slow positional wander, independent of the cursor-push offset above — sampled from two
+  // out-of-phase sine waves (separate phase/speed per axis) so particles trace a lazy, uneven
+  // drift rather than a perfect circle or a synchronized bob.
+  driftPhaseX: number;
+  driftPhaseY: number;
+  driftSpeedX: number;
+  driftSpeedY: number;
+  driftAmpX: number;
+  driftAmpY: number;
 }
 
 // Cursor proximity radius within which sparkles get pushed outward a little and fade down,
@@ -39,6 +48,11 @@ const TWINKLE_MIN_SPEED = 0.002;
 const TWINKLE_MAX_SPEED = 0.005;
 const TWINKLE_MIN_AMP = 0.25;
 const TWINKLE_MAX_AMP = 0.45;
+// Much slower than the twinkle cycle above — this is a lazy dust-mote float, not a shimmer.
+const DRIFT_MIN_SPEED = 0.00025;
+const DRIFT_MAX_SPEED = 0.0007;
+const DRIFT_MIN_AMP = 2;
+const DRIFT_MAX_AMP = 5;
 // How long the whole field takes to ease up to full brightness once start() begins the loop —
 // so sparkles fade in rather than snapping to full opacity on the first frame.
 const FADE_IN_MS = 900;
@@ -164,6 +178,16 @@ export class ParticleField {
           Math.random() * (TWINKLE_MAX_SPEED - TWINKLE_MIN_SPEED),
         twinkleAmp:
           TWINKLE_MIN_AMP + Math.random() * (TWINKLE_MAX_AMP - TWINKLE_MIN_AMP),
+        driftPhaseX: Math.random() * Math.PI * 2,
+        driftPhaseY: Math.random() * Math.PI * 2,
+        driftSpeedX:
+          DRIFT_MIN_SPEED + Math.random() * (DRIFT_MAX_SPEED - DRIFT_MIN_SPEED),
+        driftSpeedY:
+          DRIFT_MIN_SPEED + Math.random() * (DRIFT_MAX_SPEED - DRIFT_MIN_SPEED),
+        driftAmpX:
+          DRIFT_MIN_AMP + Math.random() * (DRIFT_MAX_AMP - DRIFT_MIN_AMP),
+        driftAmpY:
+          DRIFT_MIN_AMP + Math.random() * (DRIFT_MAX_AMP - DRIFT_MIN_AMP),
       };
     });
   }
@@ -234,8 +258,19 @@ export class ParticleField {
     ctx.clearRect(0, 0, this.width, this.height);
 
     for (const particle of this.particles) {
-      const x = particle.fx * this.width + particle.offsetX;
-      const y = particle.fy * this.height + particle.offsetY;
+      // Drift only applies while animating (skipped under reduced motion, same as twinkle
+      // below) — otherwise the static render would place particles off their plain home
+      // position with no motion to justify it.
+      const driftX = animate
+        ? Math.sin(time * particle.driftSpeedX + particle.driftPhaseX) *
+          particle.driftAmpX
+        : 0;
+      const driftY = animate
+        ? Math.sin(time * particle.driftSpeedY + particle.driftPhaseY) *
+          particle.driftAmpY
+        : 0;
+      const x = particle.fx * this.width + particle.offsetX + driftX;
+      const y = particle.fy * this.height + particle.offsetY + driftY;
 
       let alpha = particle.baseAlpha;
       if (animate) {
