@@ -17,8 +17,12 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
       <h1 slot="title">Gallery</h1>
 
       <Gallery />
+    </Card>
+  </Section>
 
-      <h2>See a sneak peak</h2>
+  <Section>
+    <Card>
+      <h2 slot="title">See a sneak peak</h2>
       <div class="video-frame">
         <iframe
           title="QCMM highlight video"
@@ -34,8 +38,17 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   <Section>
     <Card>
       <h2 slot="title">Unforgettable Memories: Queen City Magic in Pictures</h2>
-      <p>Explore the full archive of festival pictures from the past ten years.</p>
-      <Button slot="cta" href="/ten-years">10 years</Button>
+      <p>
+        You're about to leave queencitymagic.com. Our ten years of photos live on Pixieset, a
+        third-party gallery, and you may need the event password to view them.
+      </p>
+      <Button
+        slot="cta"
+        href="https://kate-simon.pixieset.com/guestlogin/queencitymischiefandmagic/?return=%2Fqueencitymischiefandmagic%2F"
+        external
+      >
+        10 years
+      </Button>
     </Card>
   </Section>
 </BaseLayout>
