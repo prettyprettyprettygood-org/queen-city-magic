@@ -35,7 +35,6 @@ location for them until that PRD runs.
 | 02 | [Hero Section](./03-hero-diary-effect.md) | High visibility; scope simplified during implementation (no Three.js/particle layer) |
 | 03 | [Ambient Particle Layer](./04-ambient-particle-layer.md) | Needs to render behind hero's content (no longer a shared z-index contract, hero's Three.js layer was scoped out) |
 | 04 | [Scroll Choreography (Section Transitions)](./05-scroll-choreography.md) | Rewritten 2026-07-14 — now owns only the section-transition wipe; no longer feeds Gallery |
-| 05 | [Gallery](./06-gallery.md) | Rewritten 2026-07-14 — plain grid + hover sparkle, no flip/reveal/ripple; independent of PRD 04 and Sound Toggle |
 | 06 | [Sound Toggle](./07-sound-toggle.md) | Otherwise independent, but Gallery now depends on its mute state — build relatively early |
 | 07 | [Custom Cursor](./08-custom-cursor.md) | Fully independent, low risk |
 | 08 | [10 Years of Pictures Interstitial](./09-ten-years-interstitial.md) | Fully independent, lowest risk |

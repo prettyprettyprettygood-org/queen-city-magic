@@ -1,0 +1,331 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Image } from "astro:assets";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Sparkles } from "@lucide/astro";
+
+import cityStreet from "@/assets/images/city-street.jpg";
+import games from "@/assets/images/games.jpg";
+import musicSign from "@/assets/images/music-sign.jpg";
+import phoneboothProfessor from "@/assets/images/phonebooth-professor.jpg";
+import professor from "@/assets/images/professor.jpg";
+import trainStation from "@/assets/images/train-station.jpg";
+import youBelongHere from "@/assets/images/you-belong-here.jpg";
+
+interface Photo {
+  image: typeof cityStreet;
+  alt: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const photos: Photo[] = [
+  { image: cityStreet, alt: "A magical-looking street in downtown Staunton" },
+  { image: games, alt: "Festival games waiting for visitors" },
+  { image: musicSign, alt: "A music-themed sign at the festival" },
+  { image: phoneboothProfessor, alt: "A professor beside a red phone booth" },
+  { image: professor, alt: "A festival professor posing for a picture" },
+  {
+    image: trainStation,
+    alt: "Staunton's historic train station during the festival",
+  },
+  {
+    image: youBelongHere,
+    alt: "A sign reminding visitors that they belong here",
+  },
+];
+---
+
+<div class="gallery" role="group" aria-label="Photo gallery">
+  <div class="gallery__grid">
+    {photos.map((photo, index) => (
+      <button
+        type="button"
+        class="gallery__trigger focus-glow"
+        data-gallery-trigger={index}
+        aria-label={`View larger: ${photo.alt}`}
+      >
+        <Image
+          src={photo.image}
+          alt={photo.alt}
+          width={720}
+          height={480}
+          widths={[360, 540, 720]}
+          sizes="(min-width: 64rem) 30rem, (min-width: 40rem) 45vw, 90vw"
+          loading="lazy"
+          class="gallery__image"
+        />
+        <Sparkles class="gallery__sparkle" size={20} stroke-width={1.75} aria-hidden="true" />
+      </button>
+    ))}
+  </div>
+</div>
+
+<dialog class="gallery-lightbox" data-gallery-dialog aria-labelledby="gallery-lightbox-title">
+  <div class="gallery-lightbox__panel">
+    <h2 id="gallery-lightbox-title" class="gallery-lightbox__title">Photo view</h2>
+    <button
+      type="button"
+      class="gallery-lightbox__close focus-glow"
+      data-gallery-close
+      aria-label="Close photo view"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+    <div class="gallery-lightbox__content">
+      {photos.map((photo, index) => (
+        <Image
+          src={photo.image}
+          alt={photo.alt}
+          width={1600}
+          widths={[720, 1080, 1600]}
+          sizes="(min-width: 64rem) 80vw, 92vw"
+          loading="lazy"
+          class="gallery-lightbox__image"
+          data-gallery-image={index}
+          hidden={index !== 0}
+        />
+      ))}
+    </div>
+    <div class="gallery-lightbox__controls">
+      <button type="button" class="gallery-lightbox__button focus-glow" data-gallery-prev>
+        Previous
+      </button>
+      <p class="gallery-lightbox__count" data-gallery-count aria-live="polite"></p>
+      <button type="button" class="gallery-lightbox__button focus-glow" data-gallery-next>
+        Next
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const galleryDialog = document.querySelector<HTMLDialogElement>("[data-gallery-dialog]");
+  const galleryTriggers = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-gallery-trigger]"),
+  );
+  const galleryImages = Array.from(
+    document.querySelectorAll<HTMLImageElement>("[data-gallery-image]"),
+  );
+  const galleryClose = document.querySelector<HTMLButtonElement>("[data-gallery-close]");
+  const galleryPrevious = document.querySelector<HTMLButtonElement>("[data-gallery-prev]");
+  const galleryNext = document.querySelector<HTMLButtonElement>("[data-gallery-next]");
+  const galleryCount = document.querySelector<HTMLElement>("[data-gallery-count]");
+
+  if (
+    galleryDialog &&
+    galleryTriggers.length > 0 &&
+    galleryImages.length > 0 &&
+    galleryClose &&
+    galleryPrevious &&
+    galleryNext &&
+    galleryCount
+  ) {
+    let activeIndex = 0;
+    let lastTrigger: HTMLButtonElement | undefined;
+
+    const showImage = (index: number) => {
+      activeIndex = (index + galleryImages.length) % galleryImages.length;
+      galleryImages.forEach((image, imageIndex) => {
+        image.hidden = imageIndex !== activeIndex;
+      });
+      galleryCount.textContent = `${activeIndex + 1} of ${galleryImages.length}`;
+    };
+
+    const openGallery = (index: number, trigger: HTMLButtonElement) => {
+      lastTrigger = trigger;
+      showImage(index);
+      galleryDialog.showModal();
+      galleryClose.focus();
+    };
+
+    galleryTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        openGallery(Number(trigger.dataset.galleryTrigger), trigger);
+      });
+    });
+
+    galleryClose.addEventListener("click", () => galleryDialog.close());
+    galleryPrevious.addEventListener("click", () => showImage(activeIndex - 1));
+    galleryNext.addEventListener("click", () => showImage(activeIndex + 1));
+
+    galleryDialog.addEventListener("click", (event) => {
+      if (event.target === galleryDialog) galleryDialog.close();
+    });
+
+    galleryDialog.addEventListener("close", () => {
+      lastTrigger?.focus();
+    });
+
+    galleryDialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        showImage(activeIndex - 1);
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        showImage(activeIndex + 1);
+      }
+    });
+  }
+</script>
+
+<style>
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .gallery__trigger {
+    position: relative;
+    display: block;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-control);
+    background: var(--color-surface-bg);
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .gallery__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: filter 0.2s ease-out;
+  }
+
+  .gallery__sparkle {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    color: var(--color-amber-300);
+    filter: drop-shadow(0 0 0.35rem var(--color-magic-glow));
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    pointer-events: none;
+  }
+
+  .gallery__trigger:hover .gallery__image,
+  .gallery__trigger:focus-visible .gallery__image {
+    filter: brightness(1.08);
+  }
+
+  .gallery__trigger:hover .gallery__sparkle,
+  .gallery__trigger:focus-visible .gallery__sparkle {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .gallery-lightbox {
+    width: min(92vw, 72rem);
+    max-width: none;
+    padding: 0;
+    border: 1px solid var(--color-surface-border);
+    border-radius: calc(var(--radius-control) * 2);
+    background: var(--color-obsidian-950);
+    color: var(--color-surface-text);
+  }
+
+  .gallery-lightbox::backdrop {
+    background: color-mix(in srgb, var(--color-obsidian-950) 82%, transparent);
+  }
+
+  .gallery-lightbox__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .gallery-lightbox__title {
+    margin: 0;
+    color: var(--color-surface-primary);
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+
+  .gallery-lightbox__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-surface-text);
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .gallery-lightbox__content {
+    display: grid;
+    min-height: 12rem;
+    place-items: center;
+  }
+
+  .gallery-lightbox__image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+  }
+
+  .gallery-lightbox__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .gallery-lightbox__button {
+    min-height: 2.5rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--color-surface-accent);
+    border-radius: var(--radius-control);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    white-space: nowrap;
+  }
+
+  .gallery-lightbox__button:hover {
+    border-color: var(--color-surface-primary);
+    color: var(--color-surface-primary);
+  }
+
+  .gallery-lightbox__count {
+    min-width: 4rem;
+    margin: 0;
+    text-align: center;
+  }
+
+  @media (min-width: 40rem) {
+    .gallery__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .gallery__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery__image,
+    .gallery__sparkle {
+      transition: none;
+    }
+  }
+</style>
