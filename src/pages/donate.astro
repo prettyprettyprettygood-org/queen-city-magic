@@ -2,11 +2,11 @@
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { Image } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { HeartHandshake } from "@lucide/astro";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import qrCode from "@/assets/images/qr-code.png";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import Card from "@/components/Card.astro";
+import Button from "@/components/Button.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import PageHeader from "@/components/PageHeader.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -14,49 +14,67 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="Donate — Queen City Magic">
-  <Section>
-    <Card>
-      <HeartHandshake slot="icon" size={22} aria-hidden="true" />
-      <h1 slot="title">Help us make the magic!</h1>
+  <PageHeader width="wide">Help us make the magic!</PageHeader>
+
+  <Section width="wide" class="donate-section">
+    <div class="donate-intro">
       <p>We need your help to continue making the magic, year after year!</p>
       <p>
         Please donate today to keep us going, we depend on our volunteers and generous donors,
         thank you!
       </p>
+    </div>
 
-      <div class="venmo">
-        <Image
-          src={qrCode}
-          alt="QR code linking to the QCMM Venmo account, @qcmmsva"
-          width={220}
-          height={220}
-          class="venmo__qr"
-        />
-        <p class="venmo__fallback">
-          Scan this code, or visit{" "}
-          <a
-            href="https://venmo.com/qcmmsva"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="focus-glow">@qcmmsva</a
-          > on Venmo.
-        </p>
-      </div>
-    </Card>
+    <div class="donate-actions">
+      <Button href="https://venmo.com/qcmmsva" external>Donate via Venmo</Button>
+    </div>
+
+    <div class="venmo">
+      <Image
+        src={qrCode}
+        alt="QR code linking to the QCMM Venmo account, @qcmmsva"
+        width={260}
+        height={260}
+        class="venmo__qr"
+      />
+      <p class="venmo__fallback">
+        Scan this code, or visit{" "}
+        <a
+          href="https://venmo.com/qcmmsva"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="focus-glow">@qcmmsva</a
+        > on Venmo.
+      </p>
+    </div>
   </Section>
 </BaseLayout>
 
 <style>
-  h1 {
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
-    font-weight: 400;
-    margin: 0;
-    color: var(--color-surface-primary);
+  :global(.donate-section) {
+    padding-top: clamp(1rem, 4vw, 2rem);
+  }
+
+  :global(.donate-section .section__inner) {
+    gap: 1.5rem;
   }
 
   p {
     margin: 0;
+    font-size: clamp(1rem, 2vw, 1.15rem);
     line-height: 1.6;
+    text-align: center;
+  }
+
+  .donate-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .donate-actions {
+    display: flex;
+    justify-content: center;
   }
 
   .venmo {
@@ -64,8 +82,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-top: 0.5rem;
-    padding: 1.5rem;
+    max-width: 24rem;
+    margin: 0 auto;
+    padding: 1.25rem;
     border-radius: var(--radius-control);
     border: 1px solid var(--color-surface-border);
     background-color: color-mix(in srgb, var(--color-surface-bg) 45%, transparent);
@@ -73,8 +92,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   }
 
   .venmo__qr {
-    width: 220px;
-    height: 220px;
+    width: 260px;
+    height: 260px;
     border-radius: calc(var(--radius-control) - 0.15rem);
   }
 

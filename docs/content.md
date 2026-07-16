@@ -101,4 +101,4 @@ Gallery page:
 <iframe title="vimeo-player" src="https://player.vimeo.com/video/1108443655?h=5a7827b3eb" width="640" height="360" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"   allowfullscreen></iframe>
 
 Unforgettable Memories: Queen City Magic in Pictures- to see an archive of pics visit the 10 Years of pictures link
-https://kate-simon.pixieset.com/guestlogin/queencitymischiefandmagic/?return=%2Fqueencitymischiefandmagic%2F (see PRD 09)
+https://kate-simon.pixieset.com/guestlogin/queencitymischiefandmagic/?return=%2Fqueencitymischiefandmagic%2F (linked from the Gallery card)

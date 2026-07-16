@@ -1,0 +1,76 @@
+---
+/**
+ * Standalone h1 treatment for every page except Home (Hero owns Home's h1 as a distinct
+ * diary-effect headline — out of scope here). Sits above `Section`, not inside a `Card`, the
+ * same way `Hero` precedes `Section` on Home — so it manages its own horizontal
+ * padding/max-width rather than relying on Section's shell. `width` should match whatever
+ * `Section` follows it so the heading lines up with the content below.
+ *
+ * The gold sparkle rule under the heading uses `--color-surface-gold` (the same
+ * theme-invariant gold as Hero's eyebrow line), not `--color-surface-primary` — it's meant to
+ * read as gold on every house theme, not re-tint to that theme's own accent color.
+ */
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Sparkle } from "@lucide/astro";
+
+interface Props {
+  width?: "prose" | "wide";
+  class?: string;
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+const { width = "prose", class: className } = Astro.props;
+---
+
+<div class:list={["page-header", className]} data-width={width}>
+  <div class="page-header__inner">
+    <h1 class="page-header__heading"><slot /></h1>
+    <div class="page-header__accent" aria-hidden="true">
+      <span class="page-header__accent-line"></span>
+      <Sparkle size={16} />
+      <span class="page-header__accent-line"></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-header {
+    padding: clamp(2rem, 6vw, 3rem) clamp(1.5rem, 5vw, 4rem) 0;
+  }
+
+  .page-header__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 42rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .page-header[data-width="wide"] .page-header__inner {
+    max-width: 60rem;
+  }
+
+  .page-header__heading {
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 400;
+    margin: 0;
+    color: var(--color-surface-primary);
+  }
+
+  .page-header__accent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+    color: var(--color-surface-gold);
+  }
+
+  .page-header__accent-line {
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--color-surface-gold);
+    opacity: 0.6;
+  }
+</style>

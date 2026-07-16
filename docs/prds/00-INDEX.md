@@ -37,11 +37,11 @@ location for them until that PRD runs.
 | 04 | [Scroll Choreography (Section Transitions)](./05-scroll-choreography.md) | Rewritten 2026-07-14 — now owns only the section-transition wipe; no longer feeds Gallery |
 | 06 | [Sound Toggle](./07-sound-toggle.md) | Otherwise independent, but Gallery now depends on its mute state — build relatively early |
 | 07 | [Custom Cursor](./08-custom-cursor.md) | Fully independent, low risk |
-| 08 | [10 Years of Pictures Interstitial](./09-ten-years-interstitial.md) | Fully independent, lowest risk |
 | 09 | [Events Page](./10-events-page.md) | Independent; the date-bucketing logic (timezone-aware, midnight cutover) is the real substance here |
 | 10 | [Pre-Launch Production Readiness Audit](./11-pre-launch-audit.md) | Launch gate, not a build-order item — runs after 00–09 are done |
 | 11 | [Site Layout (Navbar, Footer, Section Shell)](./12-site-layout.md) | Added after PRD 02 shipped hero-only; wraps the hero rather than changing it. Resolves PRD 06's deferred "layout pass" for fixed-UI placement. No hard blocker for 03–09, but the sooner it lands the less retrofitting later pages need |
 | 12 | [Content Pages (Home Body, FAQ, Donate, Gallery Copy)](./13-content-pages.md) | Added once `docs/content.md` (real client copy) landed. Depends on PRD 11 for the shell/nav it fills in; independent of 03–09's interaction-heavy work otherwise |
+| 13 | [Page & Section Layout Conventions](./14-page-section-layout.md) | Added once PRD 12 landed real content and its duplicated ad hoc h1/h2 CSS across 6 pages became visible. Depends on PRD 11's `Section` shell; touches every page PRD 12 filled in. Open questions resolved 2026-07-15 — ready to implement |
 
 ## Shared utilities (build once, in the scaffold phases)
 
@@ -70,11 +70,10 @@ possibly-inconsistent handling across features:
 7. **Sound Toggle** — independent; nothing else in this list depends on it anymore (Gallery's
    flip SFX coupling was cut alongside its rewrite).
 8. **Custom Cursor** — no dependency on 3–6, could be pulled earlier and built in parallel.
-9. **10 Years of Pictures Interstitial** — no dependency on 3–6, lowest risk, good parallel/filler task.
-10. **Events Page** — no hard dependency on anything but PRD 01. No longer soft-depends on
+9. **Events Page** — no hard dependency on anything but PRD 01. No longer soft-depends on
     Scroll Choreography (that image-reveal primitive was cut, not just deferred) — ships with
     static card images permanently. Independent of everything else — good parallel/filler
-    task alongside 10 Years.
+    task alongside the remaining independent PRDs.
 
 Steps 1 and 2 are true hard blockers for everything. Steps 4–10 no longer have any
 cross-dependencies on each other as of the 2026-07-14 Gallery simplification — all are
@@ -98,6 +97,14 @@ through 10 Years Interstitial) at the client's request: PRD 11 (Site Layout) and
 before returning to the more design/interaction-heavy PRDs. Depends on PRD 11 landing first
 (fills in the stub routes Site Layout's nav creates); otherwise independent of 4–8's
 interaction work.
+
+**PRD 13 (Page & Section Layout Conventions) was added 2026-07-15**, once PRD 12's six pages
+of real content made visible that every page had independently reinvented near-duplicate
+h1/h2 CSS, and that `ten-years.astro` (still a stub) hadn't even picked up the `Section`/`Card`
+convention the other pages share. Depends on PRD 11's `Section` shell; touches every page PRD
+12 filled in. No hard blocker for anything downstream. Its three open questions (PageHeader
+placement, icon opt-in, whether `SectionHeader` touches `Card`'s own title slot) were resolved
+2026-07-15, each per the recommendation stated in the PRD — ready to implement.
 
 ## Explicitly out of scope for this pass (per the original prompt)
 

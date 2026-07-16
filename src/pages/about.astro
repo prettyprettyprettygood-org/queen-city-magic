@@ -1,8 +1,12 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { ExternalLink, Landmark } from "@lucide/astro";
+import { ExternalLink } from "@lucide/astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Divider from "@/components/Divider.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import PageHeader from "@/components/PageHeader.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -70,10 +74,10 @@ const pressLinks: PressLink[] = [
 ---
 
 <BaseLayout title="About — Queen City Magic">
-  <Section>
+  <PageHeader width="wide">How it all started</PageHeader>
+
+  <Section width="wide">
     <Card>
-      <Landmark slot="icon" size={22} aria-hidden="true" />
-      <h1 slot="title">How it all started</h1>
       <p>
         Queen City Mischief & Magic started small in 2016, when Staunton local Sarah Lynch —
         owner of Baja Bean — realized her own historic downtown looked a lot like Hogsmeade.
@@ -97,9 +101,9 @@ const pressLinks: PressLink[] = [
         about it along the way.
       </p>
     </Card>
-  </Section>
 
-  <Section width="wide">
+    <Divider />
+
     <Card>
       <h2 slot="title">In the press</h2>
       <ul class="press-list">
@@ -137,13 +141,6 @@ const pressLinks: PressLink[] = [
 </BaseLayout>
 
 <style>
-  h1 {
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
-    font-weight: 400;
-    margin: 0;
-    color: var(--color-surface-primary);
-  }
-
   h2 {
     font-size: clamp(1.25rem, 3vw, 1.5rem);
     font-weight: 400;

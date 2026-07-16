@@ -2,6 +2,8 @@
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { ArrowUp } from "@lucide/astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Button from "@/components/Button.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { navLinks } from "@/lib/navLinks";
 
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -91,7 +93,7 @@ const socialLinks = [
           We depend on our volunteers and generous donors to keep the magic going, year after year — every
           contribution helps.
         </p>
-        <a href="/donate" class="site-footer__cta focus-glow">Donate</a>
+        <Button href="/donate" class="site-footer__cta">Donate</Button>
       </div>
     </div>
 
@@ -107,8 +109,7 @@ const socialLinks = [
           <a href="https://www.prettyprettyprettygood.org/" target="_blank" rel="noopener noreferrer">
             prettyprettyprettygood.org
           </a>
-        </p>
-        <p class="site-footer__credits">
+          {" "}&mdash;{" "}
           <a href="/attributions" class="focus-glow">Attributions</a>
         </p>
       </div>
@@ -153,7 +154,7 @@ const socialLinks = [
   .site-footer__wordmark {
     font-family: var(--font-display);
     font-size: 1.5rem;
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold);
     text-decoration: none;
     border-radius: var(--radius-control);
   }
@@ -174,22 +175,7 @@ const socialLinks = [
   }
 
   .site-footer__cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.5rem;
-    padding: 0.5rem 1.5rem;
     margin-top: 0.25rem;
-    border-radius: var(--radius-control);
-    border: 1px solid var(--color-surface-border);
-    color: var(--color-surface-text);
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-
-  .site-footer__cta:hover {
-    border-color: var(--color-surface-primary);
-    color: var(--color-surface-primary);
   }
 
   .site-footer__nav ul {
@@ -211,7 +197,7 @@ const socialLinks = [
   }
 
   .site-footer__nav-link:hover {
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold-active);
   }
 
   .site-footer__divider {
@@ -225,7 +211,7 @@ const socialLinks = [
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1.25rem;
     text-align: center;
   }
 

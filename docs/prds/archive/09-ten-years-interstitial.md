@@ -1,5 +1,9 @@
 # PRD 08 — "10 Years of Pictures" Interstitial
 
+> Archived 2026-07-15. The standalone interstitial route was intentionally folded into the
+> Gallery page; its Pixieset handoff and login/password explanation now live in the Gallery
+> archive card.
+
 ## Start-work prompt
 
 > Implement docs/prds/09-ten-years-interstitial.md. Read CLAUDE.md first. Depends only on
@@ -19,7 +23,7 @@ gallery, login required), matches the site's visual language, then hands off.
 ## Interaction/animation behavior, in plain terms
 
 - A mostly static, low-motion page — its job is to set expectations and hand off quickly,
-  not to be a showpiece. **Confirmed 2026-07-14: stays deliberately quiet/minimal** — site
+  not be a showpiece. **Confirmed 2026-07-14: stays deliberately quiet/minimal** — site
   typography and color tokens, maybe a light texture background, but *not* the full
   particle/ink treatment used on the hero. No longer just a recommendation.
 - Content: a heading ("10 Years of Pictures" or the client's preferred title), short
@@ -37,8 +41,7 @@ gallery, login required), matches the site's visual language, then hands off.
   "Continue to Pixieset gallery" with visually-hidden or icon-paired text indicating it's an
   external site) — not a bare "Click here."
 - If the link opens in a new tab, that's programmatically indicated (visually-hidden text or
-  icon+label), since an unexpected new-tab context change is itself an accessibility
-  concern.
+  icon+label), since an unexpected new-tab context change is itself an accessibility concern.
 - Standard heading structure, `.focus-glow` on the CTA, and body copy contrast checked
   against PRD 01's matrix like every other page.
 - No new animation surface introduced beyond whatever ambient treatment (if any) this page
@@ -52,5 +55,5 @@ Only one remains: **final copy and password/access policy**, still pending the c
 
 ## Dependencies
 
-- PRD 01 (design tokens, typography) only. Lowest-risk, most independent PRD in the set —
+- PRD 01 (Design Tokens & Typography) only. Lowest-risk, most independent PRD in the set —
   good candidate for early or parallel work alongside the Sound Toggle.

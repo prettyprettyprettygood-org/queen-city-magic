@@ -62,14 +62,14 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
   }
 
   .handwriting-path {
-    fill: var(--color-surface-eyebrow);
+    fill: var(--color-surface-gold);
     /*
       A matching stroke thickens the traced glyph outlines a touch, faking a slightly bolder
       weight — there's no font-weight to reach for once the letterforms are already a fixed
       vector path. stroke-width is in the path's own viewBox units (see HERO_EYEBROW_VIEW_BOX,
       ~1250 units tall), not CSS px, so this is a small fraction of the glyph height.
     */
-    stroke: var(--color-surface-eyebrow);
+    stroke: var(--color-surface-gold);
     stroke-width: 14;
     stroke-linejoin: round;
   }

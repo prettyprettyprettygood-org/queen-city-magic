@@ -91,8 +91,14 @@
   --surface-parallax-tint: none;
   --surface-parallax-opacity: 0.85;
   --surface-parallax-ground: var(--surface-bg);
-  /* Hero eyebrow gold — bright dark-mode value; every theme is dark mode, so it applies everywhere. */
-  --surface-eyebrow: var(--color-magic-gold-bright);
+  /* Shared gold for text and ornamental marks that stay gold across every house theme. */
+  --surface-gold: var(--color-magic-gold);
+  /*
+    Interactive gold (nav hover/active, FAQ hover/open) — deliberately brighter than
+    --surface-gold and, like it, theme-invariant: a hovered/active nav item
+    should read as "lit up gold" on every house theme, not that theme's own accent hue.
+  */
+  --surface-gold-active: var(--color-magic-gold-active);
   /*
     Whether the fixed page-wide starfield (Starfield.tsx) draws its twinkling stars at all —
     numeric 1/0, read via getComputedStyle since canvas can't consume a CSS boolean directly.
@@ -181,6 +187,7 @@
   --color-forest-800: #22563b;
 
   /* amber accent range (Twilight identity) */
+  --color-amber-200: #ffda5c;
   --color-amber-300: #f6c877;
   --color-amber-400: #f2b347;
   --color-amber-500: #e39a2b;
@@ -189,14 +196,22 @@
   --color-amber-glow: #c1630b;
 
   /*
-    Deliberately theme-invariant (unlike --surface-primary, which re-points per theme) — the
-    hero eyebrow line is meant to read as gold on every theme, not each theme's own brand hue.
+    Deliberately theme-invariant (unlike --surface-primary, which re-points per theme) — shared
+    gold text and ornamental marks are meant to read as gold on every theme, not each theme's own
+    brand hue.
     Reuses the existing amber-400 step (richer/more saturated than amber-300, which read as too
     pale/champagne) rather than inventing a new hex. Every theme is dark mode, so contrast
     headroom is ample everywhere (11:1+ against every theme's `bg`) — no need for a dimmer,
     contrast-constrained variant.
   */
-  --color-magic-gold-bright: var(--color-amber-400);
+  --color-magic-gold: var(--color-amber-400);
+  /*
+    Interactive gold (nav hover/active, FAQ hover/open) — a step brighter than
+    --color-magic-gold, reserved for hover/active feedback so it reads as distinctly
+    "lit up" against the static gold used for headings/wordmarks. Theme-invariant for the same
+    reason as the eyebrow gold above.
+  */
+  --color-magic-gold-active: var(--color-amber-200);
   /*
     Sparkle-canvas particle color behind the magical eyebrow text. Theme-invariant like the
     gold itself, and deliberately NOT --color-surface-glow — that token is each theme's own
@@ -282,5 +297,6 @@
   --color-surface-border: var(--surface-border);
   --color-surface-nav-scrim: var(--surface-nav-scrim);
   --color-surface-parallax-ground: var(--surface-parallax-ground);
-  --color-surface-eyebrow: var(--surface-eyebrow);
+  --color-surface-gold: var(--surface-gold);
+  --color-surface-gold-active: var(--surface-gold-active);
 }

@@ -1,10 +1,12 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { Clock, WandSparkles } from "@lucide/astro";
+import { Clock } from "@lucide/astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Button from "@/components/Button.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import PageHeader from "@/components/PageHeader.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -17,10 +19,10 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   Replace this single card with the real page.
 -->
 <BaseLayout title="Events — Queen City Magic">
+  <PageHeader width="wide">Staunton is magic!</PageHeader>
+
   <Section width="wide">
     <Card>
-      <WandSparkles slot="icon" size={22} aria-hidden="true" />
-      <h1 slot="title">Staunton is magic!</h1>
       <p>
         But especially during QCMM&hellip; wizards and muggles from near and far descend upon
         Staunton, Virginia for our annual Queen City Mischief &amp; Magic festival every
@@ -58,12 +60,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 </BaseLayout>
 
 <style>
-  h1 {
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
-    font-weight: 400;
-    color: var(--color-surface-primary);
-  }
-
   p {
     margin: 0;
     line-height: 1.6;

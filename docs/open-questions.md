@@ -45,8 +45,15 @@ every PRD:
   paragraphs + Saturday/Sunday hours). Confirmed with the user: goes on Home as a new fifth
   body section, placed first (below Hero, before the recap). See PRD 13's resolved note.
 
+## Resolved 2026-07-15 (continued)
+
+- **PRD 13 (Page & Section Layout Conventions) — all three questions resolved**, each per
+  the recommendation stated when the PRD was drafted: `PageHeader` is standalone above
+  `Section` (not embedded in the first Card), carries an optional icon prop defaulting to
+  none, and `SectionHeader` only covers headings outside a Card — `Card`'s own
+  `slot="title"` styling is untouched. See PRD 13's own "Open questions" section for the
+  full resolution.
+
 ## Still open
 
-- **10 Years Interstitial final copy and password/access policy** (PRD 09) — still pending
-  the client directly, not something to resolve here. Building with placeholder copy per that
-  PRD until it arrives.
+None remaining.

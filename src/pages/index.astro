@@ -14,6 +14,8 @@ import HouseSectionIcon from "@/components/HouseSectionIcon.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import SectionHeader from "@/components/SectionHeader.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
@@ -22,10 +24,10 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
   <Section width="wide">
     <div class="intro">
-      <div class="intro__icon" aria-hidden="true">
-        <HouseSectionIcon />
-      </div>
-      <h2 class="intro__heading">The magic explained&hellip;</h2>
+      <SectionHeader>
+        <HouseSectionIcon slot="icon" />
+        The magic explained&hellip;
+      </SectionHeader>
       <p class="intro__aside">
         (to the best of our abilities&ndash;we are pleasantly surprised yearly ourselves)
       </p>
@@ -125,25 +127,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     max-width: 38rem;
     margin-inline: auto;
     text-align: center;
-  }
-
-  .intro__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 5.5rem;
-    height: 5.5rem;
-    border-radius: 999px;
-    background-color: color-mix(in srgb, var(--color-surface-primary) 18%, transparent);
-    color: var(--color-surface-primary);
-  }
-
-  .intro__heading {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 400;
-    margin: 0;
-    color: var(--color-surface-primary);
   }
 
   .intro__aside {

@@ -2,6 +2,8 @@
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import PageHeader from "@/components/PageHeader.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -328,9 +330,10 @@ const festivalServices = [
 ---
 
 <BaseLayout title="FAQ — Queen City Magic">
+  <PageHeader width="wide">Frequently Asked Questions</PageHeader>
+
   <Section width="wide">
     <Card>
-      <h1 slot="title">Frequently Asked Questions</h1>
       <div class="faq-list">
       {
         faqs.map((faq) => (
@@ -434,13 +437,6 @@ const festivalServices = [
 </BaseLayout>
 
 <style>
-  h1 {
-    font-size: clamp(1.5rem, 3.5vw, 2rem);
-    font-weight: 400;
-    margin: 0;
-    color: var(--color-surface-primary);
-  }
-
   .faq-list {
     display: flex;
     flex-direction: column;
@@ -448,10 +444,6 @@ const festivalServices = [
 
   .faq-item {
     border-bottom: 1px solid var(--color-surface-border);
-  }
-
-  .faq-item:first-child {
-    border-top: 1px solid var(--color-surface-border);
   }
 
   .faq-item__question {
@@ -469,6 +461,11 @@ const festivalServices = [
 
   .faq-item__question::-webkit-details-marker {
     display: none;
+  }
+
+  .faq-item__question:hover,
+  .faq-item[open] > .faq-item__question {
+    color: var(--color-surface-gold-active);
   }
 
   .faq-item__chevron {
