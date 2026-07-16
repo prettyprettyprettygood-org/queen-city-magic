@@ -78,8 +78,3 @@ Project conventions for working in this repo. Read this before starting work on 
   just the scroll choreography PRD.
 - Images go through Astro's image optimization; no unoptimized full-resolution drops into
   `public/`.
-
-## Secrets
-
-- Formspree endpoint and Turnstile site/secret keys go through environment variables, never
-  committed directly. `.env` stays gitignored.

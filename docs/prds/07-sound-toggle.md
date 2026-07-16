@@ -2,55 +2,106 @@
 
 ## Start-work prompt
 
-> Implement docs/prds/07-sound-toggle.md. Read CLAUDE.md first. Depends only on PRD 01
-> (tokens, `useReducedMotion` for icon animation) — safe to build any time relative to
-> hero/particles. Gallery (PRD 05, rewritten 2026-07-14) no longer has a flip SFX and doesn't
-> read this PRD's mute state — that coupling is gone, so this PRD has no downstream
-> dependents to sequence around anymore. Use
-> `public/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3` (re-encoded 2026-07-14,
-> ~134kbps VBR — not the original 256kbps file) as the ambient loop — this is a provisional
-> decision (see "Audio asset — decided (provisional)" below), so keep the audio source
-> swappable from one place, not hardcoded in multiple spots. When done: sweep for dead code,
-> commit, then archive.
+Implement docs/prds/07-sound-toggle.md. Read CLAUDE.md first. Use
+`public/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3`. This control now lives
+inside `src/components/ThemeSelect.astro`'s existing dropdown (see "Placement — decided" below)
+rather than as its own fixed-position button — read that section before touching markup, since
+it changes where the audio element and its script logic live relative to `ThemeSelect` and
+`Navbar.astro`.
 
 ## What it does
 
-A small, corner-anchored, icon-based toggle (flame or quill) for a soft ambient loop (fire
-crackle, wind, distant chatter — not anything melodic). Muted by default; playback only ever
-starts from an explicit user click, no autoplay attempt.
+A "Sound: On/Off" row at the bottom of the existing house-color dropdown (`ThemeSelect`),
+below a divider, paired with a single looping `<audio>` element carrying the ambient track.
+Audio starts only from an explicit user click — no autoplay attempt.
+
+## Placement — decided (2026-07-16)
+
+This PRD originally specced a standalone fixed-position corner button. **Superseded.** The
+toggle now lives as the last row inside `ThemeSelect`'s dropdown panel (`.select-options`),
+under a divider line separating it from the house-color radio options above it.
+
+- This closes out the open question PRD 11 (Site Layout) partially addressed (fixed-corner
+  collision with other chrome) by removing the fixed-position footprint entirely — there's no
+  longer a separate corner element to collide with anything. The "just make sure mobile looks
+  good" note from 2026-07-14 no longer applies to a corner tap target; it now applies to the
+  dropdown row instead, which already inherits its sizing from `ThemeSelect`'s existing
+  `.option-label` treatment (see below), already verified to work at mobile widths.
+- **Because `ThemeSelect` is rendered twice** (`Navbar.astro`'s desktop nav and its mobile
+  disclosure panel — both exist in the DOM simultaneously, one just `display: none`'d by
+  media query), the sound-toggle row also exists twice. The theme radios handle this for free:
+  same `name="qcmm-theme"` across both instances means the browser's native radio grouping
+  keeps them in sync with no extra JS. A toggle `<button>` gets no such native grouping, so
+  the implementation must explicitly keep both instances' visible state (and `aria-pressed`)
+  in sync with each other and with the one real `<audio>` element — e.g. a shared script
+  querying every `[data-sound-toggle]` node the same way `ThemeSelect`'s own script already
+  queries every `[data-theme-select]` node.
+- **The `<audio>` element itself is a singleton** — exactly one in the DOM regardless of how
+  many toggle rows exist. It does not belong inside `ThemeSelect.astro` (which is instantiated
+  twice); put it once in `Navbar.astro` (which already hosts both `ThemeSelect` instances) or
+  in `BaseLayout.astro`.
+- Stay in vanilla `<script>`, consistent with `ThemeSelect`'s existing implementation and
+  CLAUDE.md's guidance to reserve React islands for things that genuinely need client
+  interactivity beyond a toggle + audio element.
 
 ## Interaction/animation behavior, in plain terms
 
-- A persistent fixed-position `<button>` (bottom-right corner) paired with a single looping
-  `<audio>` element carrying the ambient track. No other fixed-position UI has landed since
-  PRD 12 (Site Layout) shipped, so there's no known collision to design around — just verify
-  the corner placement reads/taps well on small viewports once built (confirmed 2026-07-14:
-  "just make sure mobile looks good," not a specific alternate placement).
+- Inside `ThemeSelect`'s `.select-options` panel, after the existing theme `<fieldset>`: a
+  thin `1px` rule using `var(--color-surface-border)` (matching the panel's own border and
+  the option icon chips' border — not `Divider.astro`, which is an ornamental prose-section
+  divider with a gold `Sparkle` glyph, the wrong visual weight for a compact menu row).
+  Purely decorative — `aria-hidden`/`role="presentation"`, same treatment `Divider.astro`
+  already uses for its own lines.
+- Below that divider: a single full-width row, styled like `ThemeSelect`'s `.option-label`
+  rows (same `min-height: 2.25rem`, padding, hover background) for visual consistency, but a
+  real `<button>` rather than a radio — this is an independent on/off setting, not a member of
+  the house-color radio group, so it stays outside the `<fieldset>`.
+- Label text is literally **"Sound: On"** / **"Sound: Off"**, swapping with the state. Note:
+  this is a deliberate deviation from the ARIA APG toggle-button pattern's usual advice to keep
+  the accessible name stable and convey state only via `aria-pressed` — here the visible label
+  swap is the point (client asked for a plain on/off readout matching the menu style). Keep
+  `aria-pressed` in sync alongside the text as a redundant, non-conflicting state cue, not a
+  replacement for it.
+- No icon swap (no flame/quill). The corner-button design's icon-based on/off states are
+  dropped along with the corner placement — a text row matches the rest of the dropdown's
+  text-first option rows better than an icon would.
+- Clicking the row toggles play/pause with a short volume fade-in/fade-out (avoids an abrupt
+  jolt of sound starting or stopping). **Decision:** unlike selecting a theme, clicking the
+  sound row does not close the dropdown (`details` stays open) — flipping sound on/off is a
+  quick, repeatable flip a visitor may want to redo without reopening the menu, unlike
+  committing to a theme choice.
 - Default state on load: paused, muted. No `autoplay` attribute, no attempt to start audio
   programmatically before a user gesture — both because the brief asks for it explicitly and
   because browsers block unprompted autoplay anyway.
-- Click toggles play/pause with a short volume fade-in/fade-out (avoids an abrupt jolt of
-  sound starting or stopping) and swaps the icon between an "off" state (quill/flame
-  outline) and an "on" state (lit/animated flame).
 - Preference optionally persisted in `localStorage` so a returning visitor's choice is
   remembered — but even if the stored preference is "on," most browsers still require a
-  fresh user gesture on that page load before `audio.play()` will actually succeed. The
-  button can reflect the saved "on" state visually, but the code needs to retry playback on
-  the visitor's first click/keypress if the initial attempt is silently blocked. Documenting
-  this as a real technical constraint, not something fully solvable client-side.
+  fresh user gesture on that page load before `audio.play()` will actually succeed. Both
+  toggle rows can reflect the saved "on" state visually on load, but the code needs to retry
+  playback on the visitor's first click/keypress anywhere on the page if the initial attempt
+  is silently blocked. Documenting this as a real technical constraint, not something fully
+  solvable client-side.
 
 ## Accessibility branch
 
-- A real `<button>`, with a stable accessible name (e.g. "Ambient sound") and `aria-pressed`
-  reflecting on/off state — following the ARIA APG toggle-button pattern (state conveyed via
-  `aria-pressed`, not by swapping the label text itself, which would be confusing for screen
-  reader users mid-toggle).
-- Target size ≥24×24px CSS at minimum (WCAG 2.2 2.5.8), with a comfortable mobile tap area
-  in practice given the corner placement.
-- Visible `.focus-glow` ring when tabbed to, matching the rest of the site's focus treatment.
-- If the "on" icon animates (e.g. a flickering flame), that flicker itself respects
-  `prefers-reduced-motion` — a static lit icon instead of an animated flicker under reduced
-  motion. This is icon-level motion, independent of whether the audio itself plays.
+- A real `<button>`, with `aria-pressed` reflecting on/off state alongside the swapping
+  visible label (see the deliberate-deviation note above) — following the ARIA APG
+  toggle-button pattern otherwise.
+- Target size ≥24×24px CSS at minimum (WCAG 2.2 2.5.8) — already satisfied by matching
+  `ThemeSelect`'s `.option-label` row sizing (`min-height: 2.25rem` ≈ 36px), which the
+  dropdown context inherits automatically by reusing that treatment.
+- Visible `.focus-glow` ring when tabbed to, matching `ThemeSelect`'s own trigger/options
+  focus treatment and the rest of the site.
+- The decorative divider needs no ARIA role of its own (`aria-hidden`/`role="presentation"`,
+  per `Divider.astro`'s existing precedent) — the `<fieldset>`/`<legend>` above it already
+  names the radio group, and the button below it has its own accessible name.
+- No icon-flicker/reduced-motion consideration remains for this control specifically (the
+  icon-swap design that motivated it is gone) — `prefers-reduced-motion` still applies as
+  usual to the volume fade-in/fade-out if that's implemented with an animated/timed
+  transition rather than a direct value set.
+- Keyboard/dismissal behavior (Escape closes the dropdown and returns focus to its trigger,
+  outside-click closes it) is already handled by `ThemeSelect`'s existing `details` keydown
+  listener and needs no reimplementation — the sound row is just another focusable child
+  inside that same disclosure.
 
 ## Audio asset — decided (provisional)
 
@@ -74,11 +125,17 @@ point, not a mechanical re-encode, so it's left as a manual task for whoever bui
 
 ## Open questions / assumptions
 
-None remaining — resolved 2026-07-14, see notes above.
+None remaining — placement resolved 2026-07-16 (see "Placement — decided" above); everything
+else was already resolved 2026-07-14, see the audio-asset notes above.
 
 ## Dependencies
 
-- PRD 01 (design tokens: icon styling, focus-glow, `useReducedMotion` for icon animation).
-- No dependency *on* other feature PRDs. PRD 05 (Gallery)'s soft dependency on this PRD's
-  mute state was cut alongside Gallery's 2026-07-14 rewrite (no flip SFX to gate anymore) —
-  this PRD is fully isolated again, no longer anything else's build-order consideration.
+- PRD 01 (design tokens: focus-glow, radius/border/panel tokens already reused from
+  `ThemeSelect`'s own styling).
+- **PRD 11 (Site Layout)** — hard dependency now, where it previously had none. The toggle is
+  built as an addition to `ThemeSelect.astro` and lives inside the `Navbar.astro` chrome that
+  PRD 11 shipped; there's no longer a standalone fixed-position element that could be built
+  independently of that dropdown existing.
+- No dependency on Gallery — its earlier soft dependency on this PRD's mute state was cut
+  alongside Gallery's 2026-07-14 rewrite (no flip SFX to gate anymore) and stays cut; this
+  rewrite doesn't reintroduce it.

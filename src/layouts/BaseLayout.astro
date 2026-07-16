@@ -1,5 +1,7 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { ClientRouter } from "astro:transitions";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Footer from "@/components/Footer.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Navbar from "@/components/Navbar.astro";
@@ -27,6 +29,7 @@ const {
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <ClientRouter />
     <link
       rel="preload"
       as="font"

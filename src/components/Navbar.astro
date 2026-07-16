@@ -16,6 +16,9 @@ const currentPath = Astro.url.pathname;
   data-navbar
 >
   <div class="navbar__bg" aria-hidden="true"></div>
+  <audio transition:persist="sound-audio" data-sound-audio loop preload="none" muted>
+    <source src="/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3" type="audio/mpeg" />
+  </audio>
   <div class="navbar__inner">
     <a href="/" class="navbar__wordmark focus-glow">Queen City Magic</a>
 
@@ -232,56 +235,150 @@ const currentPath = Astro.url.pathname;
   const HIDE_THRESHOLD = 96;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  document.querySelectorAll<HTMLElement>("[data-navbar]").forEach((nav) => {
-    let ticking = false;
-    let lastScrollY = window.scrollY;
+  // Re-query `[data-navbar]`/`.navbar__disclosure` live on every call rather than capturing
+  // references once — Astro's ClientRouter swaps in a fresh <nav> on each client-side
+  // navigation, but this module script (and the window/document listeners it registers) only
+  // runs once per session, so stale captured elements would silently stop updating after the
+  // first page transition.
+  let ticking = false;
+  let lastScrollY = window.scrollY;
 
-    const setHidden = (hidden: boolean) => {
-      nav.classList.toggle("navbar--hidden", hidden);
-      nav.toggleAttribute("inert", hidden);
-    };
+  const setHidden = (nav: HTMLElement, hidden: boolean) => {
+    nav.classList.toggle("navbar--hidden", hidden);
+    nav.toggleAttribute("inert", hidden);
+  };
 
-    const update = () => {
-      const scrollY = window.scrollY;
+  const update = () => {
+    const scrollY = window.scrollY;
+
+    document.querySelectorAll<HTMLElement>("[data-navbar]").forEach((nav) => {
       nav.classList.toggle("navbar--solid", scrollY > SCROLL_THRESHOLD);
 
       const disclosure = nav.querySelector<HTMLDetailsElement>(".navbar__disclosure");
       if (prefersReducedMotion || disclosure?.open) {
-        setHidden(false);
+        setHidden(nav, false);
       } else if (scrollY <= HIDE_THRESHOLD) {
-        setHidden(false);
+        setHidden(nav, false);
       } else {
-        setHidden(scrollY > lastScrollY);
+        setHidden(nav, scrollY > lastScrollY);
       }
+    });
 
-      lastScrollY = scrollY;
-      ticking = false;
+    lastScrollY = scrollY;
+    ticking = false;
+  };
+
+  update();
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    },
+    { passive: true },
+  );
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as Node;
+    document.querySelectorAll<HTMLDetailsElement>(".navbar__disclosure[open]").forEach((details) => {
+      if (!details.contains(target)) details.removeAttribute("open");
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    document.querySelectorAll<HTMLDetailsElement>(".navbar__disclosure[open]").forEach((details) => {
+      details.removeAttribute("open");
+      details.querySelector<HTMLElement>("summary")?.focus();
+    });
+  });
+
+  const SOUND_STORAGE_KEY = "qcmm-sound";
+  const audio = document.querySelector<HTMLAudioElement>("[data-sound-audio]");
+  const soundPrefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const soundWindow = window as typeof window & {
+    __qcmmSoundController?: { sync: () => void };
+  };
+
+  if (soundWindow.__qcmmSoundController) {
+    soundWindow.__qcmmSoundController.sync();
+  } else if (audio) {
+    let soundEnabled = localStorage.getItem(SOUND_STORAGE_KEY) === "on";
+    let fadeFrame = 0;
+
+    const syncSoundToggles = () => {
+      document.querySelectorAll<HTMLButtonElement>("[data-sound-toggle]").forEach((toggle) => {
+        toggle.setAttribute("aria-pressed", String(soundEnabled));
+        const label = toggle.querySelector<HTMLElement>(".option-text");
+        if (label) label.textContent = `Sound: ${soundEnabled ? "On" : "Off"}`;
+      });
     };
 
-    update();
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(update);
-      },
-      { passive: true },
-    );
-  });
+    const fadeVolume = (target: number, onComplete?: () => void) => {
+      cancelAnimationFrame(fadeFrame);
+      if (soundPrefersReducedMotion) {
+        audio.volume = target;
+        onComplete?.();
+        return;
+      }
 
-  document.querySelectorAll<HTMLDetailsElement>(".navbar__disclosure").forEach((details) => {
+      const start = audio.volume;
+      const startedAt = performance.now();
+      const duration = 180;
+      const step = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        audio.volume = start + (target - start) * progress;
+        if (progress < 1) {
+          fadeFrame = requestAnimationFrame(step);
+        } else {
+          onComplete?.();
+        }
+      };
+      fadeFrame = requestAnimationFrame(step);
+    };
+
+    const tryPlayback = () => {
+      if (!soundEnabled || !audio.paused) return;
+      audio.volume = 0;
+      audio.muted = false;
+      const playback = audio.play();
+      playback?.then(() => fadeVolume(0.35)).catch(() => {
+        audio.pause();
+        audio.muted = true;
+      });
+    };
+
+    const disableSound = () => {
+      soundEnabled = false;
+      localStorage.setItem(SOUND_STORAGE_KEY, "off");
+      syncSoundToggles();
+      fadeVolume(0, () => {
+        audio.pause();
+        audio.muted = true;
+      });
+    };
+
+    const enableSound = () => {
+      soundEnabled = true;
+      localStorage.setItem(SOUND_STORAGE_KEY, "on");
+      syncSoundToggles();
+      tryPlayback();
+    };
+
+    syncSoundToggles();
+    soundWindow.__qcmmSoundController = { sync: syncSoundToggles };
     document.addEventListener("click", (event) => {
-      if (details.open && !details.contains(event.target as Node)) {
-        details.removeAttribute("open");
-      }
+      const toggle = (event.target as Element).closest<HTMLButtonElement>("[data-sound-toggle]");
+      if (!toggle) return;
+      if (soundEnabled) disableSound();
+      else enableSound();
     });
 
-    details.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && details.open) {
-        details.removeAttribute("open");
-        details.querySelector("summary")?.focus();
-      }
-    });
-  });
+    const retryOnUserGesture = () => {
+      if (soundEnabled && audio.paused) tryPlayback();
+    };
+    document.addEventListener("click", retryOnUserGesture, { capture: true });
+    document.addEventListener("keydown", retryOnUserGesture, { capture: true });
+  }
 </script>

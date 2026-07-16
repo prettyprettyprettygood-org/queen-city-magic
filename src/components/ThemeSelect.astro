@@ -87,6 +87,10 @@ const themes = [
           ))
         }
       </fieldset>
+      <div class="sound-divider" aria-hidden="true" role="presentation"></div>
+      <button type="button" class="option-label sound-toggle focus-glow" data-sound-toggle aria-pressed="false">
+        <span class="option-text">Sound: Off</span>
+      </button>
     </div>
   </details>
 </div>
@@ -183,6 +187,25 @@ const themes = [
   .option-label:has(.option-radio:checked) {
     color: var(--color-surface-primary);
     font-weight: 600;
+  }
+
+  .sound-divider {
+    height: 1px;
+    margin: 0.35rem 0;
+    background-color: var(--color-surface-border);
+  }
+
+  .sound-toggle {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--color-surface-text);
+    font: inherit;
+    text-align: left;
+  }
+
+  .sound-toggle:hover {
+    background-color: var(--color-surface-border);
   }
 
   .option-radio {

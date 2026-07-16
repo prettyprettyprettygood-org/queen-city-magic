@@ -108,9 +108,8 @@ placement, icon opt-in, whether `SectionHeader` touches `Card`'s own title slot)
 
 ## Explicitly out of scope for this pass (per the original prompt)
 
-- The Formspree + Turnstile contact/join form on Home — this is a standard build task, not a
-  design-forward feature area, so it isn't getting its own PRD. It'll be scoped inline when
-  the Home page is implemented, using the design tokens and focus/ARIA conventions established here.
+- ~~The Formspree + Turnstile contact/join form on Home.~~ **Cut entirely, 2026-07-16** — no
+  contact form is being added to this site at all, not just deferred out of this pass.
 - ~~Pool/ripple memory-reveal effect for gallery images (next phase).~~ **Cut entirely,
   2026-07-14** — Gallery was rewritten to a plain grid with a hover sparkle; ripple/pool is no
   longer a planned future phase, just dropped scope.
