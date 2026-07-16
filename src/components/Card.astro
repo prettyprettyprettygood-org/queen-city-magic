@@ -125,7 +125,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     --surface-border: color-mix(in srgb, var(--surface-card-text) 24%, transparent);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--shadow-panel);
   }
 
   .card__glow {
@@ -208,7 +208,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
        the actual "this card is lit up" work. Faint at rest, brighter on hover/focus. */
     border: 1px solid color-mix(in srgb, var(--color-surface-featured) 25%, transparent);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.35),
+      var(--shadow-panel),
       0 0 12px 1px color-mix(in srgb, var(--color-surface-featured) 20%, transparent),
       0 0 28px 6px color-mix(in srgb, var(--color-surface-featured) 9%, transparent);
   }
@@ -223,7 +223,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
   .card--featured:focus-within {
     border-color: color-mix(in srgb, var(--color-surface-featured) 55%, transparent);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.35),
+      var(--shadow-panel),
       0 0 18px 3px color-mix(in srgb, var(--color-surface-featured) 55%, transparent),
       0 0 44px 12px color-mix(in srgb, var(--color-surface-featured) 28%, transparent);
   }

@@ -72,6 +72,7 @@ export default function FeaturedCardGlow() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let width = 0;
     let height = 0;
+    let isIntersecting = true;
     const blobs: Blob[] = Array.from({ length: BLOB_COUNT }, makeBlob);
 
     const resize = () => {
@@ -129,6 +130,7 @@ export default function FeaturedCardGlow() {
     };
 
     const start = () => {
+      if (!isIntersecting || document.visibilityState !== "visible") return;
       if (reducedMotion) {
         // One settled frame, no ongoing rAF cost — matches Starfield.tsx's reduced-motion
         // handling.
@@ -144,6 +146,13 @@ export default function FeaturedCardGlow() {
       if (document.visibilityState === "visible") start();
       else stop();
     };
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+      if (isIntersecting) start();
+      else stop();
+    });
+    intersectionObserver.observe(canvas);
 
     readTokens();
     const resizeObserver = new ResizeObserver(() => {
@@ -167,6 +176,7 @@ export default function FeaturedCardGlow() {
     return () => {
       stop();
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       themeObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };

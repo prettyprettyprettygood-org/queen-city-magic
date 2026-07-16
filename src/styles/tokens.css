@@ -49,6 +49,13 @@
   font-display: swap;
   src: url("/fonts/nothing-you-could-do-400.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Cantarell";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/cantarell-400.woff2") format("woff2");
+}
 
 :root {
   /* semantic surface tokens — default "Twilight" identity (dark mode) */
@@ -114,6 +121,7 @@
     so every theme gets it.
   */
   --surface-starfield-visible: 1;
+  --shadow-panel: 0 8px 24px rgb(0 0 0 / 35%);
 }
 
 [data-theme="daring"] {
@@ -181,6 +189,7 @@
   --font-display: "IM Fell English", Cambria, Georgia, serif;
   --font-script: "Nothing You Could Do", "Segoe Script", cursive;
   --font-body: "EB Garamond", "Iowan Old Style", Georgia, serif;
+  --font-numeric: "Cantarell", "Segoe UI", Roboto, sans-serif;
 
   /* shared radius scale — not theme-dependent, just a token so nothing inlines a raw px/rem */
   --radius-control: 0.375rem;

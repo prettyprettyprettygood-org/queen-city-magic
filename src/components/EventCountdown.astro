@@ -4,6 +4,8 @@
  * Rendered once at build time so there's a sensible value before JS runs, then corrected
  * client-side on load in case the static page has been live a while since its last build.
  */
+import { daysUntilFestival, festivalStatus } from "@/lib/festival";
+
 interface Props {
   class?: string;
   /** Delay, in ms, before the digits start counting up — lets a caller stagger this after other content. */
@@ -13,25 +15,19 @@ interface Props {
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const { class: className, startDelayMs = 0 } = Astro.props;
 
-const FESTIVAL_START = "2026-09-26T00:00:00";
-const FESTIVAL_END = "2026-09-28T00:00:00"; // exclusive — the moment the festival is over
-const MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-function festivalStatus(): "upcoming" | "live" | "past" {
-  const now = Date.now();
-  if (now < new Date(FESTIVAL_START).getTime()) return "upcoming";
-  if (now < new Date(FESTIVAL_END).getTime()) return "live";
-  return "past";
-}
-
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const status = festivalStatus();
-const days = Math.max(
-  Math.ceil((new Date(FESTIVAL_START).getTime() - Date.now()) / MS_PER_DAY),
-  0,
-);
+const days = daysUntilFestival();
+// Leading zeros in the first two cells render as Elder Futhark runes (Perthro, Algiz)
+// instead of "0" — a nod to the Azkaban prison-door prop's countdown, not Potter-specific
+// iconography since these are pre-existing runic alphabet characters.
+const RUNE_ZERO = ["ᛈ", "ᛉ"];
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const digits = days.toString().padStart(5, "0").split("");
+const digits = days
+  .toString()
+  .padStart(5, "0")
+  .split("")
+  .map((digit, i) => (i < 2 && digit === "0" ? RUNE_ZERO[i] : digit));
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief & Magic`;
 ---
@@ -39,8 +35,8 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
 <div
   class:list={["countdown", className]}
   data-countdown
-  data-festival-start={FESTIVAL_START}
-  data-festival-end={FESTIVAL_END}
+  data-festival-start="2026-09-26T00:00:00"
+  data-festival-end="2026-09-28T00:00:00"
   data-start-delay={startDelayMs}
 >
   <div
@@ -53,7 +49,12 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
   >
     {
       digits.map((digit) => (
-        <span class="countdown__cell" data-digit aria-hidden="true">
+        <span
+          class="countdown__cell"
+          data-digit
+          data-glyph={RUNE_ZERO.includes(digit) ? "rune" : "digit"}
+          aria-hidden="true"
+        >
           {digit}
         </span>
       ))
@@ -79,11 +80,22 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
   const COUNT_UP_MS = 2200;
 
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const countdownCleanups = new Set<() => void>();
 
   // Ease-out quintic (steeper than cubic) — numbers arrive quickly at first, then slow
   // noticeably more as they approach the final value, reading as a mechanical counter
   // settling into place rather than a linear tick.
   const easeOutQuint = (x: number) => 1 - (1 - x) ** 5;
+
+  // Leading zeros in the first two cells render as runes (Perthro, Algiz) — mirrors the
+  // build-time substitution above so the count-up animation doesn't flash plain "0"s.
+  const RUNE_ZERO = ["ᛈ", "ᛉ"];
+  const displayChar = (index: number, char: string) => (index < 2 && char === "0" ? RUNE_ZERO[index] : char);
+  const applyChar = (el: HTMLElement, index: number, char: string) => {
+    const display = displayChar(index, char);
+    el.textContent = display;
+    el.dataset.glyph = RUNE_ZERO.includes(display) ? "rune" : "digit";
+  };
 
   function festivalStatus(): "upcoming" | "live" | "past" {
     const now = Date.now();
@@ -140,13 +152,14 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
     // Zero out for the count-up's starting point (only once motion-safe JS has confirmed it
     // will animate back up to the real value — a no-JS visitor never sees this, only the
     // build-time-correct digits above).
-    digitEls.forEach((el) => {
-      el.textContent = "0";
+    digitEls.forEach((el, i) => {
+      applyChar(el, i, "0");
     });
 
     const startDelayMs = Number(root.dataset.startDelay) || 0;
 
-    setTimeout(() => {
+    let rafId = 0;
+    const timeoutId = window.setTimeout(() => {
       const start = performance.now();
 
       const frame = (now: number) => {
@@ -154,25 +167,33 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
         const current = Math.round(easeOutQuint(t) * days);
         const currentChars = current.toString().padStart(digitEls.length, "0");
         digitEls.forEach((el, i) => {
-          el.textContent = currentChars[i] ?? "0";
+          applyChar(el, i, currentChars[i] ?? "0");
         });
 
         if (t < 1) {
-          requestAnimationFrame(frame);
+          rafId = requestAnimationFrame(frame);
         } else {
           digitEls.forEach((el, i) => {
-            el.textContent = targetChars[i] ?? "0";
+            applyChar(el, i, targetChars[i] ?? "0");
           });
           document.dispatchEvent(new CustomEvent("countdown-complete"));
         }
       };
-      requestAnimationFrame(frame);
+      rafId = requestAnimationFrame(frame);
     }, startDelayMs);
+    countdownCleanups.add(() => {
+      window.clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+    });
     });
   };
 
   initializeCountdowns();
   document.addEventListener("astro:page-load", initializeCountdowns);
+  document.addEventListener("astro:before-swap", () => {
+    countdownCleanups.forEach((cleanup) => cleanup());
+    countdownCleanups.clear();
+  });
 </script>
 
 <style>
@@ -203,7 +224,17 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
     color: var(--color-surface-gold);
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 4vw, 2.1rem);
-    font-variant-numeric: tabular-nums;
+    /* lining-nums: IM Fell English defaults to old-style figures, where digits like 3/5/7/9
+       have a descender below the baseline — lining figures keep every digit the same height. */
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Numerals sit visibly shorter than the rune glyphs at the same font-size — scale them up
+     so the two read at a matching height rather than the digits looking undersized next to
+     the runes. */
+  .countdown__cell[data-glyph="digit"] {
+    font-family: var(--font-numeric);
+    font-size: clamp(1.7rem, 4.6vw, 2.4rem);
   }
 
   .countdown__message {

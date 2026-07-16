@@ -156,27 +156,19 @@ const photos: Photo[] = [
 <script>
   import { lockScroll, unlockScroll } from "@/lib/scrollLock";
 
-  const galleryDialog = document.querySelector<HTMLDialogElement>("[data-gallery-dialog]");
-  const galleryTriggers = Array.from(
-    document.querySelectorAll<HTMLButtonElement>("[data-gallery-trigger]"),
-  );
-  const galleryImages = Array.from(
-    document.querySelectorAll<HTMLImageElement>("[data-gallery-image]"),
-  );
-  const galleryClose = document.querySelector<HTMLButtonElement>("[data-gallery-close]");
-  const galleryPrevious = document.querySelector<HTMLButtonElement>("[data-gallery-prev]");
-  const galleryNext = document.querySelector<HTMLButtonElement>("[data-gallery-next]");
-  const galleryCount = document.querySelector<HTMLElement>("[data-gallery-count]");
+  let cleanupGallery: (() => void) | undefined;
 
-  if (
-    galleryDialog &&
-    galleryTriggers.length > 0 &&
-    galleryImages.length > 0 &&
-    galleryClose &&
-    galleryPrevious &&
-    galleryNext &&
-    galleryCount
-  ) {
+  const initializeGallery = () => {
+    cleanupGallery?.();
+    const galleryDialog = document.querySelector<HTMLDialogElement>("[data-gallery-dialog]");
+    const galleryTriggers = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-gallery-trigger]"));
+    const galleryImages = Array.from(document.querySelectorAll<HTMLImageElement>("[data-gallery-image]"));
+    const galleryClose = document.querySelector<HTMLButtonElement>("[data-gallery-close]");
+    const galleryPrevious = document.querySelector<HTMLButtonElement>("[data-gallery-prev]");
+    const galleryNext = document.querySelector<HTMLButtonElement>("[data-gallery-next]");
+    const galleryCount = document.querySelector<HTMLElement>("[data-gallery-count]");
+
+    if (galleryDialog && galleryTriggers.length > 0 && galleryImages.length > 0 && galleryClose && galleryPrevious && galleryNext && galleryCount) {
     let activeIndex = 0;
     let lastTrigger: HTMLButtonElement | undefined;
 
@@ -196,36 +188,53 @@ const photos: Photo[] = [
       galleryClose.focus();
     };
 
+    const listeners: Array<() => void> = [];
+    const listen = <T extends EventTarget>(target: T, type: string, handler: EventListener) => {
+      target.addEventListener(type, handler);
+      listeners.push(() => target.removeEventListener(type, handler));
+    };
+
     galleryTriggers.forEach((trigger) => {
-      trigger.addEventListener("click", () => {
+      listen(trigger, "click", () => {
         openGallery(Number(trigger.dataset.galleryTrigger), trigger);
       });
     });
 
-    galleryClose.addEventListener("click", () => galleryDialog.close());
-    galleryPrevious.addEventListener("click", () => showImage(activeIndex - 1));
-    galleryNext.addEventListener("click", () => showImage(activeIndex + 1));
+    listen(galleryClose, "click", () => galleryDialog.close());
+    listen(galleryPrevious, "click", () => showImage(activeIndex - 1));
+    listen(galleryNext, "click", () => showImage(activeIndex + 1));
 
-    galleryDialog.addEventListener("click", (event) => {
+    listen(galleryDialog, "click", (event) => {
       if (event.target === galleryDialog) galleryDialog.close();
     });
 
-    galleryDialog.addEventListener("close", () => {
+    listen(galleryDialog, "close", () => {
       unlockScroll();
       lastTrigger?.focus();
     });
 
-    galleryDialog.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft") {
+    listen(galleryDialog, "keydown", (event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      if (keyboardEvent.key === "ArrowLeft") {
         event.preventDefault();
         showImage(activeIndex - 1);
       }
-      if (event.key === "ArrowRight") {
+      if (keyboardEvent.key === "ArrowRight") {
         event.preventDefault();
         showImage(activeIndex + 1);
       }
     });
+    cleanupGallery = () => {
+      listeners.forEach((remove) => remove());
+      if (galleryDialog.open) galleryDialog.close();
+      cleanupGallery = undefined;
+    };
   }
+  };
+
+  initializeGallery();
+  document.addEventListener("astro:page-load", initializeGallery);
+  document.addEventListener("astro:before-swap", () => cleanupGallery?.());
 </script>
 
 <style>

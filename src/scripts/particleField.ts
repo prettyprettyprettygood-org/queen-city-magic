@@ -74,7 +74,12 @@ export class ParticleField {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly particleCount: number;
-  private readonly reducedMotion: boolean;
+  private reducedMotion: boolean;
+  private readonly reducedMotionQuery: MediaQueryList;
+  private readonly handleReducedMotionChange: (
+    event: MediaQueryListEvent,
+  ) => void;
+  private readonly handleVisibilityChange: () => void;
   private readonly dpr: number;
   private readonly themeObserver: MutationObserver;
 
@@ -95,14 +100,28 @@ export class ParticleField {
     this.ctx = context;
     this.particleCount = particleCount;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.reducedMotion = window.matchMedia(
+    this.reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
-    ).matches;
+    );
+    this.reducedMotion = this.reducedMotionQuery.matches;
 
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleResize = this.handleResize.bind(this);
     this.tick = this.tick.bind(this);
+    this.handleReducedMotionChange = (event) => {
+      this.reducedMotion = event.matches;
+      if (this.reducedMotion) {
+        this.stop();
+        this.render(0, false);
+      } else if (document.visibilityState === "visible") {
+        this.start();
+      }
+    };
+    this.handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") this.stop();
+      else if (!this.reducedMotion) this.start();
+    };
 
     this.readColor();
     this.resize();
@@ -115,12 +134,17 @@ export class ParticleField {
       // entirely (it doesn't bubble, so this only catches the document-level boundary).
       document.addEventListener("mouseleave", this.handleMouseLeave);
     }
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
 
     this.themeObserver = new MutationObserver(() => this.readColor());
     this.themeObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["data-theme"],
     });
+    this.reducedMotionQuery.addEventListener(
+      "change",
+      this.handleReducedMotionChange,
+    );
   }
 
   start(): void {
@@ -133,13 +157,25 @@ export class ParticleField {
     this.rafId = requestAnimationFrame(this.tick);
   }
 
-  destroy(): void {
+  stop(): void {
     if (this.rafId !== null) cancelAnimationFrame(this.rafId);
     this.rafId = null;
+  }
+
+  destroy(): void {
+    this.stop();
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("mousemove", this.handleMouseMove);
     document.removeEventListener("mouseleave", this.handleMouseLeave);
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange,
+    );
     this.themeObserver.disconnect();
+    this.reducedMotionQuery.removeEventListener(
+      "change",
+      this.handleReducedMotionChange,
+    );
   }
 
   private readColor(): void {

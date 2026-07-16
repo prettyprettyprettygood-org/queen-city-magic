@@ -85,6 +85,7 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
 
   const DRAW_MS = 3400;
   let clipIdCounter = 0;
+  const handwritingCleanups = new Set<() => void>();
 
   const initializeHandwritingReveals = () => {
     const returningHome = sessionStorage.getItem("qcmm-home-visited") === "true";
@@ -126,9 +127,12 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
     clipPath.appendChild(rect);
     svg.appendChild(clipPath);
     pathEl.setAttribute("clip-path", `url(#${clipId})`);
+    const controller = new AbortController();
+    let timeoutId = 0;
+    let rafId = 0;
 
     const beginDraw = () => {
-      setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         const start = performance.now();
 
         const frame = (now: number) => {
@@ -137,7 +141,7 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
           rect.setAttribute("width", String(eased * (maxX - minX)));
 
           if (t < 1) {
-            requestAnimationFrame(frame);
+            rafId = requestAnimationFrame(frame);
           } else {
             // ParticleField listens for this on `wrapper` (its own parent element) to hold off
             // sparkling until the pen-draw reveal finishes, rather than appearing underneath it
@@ -145,18 +149,29 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
             wrapper.dispatchEvent(new CustomEvent("handwriting-complete"));
           }
         };
-        requestAnimationFrame(frame);
+        rafId = requestAnimationFrame(frame);
       }, startDelayMs);
     };
 
     if (waitForEvent) {
-      document.addEventListener(waitForEvent, beginDraw, { once: true });
+      document.addEventListener(waitForEvent, beginDraw, { once: true, signal: controller.signal });
     } else {
       beginDraw();
     }
+    handwritingCleanups.add(() => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId);
+      clipPath.remove();
+      pathEl.removeAttribute("clip-path");
+    });
     });
   };
 
   initializeHandwritingReveals();
   document.addEventListener("astro:page-load", initializeHandwritingReveals);
+  document.addEventListener("astro:before-swap", () => {
+    handwritingCleanups.forEach((cleanup) => cleanup());
+    handwritingCleanups.clear();
+  });
 </script>

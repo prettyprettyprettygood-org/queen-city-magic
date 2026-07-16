@@ -6,8 +6,12 @@ import ThemeSelect from "@/components/ThemeSelect.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { navLinks } from "@/lib/navLinks";
 
+// Static builds (build.format: "directory") resolve Astro.url.pathname with a trailing
+// slash (e.g. "/about/") since each page is emitted as a directory's index.html; dev's
+// request-based routing doesn't add one. Strip it so comparisons against navLinks hrefs
+// (which never have a trailing slash) match in both environments.
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/(.)\/$/, "$1");
 ---
 
 <nav
@@ -16,7 +20,7 @@ const currentPath = Astro.url.pathname;
   data-navbar
 >
   <div class="navbar__bg" aria-hidden="true"></div>
-  <audio transition:persist="sound-audio" data-sound-audio preload="none" muted>
+  <audio transition:persist="sound-audio" data-sound-audio preload="auto" muted>
     <source src="/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3" type="audio/mpeg" />
   </audio>
   <div class="navbar__inner">
@@ -214,7 +218,7 @@ const currentPath = Astro.url.pathname;
     border-radius: var(--radius-control);
     border: 1px solid var(--color-surface-border);
     background-color: var(--color-surface-panel);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--shadow-panel);
   }
 
   .navbar__panel .navbar__links {
@@ -323,6 +327,7 @@ const currentPath = Astro.url.pathname;
     let loopAudio: HTMLAudioElement | undefined;
     let activeAudio = audio;
     let crossfadeStarted = false;
+    let wasPlayingBeforeHidden = false;
     const targetVolume = 0.35;
     const loopCrossfadeDuration = 1600;
 
@@ -418,7 +423,6 @@ const currentPath = Astro.url.pathname;
 
     const tryPlayback = () => {
       if (!soundEnabled || !audio.paused) return;
-      prepareLoopAudio();
       activeAudio = audio;
       crossfadeStarted = false;
       audio.volume = 0;
@@ -427,9 +431,16 @@ const currentPath = Astro.url.pathname;
       audio.addEventListener("timeupdate", watchForLoopPoint);
       audio.addEventListener("ended", startNextLoop);
       const playback = audio.play();
-      playback?.then(() => fadeVolume(targetVolume)).catch(() => {
+      playback?.then(() => {
+        // Start the primary track first. Preparing the crossfade track before
+        // this point can compete with the first audio request and make the
+        // toggle appear unresponsive on a cold load.
+        prepareLoopAudio();
+        fadeVolume(targetVolume);
+      }).catch((error: unknown) => {
         audio.pause();
         audio.muted = true;
+        console.warn("Queen City Magic sound could not start.", error);
       });
     };
 
@@ -457,6 +468,29 @@ const currentPath = Astro.url.pathname;
       syncSoundToggles();
       tryPlayback();
     };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        wasPlayingBeforeHidden = !audio.paused || Boolean(loopAudio && !loopAudio.paused);
+        if (!wasPlayingBeforeHidden) return;
+
+        cancelLoopFade();
+        crossfadeStarted = false;
+        audio.pause();
+        loopAudio?.pause();
+        return;
+      }
+
+      if (!wasPlayingBeforeHidden || !soundEnabled || !activeAudio.paused) return;
+      wasPlayingBeforeHidden = false;
+      activeAudio.muted = false;
+      activeAudio.play().then(
+        () => fadeVolume(targetVolume),
+        () => {
+          activeAudio.muted = true;
+        },
+      );
+    });
 
     syncSoundToggles();
     soundWindow.__qcmmSoundController = { sync: syncSoundToggles };

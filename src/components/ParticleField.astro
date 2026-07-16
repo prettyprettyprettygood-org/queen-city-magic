@@ -59,7 +59,8 @@ const { class: className, particleCount = 40, waitForEvent } = Astro.props;
 <script>
   import { ParticleField } from "@/scripts/particleField";
 
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const fields = new Map<HTMLCanvasElement, { field: ParticleField; cleanup: () => void }>();
 
   const initializeParticleFields = () => {
     document.querySelectorAll<HTMLCanvasElement>("[data-particle-field]").forEach((canvas) => {
@@ -71,14 +72,27 @@ const { class: className, particleCount = 40, waitForEvent } = Astro.props;
 
       const waitForEvent = canvas.dataset.waitForEvent;
       const parent = canvas.parentElement;
-      if (!reducedMotion && waitForEvent && parent) {
-        parent.addEventListener(waitForEvent, () => field.start(), { once: true });
+      if (!reducedMotionQuery.matches && waitForEvent && parent) {
+        const onStart = () => field.start();
+        parent.addEventListener(waitForEvent, onStart, { once: true });
+        fields.set(canvas, {
+          field,
+          cleanup: () => parent.removeEventListener(waitForEvent, onStart),
+        });
       } else {
         field.start();
+        fields.set(canvas, { field, cleanup: () => undefined });
       }
     });
   };
 
   initializeParticleFields();
   document.addEventListener("astro:page-load", initializeParticleFields);
+  document.addEventListener("astro:before-swap", () => {
+    for (const { field, cleanup } of fields.values()) {
+      cleanup();
+      field.destroy();
+    }
+    fields.clear();
+  });
 </script>
