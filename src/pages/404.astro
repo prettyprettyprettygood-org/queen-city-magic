@@ -1,0 +1,108 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { Sparkle } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Button from "@/components/Button.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page Not Found — Queen City Magic">
+  <Section width="prose" class="not-found">
+    <div class="not-found__inner">
+      <h1 class="not-found__heading">
+        <span class="not-found__code" aria-hidden="true">404</span>
+        <span class="not-found__subheading">Page Not Found</span>
+      </h1>
+
+      <div class="not-found__accent" aria-hidden="true">
+        <span class="not-found__accent-line"></span>
+        <Sparkle size={16} />
+        <span class="not-found__accent-line"></span>
+      </div>
+
+      <p class="not-found__body">
+        Looks like you went diagonally instead of to Diagon Alley. Let&rsquo;s get you back
+        to the map.
+      </p>
+
+      <Button href="/" class="not-found__cta">Back Home</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    align-items: center;
+    min-height: 60vh;
+  }
+
+  .not-found :global(.section__inner) {
+    width: 100%;
+  }
+
+  .not-found__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .not-found__heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .not-found__code {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 22vw, 11rem);
+    line-height: 1;
+    color: var(--color-surface-gold);
+    text-shadow: 0 0 32px color-mix(in srgb, var(--color-magic-glow) 45%, transparent);
+  }
+
+  .not-found__subheading {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+    font-weight: 400;
+    color: var(--color-surface-text);
+  }
+
+  .not-found__accent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: var(--color-surface-gold);
+  }
+
+  .not-found__accent-line {
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--color-surface-gold);
+    opacity: 0.6;
+  }
+
+  .not-found__body {
+    max-width: 32rem;
+    margin: 1.5rem 0 0;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  /*
+    :global — this class is applied to the <a> Button.astro renders, which carries Button's
+    own scope attribute, not this page's. A plain scoped selector here would never match (see
+    Hero.astro's .hero__countdown for the same pattern).
+  */
+  :global(.not-found__cta) {
+    margin-top: 2rem;
+  }
+</style>

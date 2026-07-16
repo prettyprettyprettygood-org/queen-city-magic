@@ -1,0 +1,55 @@
+---
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Card from "@/components/Card.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import PageHeader from "@/components/PageHeader.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Section from "@/components/Section.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Legal — Queen City Magic">
+  <PageHeader width="wide">Legal</PageHeader>
+
+  <Section width="wide">
+    <Card>
+      <h2 slot="title">Disclaimer</h2>
+      <p>
+        Queen City Mischief &amp; Magic (QCMM) is an independent, volunteer-run community
+        festival celebrating magic and fandom broadly, including themes inspired by the
+        Wizarding World created by J.K. Rowling.
+      </p>
+      <p>
+        We are not affiliated with, endorsed by, or sponsored by Warner Bros. Entertainment,
+        J.K. Rowling, Pottermore/Wizarding World Digital, or any other rights holder connected
+        to the Harry Potter franchise or any other franchise referenced during the festival.
+        Any resemblance to copyrighted characters, settings, or terminology is offered in the
+        spirit of fan celebration, not commercial exploitation.
+      </p>
+      <p>
+        All event names, character portrayals, and thematic elements are created and
+        performed by independent volunteers and local community members as part of a free,
+        non-commercial community event.
+      </p>
+    </Card>
+  </Section>
+</BaseLayout>
+
+<style>
+  h2 {
+    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+    font-weight: 400;
+    color: var(--color-surface-gold);
+    margin: 0 0 0.75rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    line-height: 1.6;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+</style>

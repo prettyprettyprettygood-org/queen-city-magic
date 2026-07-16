@@ -1,9 +1,9 @@
 ---
 /**
  * Ornamental section divider — a themed line/glyph/line rule for breaking up open-prose
- * content outside of Card. Purely decorative (role="presentation"); the glyph and lines key
- * off --color-surface-primary/--color-surface-secondary, so it reskins automatically with the
- * house-theme switcher.
+ * content outside of Card. Purely decorative (role="presentation"); the lines key off
+ * --color-surface-secondary so they reskin with the house-theme switcher, but the glyph is
+ * pinned to the theme-invariant gold token — it should read the same regardless of house.
  */
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { Sparkle } from "@lucide/astro";
@@ -40,6 +40,6 @@ const { class: className } = Astro.props;
 
   .divider__glyph {
     flex-shrink: 0;
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold);
   }
 </style>

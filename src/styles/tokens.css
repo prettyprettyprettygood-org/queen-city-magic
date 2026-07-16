@@ -151,7 +151,7 @@
   --surface-glow: var(--color-clever-primary);
 }
 [data-theme="loyal"] {
-  /* Hufflepuff / Loyal Gold: dark gold-tinted cards with the existing gold treatment. */
+  /* Hufflepuff / Loyal Yellow: dark gold-tinted cards with the existing gold treatment. */
   --surface-bg: var(--color-loyal-bg);
   --surface-panel: var(--color-loyal-panel);
   --surface-text: var(--color-parchment-50);
@@ -254,15 +254,18 @@
   */
   --color-daring-bg: #221111;
   --color-daring-panel: #321a1b;
-  --color-daring-primary: #a92c35;
+  /* Lightened for the theme picker icon and focus ring on --color-daring-bg. */
+  --color-daring-primary: #d97880;
   --color-daring-heading: #d3a625;
-  --color-daring-accent: #a92c35;
+  /* Clears the 3:1 non-text boundary target when used for themed borders. */
+  --color-daring-accent: #c95762;
   --color-daring-secondary: #d3a625;
   --color-daring-card: #190a0b;
 
   --color-ambitious-bg: #131c18;
   --color-ambitious-panel: #1d2923;
-  --color-ambitious-primary: #519473;
+  /* Clears 4.5:1 text and 3:1 focus-ring contrast on both panel and card surfaces. */
+  --color-ambitious-primary: #5aa47b;
   --color-ambitious-accent: #75786e;
   --color-ambitious-secondary: #c4c7c3;
   /* Deliberately darker than #131c18 (the Ambitious page background). */
@@ -270,7 +273,8 @@
 
   --color-clever-bg: #111522;
   --color-clever-panel: #1a2132;
-  --color-clever-primary: #6688d6;
+  /* Keeps card headings above the 4.5:1 text threshold in every theme state. */
+  --color-clever-primary: #6b8fdf;
   --color-clever-accent: #bf8c4a;
   --color-clever-secondary: #bf8c4a;
   --color-clever-card: #17243a;

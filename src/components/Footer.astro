@@ -112,6 +112,10 @@ const socialLinks = [
           {" "}&mdash;{" "}
           <a href="/attributions" class="focus-glow">Attributions</a>
         </p>
+        <p class="site-footer__disclaimer">
+          Not affiliated with Warner Bros., J.K. Rowling, or the Wizarding World.{" "}
+          <a href="/legal" class="focus-glow">Full disclaimer</a>.
+        </p>
       </div>
 
       <a href="#top" class="site-footer__icon-btn site-footer__back-to-top focus-glow" data-back-to-top aria-label="Back to top">
@@ -171,7 +175,7 @@ const socialLinks = [
     margin: 0;
     font-family: var(--font-display);
     font-size: 1.25rem;
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold);
   }
 
   .site-footer__cta {
@@ -248,6 +252,7 @@ const socialLinks = [
     max-width: 40rem;
   }
 
+  .site-footer__disclaimer,
   .site-footer__copyright,
   .site-footer__credits {
     margin: 0;
@@ -255,9 +260,22 @@ const socialLinks = [
     opacity: 0.75;
   }
 
+  .site-footer__disclaimer a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .site-footer__disclaimer a:hover {
+    color: var(--color-surface-gold-active);
+  }
+
   .site-footer__credits a {
     color: inherit;
     text-decoration: underline;
+  }
+
+  .site-footer__credits a:hover {
+    color: var(--color-surface-gold-active);
   }
 
   .site-footer__icon-btn {
@@ -273,8 +291,8 @@ const socialLinks = [
   }
 
   .site-footer__icon-btn:hover {
-    color: var(--color-surface-primary);
-    border-color: var(--color-surface-primary);
+    color: var(--color-surface-gold-active);
+    border-color: var(--color-surface-gold-active);
   }
 
   .site-footer__icon-btn svg {

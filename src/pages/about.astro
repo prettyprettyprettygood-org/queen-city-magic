@@ -1,6 +1,6 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { ExternalLink } from "@lucide/astro";
+import { Diamond, ExternalLink } from "@lucide/astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -86,6 +86,11 @@ const pressLinks: PressLink[] = [
         occasion. Word moved fast: a single Facebook post two weeks out picked up 25,000
         shares, and the city closed streets downtown to make room for what was coming.
       </p>
+      <div class="about-card-divider" role="presentation" aria-hidden="true">
+        <span class="about-card-divider__line about-card-divider__line--start"></span>
+        <Diamond class="about-card-divider__ornament" size={12} aria-hidden="true" />
+        <span class="about-card-divider__line about-card-divider__line--end"></span>
+      </div>
       <p>
         What began with around 30 participating businesses has grown into a two-day,
         block-by-block transformation of downtown Staunton — each street sorted into its own
@@ -94,6 +99,11 @@ const pressLinks: PressLink[] = [
         entirely by volunteers, and still one of the biggest fundraising weekends of the year
         for Staunton's small nonprofits.
       </p>
+      <div class="about-card-divider" role="presentation" aria-hidden="true">
+        <span class="about-card-divider__line about-card-divider__line--start"></span>
+        <Diamond class="about-card-divider__ornament" size={12} aria-hidden="true" />
+        <span class="about-card-divider__line about-card-divider__line--end"></span>
+      </div>
       <p>
         QCMM isn't affiliated with Warner Bros. or J.K. Rowling — it's a homegrown fan
         celebration, built by this town, for anyone who wants to spend a weekend somewhere a
@@ -145,12 +155,48 @@ const pressLinks: PressLink[] = [
     font-size: clamp(1.25rem, 3vw, 1.5rem);
     font-weight: 400;
     margin: 0;
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold);
   }
 
   p {
     margin: 0;
     line-height: 1.6;
+  }
+
+  .about-card-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 14rem;
+    margin-block: 0.5rem;
+    margin-inline: auto;
+  }
+
+  .about-card-divider__line {
+    flex: 1;
+    height: 1px;
+  }
+
+  .about-card-divider__line--start {
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in srgb, var(--color-surface-gold) 55%, transparent)
+    );
+  }
+
+  .about-card-divider__line--end {
+    background: linear-gradient(
+      to left,
+      transparent,
+      color-mix(in srgb, var(--color-surface-gold) 55%, transparent)
+    );
+  }
+
+  .about-card-divider__ornament {
+    flex-shrink: 0;
+    color: color-mix(in srgb, var(--color-surface-gold) 70%, transparent);
   }
 
   .press-list {
@@ -182,7 +228,7 @@ const pressLinks: PressLink[] = [
 
   .press-link:hover .press-link__title,
   .press-link:focus-visible .press-link__title {
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold-active);
   }
 
   .press-link__text {
@@ -202,6 +248,7 @@ const pressLinks: PressLink[] = [
   .press-link__title {
     font-family: var(--font-display);
     font-size: 1.05rem;
+    color: var(--color-surface-gold);
   }
 
   .press-link__icon {

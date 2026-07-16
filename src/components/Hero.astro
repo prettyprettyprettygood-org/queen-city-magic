@@ -1,5 +1,7 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import { ChevronDown } from "@lucide/astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import EventCountdown from "@/components/EventCountdown.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import HandwritingReveal from "@/components/HandwritingReveal.astro";
@@ -16,6 +18,15 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
     <EventCountdown class="hero__countdown" startDelayMs={1200} />
     <HandwritingReveal class="hero__eyebrow" waitForEvent="countdown-complete" startDelayMs={150} />
   </div>
+
+  <button
+    type="button"
+    class="hero__scroll-cue focus-glow"
+    aria-label="Scroll to next section"
+    data-hero-scroll-cue
+  >
+    <ChevronDown aria-hidden="true" focusable="false" size={28} />
+  </button>
 </section>
 
 <style>
@@ -27,7 +38,7 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
       Starfield behind everything, at z-index -1) as more sections land on the page.
     */
     isolation: isolate;
-    min-height: 62vh;
+    min-height: 88vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +63,7 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
       to bottom,
       transparent 0%,
       transparent 55%,
-      var(--color-surface-parallax-ground) 78%,
+      var(--color-surface-parallax-ground) 84%,
       transparent 100%
     );
     color: var(--color-surface-text);
@@ -157,4 +168,92 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
       transform: none;
     }
   }
+
+  /*
+    Hidden (not just transparent) until JS reveals it once the handwriting draw finishes — see
+    the script below. `visibility: hidden` (not opacity/pointer-events alone) so it's also
+    pulled out of tab order while invisible; a keyboard user tabbing through before the reveal
+    would otherwise land on a control they can't see.
+  */
+  .hero__scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1rem, 4vh, 2rem);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    transform: translateX(-50%);
+    border: none;
+    border-radius: var(--radius-control);
+    background: transparent;
+    color: var(--color-surface-gold);
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+  }
+
+  .hero__scroll-cue:hover,
+  .hero__scroll-cue:focus-visible {
+    color: var(--color-surface-gold-active);
+  }
+
+  .hero__scroll-cue--visible {
+    opacity: 0.85;
+    visibility: visible;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__scroll-cue {
+      transition: opacity 0.6s ease;
+    }
+
+    /* Bounce is transform-only (GPU-composited) and skipped entirely under reduced motion — the
+       button still appears, just without the continuous loop. */
+    .hero__scroll-cue--visible {
+      animation: hero-scroll-bounce 1.8s ease-in-out infinite;
+    }
+  }
+
+  @keyframes hero-scroll-bounce {
+    0%,
+    100% {
+      transform: translate(-50%, 0);
+    }
+    50% {
+      transform: translate(-50%, 0.4rem);
+    }
+  }
 </style>
+
+<script>
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  document.querySelectorAll<HTMLButtonElement>("[data-hero-scroll-cue]").forEach((button) => {
+    const hero = button.closest(".hero");
+    // HandwritingReveal.astro dispatches "handwriting-complete" on its own root element (the
+    // "You belong here" wrapper) once its pen-draw finishes — waiting for that means the cue
+    // fades in only after the rest of the hero's entrance stagger has settled, rather than
+    // competing with it for attention.
+    const eyebrow = hero?.querySelector<HTMLElement>(".hero__eyebrow");
+
+    const reveal = () => button.classList.add("hero__scroll-cue--visible");
+
+    // Under reduced motion, HandwritingReveal skips its draw animation entirely and never
+    // dispatches "handwriting-complete" — reveal immediately instead of waiting forever.
+    if (reducedMotionQuery.matches || !eyebrow) {
+      reveal();
+    } else {
+      eyebrow.addEventListener("handwriting-complete", reveal, { once: true });
+    }
+
+    button.addEventListener("click", () => {
+      hero?.nextElementSibling?.scrollIntoView({
+        behavior: reducedMotionQuery.matches ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+  });
+</script>

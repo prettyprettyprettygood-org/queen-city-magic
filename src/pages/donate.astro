@@ -4,8 +4,6 @@ import { Image } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import qrCode from "@/assets/images/qr-code.png";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import Button from "@/components/Button.astro";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import PageHeader from "@/components/PageHeader.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Section from "@/components/Section.astro";
@@ -23,10 +21,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
         Please donate today to keep us going, we depend on our volunteers and generous donors,
         thank you!
       </p>
-    </div>
-
-    <div class="donate-actions">
-      <Button href="https://venmo.com/qcmmsva" external>Donate via Venmo</Button>
     </div>
 
     <div class="venmo">
@@ -70,11 +64,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .donate-actions {
-    display: flex;
-    justify-content: center;
   }
 
   .venmo {

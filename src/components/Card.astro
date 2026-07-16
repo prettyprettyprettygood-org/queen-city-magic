@@ -70,6 +70,10 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     }
   </div>
 
+  <div class="card__media">
+    <slot name="media" />
+  </div>
+
   <div class="card__header">
     <div class="card__icon">
       <slot name="icon" />
@@ -187,6 +191,10 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     gap: 0.85rem;
   }
 
+  .card__media:empty {
+    display: none;
+  }
+
   /*
     Since PRD 14 moved most pages' h1 out to PageHeader, a Card is often used with neither
     slot filled (e.g. FAQ). .card__icon:empty already hides itself, but the header row's own
@@ -250,7 +258,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
   .card__title :global(h2),
   .card__title :global(h3) {
     margin: 0;
-    color: var(--color-surface-card-heading);
+    color: var(--color-surface-gold);
   }
 
   .card__body {

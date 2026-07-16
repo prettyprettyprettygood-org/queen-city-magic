@@ -10,7 +10,11 @@ import { navLinks } from "@/lib/navLinks";
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="navbar" aria-label="Primary" data-navbar>
+<nav
+  class:list={["navbar", { "navbar--bordered": currentPath !== "/" }]}
+  aria-label="Primary"
+  data-navbar
+>
   <div class="navbar__bg" aria-hidden="true"></div>
   <div class="navbar__inner">
     <a href="/" class="navbar__wordmark focus-glow">Queen City Magic</a>
@@ -71,6 +75,21 @@ const currentPath = Astro.url.pathname;
     z-index: 40;
     isolation: isolate;
     font-family: var(--font-body);
+  }
+
+  .navbar--bordered {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-surface-gold) 40%, transparent);
+    box-shadow: 0 1px 6px 0 color-mix(in srgb, var(--color-magic-glow) 25%, transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .navbar {
+      transition: transform 0.25s ease-out;
+    }
+  }
+
+  .navbar--hidden {
+    transform: translateY(-100%);
   }
 
   .navbar__bg {
@@ -210,11 +229,32 @@ const currentPath = Astro.url.pathname;
 
 <script>
   const SCROLL_THRESHOLD = 48;
+  const HIDE_THRESHOLD = 96;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.querySelectorAll<HTMLElement>("[data-navbar]").forEach((nav) => {
     let ticking = false;
+    let lastScrollY = window.scrollY;
+
+    const setHidden = (hidden: boolean) => {
+      nav.classList.toggle("navbar--hidden", hidden);
+      nav.toggleAttribute("inert", hidden);
+    };
+
     const update = () => {
-      nav.classList.toggle("navbar--solid", window.scrollY > SCROLL_THRESHOLD);
+      const scrollY = window.scrollY;
+      nav.classList.toggle("navbar--solid", scrollY > SCROLL_THRESHOLD);
+
+      const disclosure = nav.querySelector<HTMLDetailsElement>(".navbar__disclosure");
+      if (prefersReducedMotion || disclosure?.open) {
+        setHidden(false);
+      } else if (scrollY <= HIDE_THRESHOLD) {
+        setHidden(false);
+      } else {
+        setHidden(scrollY > lastScrollY);
+      }
+
+      lastScrollY = scrollY;
       ticking = false;
     };
 

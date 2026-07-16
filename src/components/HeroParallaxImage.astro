@@ -2,7 +2,7 @@
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { Image } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import castleBackground from "@/assets/images/castle-background.png";
+import castleBackground from "@/assets/images/hero/castle-background.png";
 
 interface Props {
   class?: string;
@@ -39,9 +39,9 @@ const { class: className } = Astro.props;
   [data-parallax-image] {
     position: absolute;
     top: clamp(0.25rem, 1.5vh, 1.25rem);
-    right: max(0px, calc((100% - 1440px) / 2));
+    right: max(0px, calc((100% - 1600px) / 2));
     bottom: 0;
-    left: max(0px, calc((100% - 1440px) / 2));
+    left: max(0px, calc((100% - 1600px) / 2));
     overflow: hidden;
     pointer-events: none;
     /*
@@ -50,8 +50,8 @@ const { class: className } = Astro.props;
       with Hero.astro's background gradient, which eases back toward transparent over the same
       stretch so the two layers dissolve together rather than one masking the other's edge.
     */
-    mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 96%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 96%);
+    mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 98%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 98%);
   }
 
   /*

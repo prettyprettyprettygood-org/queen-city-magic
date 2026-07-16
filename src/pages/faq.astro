@@ -1,5 +1,7 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import Button from "@/components/Button.astro";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import PageHeader from "@/components/PageHeader.astro";
@@ -19,7 +21,7 @@ const faqs: Faq[] = [
   {
     question: "How do I get tickets to the festival?",
     answer:
-      "<p>QCMM is a free festival and no tickets are needed to attend. Some events hosted by participating businesses and non-profits may require tickets and/or registration. Check the “Events” tab on our Facebook page and/or check Sched to see which events require a ticket.</p>",
+      "<p>QCMM is a free festival and no tickets are needed to attend. Some events hosted by participating businesses and non-profits may require tickets and/or registration. Check the “Events” tab on our Facebook page to see which events require a ticket.</p>",
   },
   {
     question: "Where can I park?",
@@ -44,12 +46,12 @@ const faqs: Faq[] = [
   {
     question: "How can I see the whole festival schedule?",
     answer:
-      '<p>Visit <a href="https://qcmm25.sched.com/" target="_blank" rel="noopener noreferrer" class="focus-glow">qcmm25.sched.com</a> to find the most complete and up-to-date schedule of events, activities, and festival amenities. You can also download the (free) Sched app. A limited number of logins are available for attendees to create their own personalized schedule but a login is not needed to access the information in Sched.</p>',
+      '<p>Visit our <a href="/schedule" class="focus-glow">Schedule</a> page for the most complete and up-to-date list of events, activities, and festival amenities — the 2026 lineup will be posted there once it’s finalized, alongside last year’s schedule for reference.</p>',
   },
   {
     question: "Where can I find festival maps?",
     answer:
-      "<p>In an effort to reduce paper waste, we no longer print individual maps. Large versions of the map will be posted around the festival and smaller maps (for review only) can be found at the Information Booth. The map can be found on our website, social media, and in Sched.</p>",
+      "<p>In an effort to reduce paper waste, we no longer print individual maps. Large versions of the map will be posted around the festival and smaller maps (for review only) can be found at the Information Booth. The map can also be found on our website and social media.</p>",
   },
   {
     question: "What time do the trains with characters arrive?",
@@ -80,7 +82,7 @@ const faqs: Faq[] = [
     question:
       "We want to meet some characters and take pictures! What’s the best way to do that?",
     answer:
-      "<p>Meet-and-greets with our official characters will take place at several locations within the festival. Characters will also be arriving by train several times each day! Check Sched to find details on which characters will be arriving on each train. Sched will also have the times for each meet-and-greet area.</p>",
+      "<p>Meet-and-greets with our official characters will take place at several locations within the festival. Characters will also be arriving by train several times each day! Check our website and social media closer to the festival for details on which characters are arriving on each train and meet-and-greet times.</p>",
   },
   {
     question: "I don’t know my house! Can I be sorted at QCMM?",
@@ -100,231 +102,12 @@ const faqs: Faq[] = [
   {
     question: "Where can I get tickets to the Hogwarts Reunion Banquet?",
     answer:
-      "<p>Banquet tickets are available online. Please see the listing in Sched for more information and a link to the feast and/or pancake breakfast.</p>",
+      "<p>Banquet tickets are available online. Check our website and social media for the listing and a link to the feast and/or pancake breakfast.</p>",
   },
   {
     question: "What is new this year?",
     answer:
-      "<p>This year we are celebrating a DECADE of MAGIC in STAUNTON! Don’t miss our retrospectives as you wander around. We are hosting a greenhouse with big thanks for Messer Landscape & Bloomaker on Hufflepuff. We have new enormous creatures but will leave it up to you to behold them—DON’T PET! We have added night fun with a Dementor Dance Party on Saturday in front of Gringotts—the vibe is going to be a little darker so consider yourselves warned. More in our usual, sweet brand you’ll be able to watch a duck race, listen to great music, see amazing performers (new and returning!) some with unbelievable creatures, and meet 100+ characters on our streets and in our character spaces. You will also see some physical changes as our historic downtown prepares for some major improvements in our old (and beloved) infrastructure! We moved some of our staging to accommodate the progress.</p>",
-  },
-];
-
-interface ScheduleEvent {
-  time: string;
-  title: string;
-  location?: string;
-}
-
-interface ScheduleStage {
-  /** Omitted for the day's main timeline (as opposed to a named performance stage). */
-  name?: string;
-  events: ScheduleEvent[];
-}
-
-interface ScheduleDay {
-  day: string;
-  stages: ScheduleStage[];
-}
-
-// Placeholder preview of last year's schedule — swap this array for the 2026 lineup once
-// the client publishes it; the markup below only needs this data to change.
-// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const schedule2025: ScheduleDay[] = [
-  {
-    day: "Saturday",
-    stages: [
-      {
-        events: [
-          { time: "8:00 a.m.", title: "Shuttles Begin" },
-          { time: "9:00 a.m.", title: "Festival Opens" },
-          {
-            time: "9:00 a.m.–12:00 p.m.",
-            title: "Character Meet and Greets",
-            location: "103 W. Beverley, 110 W. Beverley, 35A South New Street",
-          },
-          { time: "9:30 a.m.", title: "Buckingham Branch Train Arrival" },
-          {
-            time: "10:00 a.m.–7:00 p.m.",
-            title: "QCMM Merch Table & Butter Brew Tent Open",
-          },
-          {
-            time: "10:00 a.m.–3:00 p.m.",
-            title: "Dance like Professor G!",
-            location: "Corner of Central and Beverley",
-          },
-          { time: "10:00 a.m.–5:30 p.m.", title: "Sorting", location: "Wharf" },
-          {
-            time: "10:00 a.m.–6:00 p.m.",
-            title: "Low Flying Owls",
-            location: "Beverley",
-          },
-          { time: "Noon", title: "Polyjuice Parade", location: "Beverley" },
-          {
-            time: "Noon–9 p.m.",
-            title: "Knockturn Alley Open for Mature Wizards",
-            location: "Beverley/Augusta St",
-          },
-          {
-            time: "12:45 p.m.",
-            title: "Quidditch Training",
-            location: "Johnson Street",
-          },
-          {
-            time: "1:00 p.m.–5:00 p.m.",
-            title: "Character Meet and Greets",
-            location: "103 W. Beverley, 110 W. Beverley, 35A S. New Street",
-          },
-          {
-            time: "1:30 p.m.",
-            title: "Quidditch Match",
-            location: "Johnson Street",
-          },
-          {
-            time: "2:00 p.m.–5:00 p.m.",
-            title: "Magic Plant Demonstration by Bloomaker",
-            location: "Greenhouse on Beverley",
-          },
-          { time: "2:30 p.m.", title: "Buckingham Branch Train Arrival" },
-          {
-            time: "3:00 p.m.",
-            title: "Quackkitch World Cup",
-            location: "S. Central Ave",
-          },
-          {
-            time: "4:00 p.m.",
-            title: "Weasley Wedding Reception",
-            location: "You Belong Here Mural",
-          },
-          {
-            time: "4:45 p.m.",
-            title: "Quidditch Training",
-            location: "Johnson Street",
-          },
-          {
-            time: "5:00 p.m.",
-            title: "Meet the Weasleys",
-            location: "110 W. Beverley",
-          },
-          {
-            time: "5:30 p.m.",
-            title: "Quidditch Match",
-            location: "Johnson Street",
-          },
-          {
-            time: "6:30 p.m.",
-            title: "Dementor Dance Party",
-            location: "Hufflepuff Block/Beverley Street",
-          },
-          { time: "9:00 p.m.", title: "Retail Shops Close" },
-          { time: "9:45 p.m.", title: "Shuttles End" },
-        ],
-      },
-      {
-        name: "SunSpots Stage",
-        events: [
-          { time: "10:15 a.m.", title: "Vick the Illusionist" },
-          { time: "11:15 a.m.", title: "Sssslytherin Sssssnake Ssssshow" },
-          { time: "12:45 p.m.", title: "Critters and Their Stories" },
-          { time: "1:45 p.m.", title: "Vick the Illusionist" },
-          { time: "2:30 p.m.", title: "Critters and Their Stories" },
-          { time: "3:30 p.m.", title: "Vick the Illusionist" },
-          { time: "4:30 p.m.", title: "Sssslytherin Sssssnake Ssssshow" },
-        ],
-      },
-      {
-        name: "Ravenclaw Stage",
-        events: [
-          { time: "10:00 a.m.", title: "Sorting Hat Ceremony" },
-          { time: "11:00 a.m.", title: "Goblet of Fire Ceremony" },
-          { time: "11:30 a.m.", title: "Beauxbaton Dance" },
-          { time: "Noon", title: "Queen City A Cappella" },
-          { time: "1:00 p.m.", title: "Flutes of the Shenandoah" },
-          { time: "2:00 p.m.", title: "Queen City A Cappella" },
-          { time: "Various Afternoon Times", title: "Time Step Turners" },
-        ],
-      },
-    ],
-  },
-  {
-    day: "Sunday",
-    stages: [
-      {
-        events: [
-          { time: "9:00 a.m.", title: "Festival Opens" },
-          {
-            time: "9:00 a.m.–5:00 p.m.",
-            title: "Character Meet and Greets",
-            location: "103 W. Beverley, 110 W. Beverley, 35A South New Street",
-          },
-          { time: "9:30 a.m.", title: "Buckingham Branch Train Arrival" },
-          { time: "9:30 a.m.–1:00 p.m.", title: "Sorting", location: "Wharf" },
-          {
-            time: "10:00 a.m.–4:00 p.m.",
-            title: "QCMM Merch Table & Butter Brew Tent Open",
-          },
-          {
-            time: "10:00 a.m.",
-            title: "Vick the Illusionist",
-            location: "You Belong Here Mural",
-          },
-          {
-            time: "Noon–2:00 p.m.",
-            title: "Matt Johnson of NBC’s the Voice Performs",
-            location: "You Belong Here Mural",
-          },
-          { time: "2:30 p.m.", title: "Buckingham Branch Train Arrival" },
-          {
-            time: "2:45 p.m.",
-            title: "Quidditch Training",
-            location: "Johnson Street",
-          },
-          {
-            time: "3:30 p.m.",
-            title: "Quidditch Match",
-            location: "Johnson Street",
-          },
-          { time: "5:00 p.m.", title: "Festival Concludes" },
-        ],
-      },
-      {
-        name: "SunSpots Stage",
-        events: [
-          { time: "10:00 a.m.", title: "Beware of Low Flying Owls" },
-          { time: "11:00 a.m.", title: "Sssslytherin Sssssnake Ssssshow" },
-          { time: "1:00 p.m.", title: "Beware of Low Flying Owls" },
-          { time: "2:00 p.m.", title: "Vick the Illusionist" },
-          { time: "4:00 p.m.", title: "Beware of Low Flying Owls" },
-        ],
-      },
-      {
-        name: "Ravenclaw Stage",
-        events: [
-          { time: "Noon", title: "Vick the Illusionist" },
-          { time: "2:00 p.m.–4:00 p.m.", title: "Nickel Plate Brass Band" },
-        ],
-      },
-    ],
-  },
-];
-
-// biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const festivalServices = [
-  {
-    name: "Restrooms",
-    detail: "Behind SunTrust Bank — Between Augusta St and Central Ave",
-  },
-  { name: "Water Filling Station", detail: "Ciders from Mars" },
-  {
-    name: "Nursing/Changing Room",
-    detail: "The Frenchman (at Train Station) & CoArt Gallery",
-  },
-  {
-    name: "Information Booth",
-    detail: "5 E. Beverley Saturday & Sunday | Wharf Saturday only",
-  },
-  {
-    name: "Do Good Alley",
-    detail: "Featuring Non-Profit Organizations — New Location on New Street!",
+      "<p>2026 details are coming soon, but here are some highlights from last year! We hosted a greenhouse with Messer Landscape &amp; Bloomaker, brought in new enormous creatures to admire (don’t pet!), and threw an after-dark Dementor Dance Party. Guests caught a duck race, live music, and amazing performers, and met 100+ characters on the streets and in our character spaces — all while our historic downtown kept up its ongoing infrastructure improvements.</p>",
   },
 ];
 ---
@@ -333,6 +116,11 @@ const festivalServices = [
   <PageHeader width="wide">Frequently Asked Questions</PageHeader>
 
   <Section width="wide">
+    <p class="faq-intro">
+      Answers to the questions we hear most about parking, shuttles, accessibility, and
+      getting around the festival.
+    </p>
+
     <Card>
       <div class="faq-list">
       {
@@ -359,84 +147,24 @@ const festivalServices = [
         ))
       }
 
-      <details class="faq-item">
-        <summary class="faq-item__question focus-glow">
-          <span>Last year&rsquo;s schedule (2025)</span>
-          <svg
-            class="faq-item__chevron"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </summary>
-        <div class="faq-item__answer">
-          <p class="schedule-preview-note">
-            A preview of last year&rsquo;s lineup while the 2026 schedule is being finalized —
-            check back closer to the festival for the current one, or watch{" "}
-            <a
-              href="https://qcmm25.sched.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="focus-glow"
-            >
-              qcmm25.sched.com
-            </a>{" "}
-            directly.
-          </p>
-
-          {
-            schedule2025.map((day) => (
-              <div class="schedule-day">
-                <h3>{day.day}</h3>
-                {day.stages.map((stage) => (
-                  <div class="schedule-stage">
-                    {stage.name && <h4>{stage.name}</h4>}
-                    <ul>
-                      {stage.events.map((event) => (
-                        <li>
-                          <span class="schedule-time">{event.time}</span>
-                          {" — "}
-                          {event.title}
-                          {event.location && <span class="schedule-location"> ({event.location})</span>}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            ))
-          }
-
-          <div class="schedule-day">
-            <h3>Festival Services</h3>
-            <p class="schedule-services-subhead">Available Saturday & Sunday</p>
-            <ul>
-              {
-                festivalServices.map((service) => (
-                  <li>
-                    <span class="schedule-time">{service.name}</span>
-                    {" — "}
-                    {service.detail}
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-        </div>
-      </details>
       </div>
     </Card>
+
+    <div class="schedule-cta">
+      <p>Curious what QCMM looked like last year?</p>
+      <Button href="/schedule">View 2025 Schedule</Button>
+    </div>
   </Section>
 </BaseLayout>
 
 <style>
+  .faq-intro {
+    margin: 0;
+    line-height: 1.6;
+    text-align: center;
+    opacity: 0.85;
+  }
+
   .faq-list {
     display: flex;
     flex-direction: column;
@@ -497,59 +225,16 @@ const festivalServices = [
     margin-bottom: 0;
   }
 
-  .schedule-preview-note {
-    font-style: italic;
-    opacity: 0.85;
-  }
-
-  .schedule-day {
-    margin-top: 1.5rem;
-  }
-
-  .schedule-day:first-child {
-    margin-top: 0;
-  }
-
-  .schedule-day h3 {
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: var(--color-surface-primary);
-    margin: 0 0 0.5rem;
-  }
-
-  .schedule-services-subhead {
-    margin: -0.25rem 0 0.5rem;
-    font-size: 0.85rem;
-    opacity: 0.75;
-  }
-
-  .schedule-stage {
-    margin-top: 0.85rem;
-  }
-
-  .schedule-stage h4 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: var(--font-body);
-    margin: 0 0 0.35rem;
-    opacity: 0.85;
-  }
-
-  .schedule-day ul {
+  .schedule-cta {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .schedule-cta p {
     margin: 0;
-    padding: 0;
-    list-style: none;
-    font-size: 0.95rem;
-  }
-
-  .schedule-time {
-    font-weight: 600;
-  }
-
-  .schedule-location {
-    opacity: 0.75;
+    line-height: 1.6;
   }
 </style>

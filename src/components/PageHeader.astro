@@ -6,9 +6,9 @@
  * padding/max-width rather than relying on Section's shell. `width` should match whatever
  * `Section` follows it so the heading lines up with the content below.
  *
- * The gold sparkle rule under the heading uses `--color-surface-gold` (the same
- * theme-invariant gold as Hero's eyebrow line), not `--color-surface-primary` — it's meant to
- * read as gold on every house theme, not re-tint to that theme's own accent color.
+ * Heading and sparkle rule both use `--color-surface-gold` (the same theme-invariant gold as
+ * Hero's eyebrow line), not `--color-surface-primary` — titles read as gold on every house
+ * theme, not re-tinted to that theme's own accent color.
  */
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { Sparkle } from "@lucide/astro";
@@ -55,7 +55,7 @@ const { width = "prose", class: className } = Astro.props;
     font-size: clamp(1.5rem, 3.5vw, 2rem);
     font-weight: 400;
     margin: 0;
-    color: var(--color-surface-primary);
+    color: var(--color-surface-gold);
   }
 
   .page-header__accent {

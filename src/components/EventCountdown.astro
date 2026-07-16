@@ -1,10 +1,8 @@
 ---
 /**
- * Split-flap-style countdown to QCMM's festival dates (matches the dates in Hero.astro — no
- * shared date module exists yet, see PRD 09/10-events-page.md for the eventual timezone-aware
- * date utility once Events gets its real build). Rendered once at build time so there's a
- * sensible value before JS runs, then corrected client-side on load in case the static page
- * has been live a while since its last build.
+ * Split-flap-style countdown to QCMM's festival dates (matches the dates in Hero.astro).
+ * Rendered once at build time so there's a sensible value before JS runs, then corrected
+ * client-side on load in case the static page has been live a while since its last build.
  */
 interface Props {
   class?: string;
