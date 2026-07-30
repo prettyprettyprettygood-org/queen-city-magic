@@ -7,7 +7,7 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://queen-city-magic.vercel.app",
+  site: "https://magic-festival.vercel.app",
   integrations: [react(), sitemap()],
   redirects: {
     "/attributions": "/legal",

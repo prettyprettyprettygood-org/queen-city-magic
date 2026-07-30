@@ -1,6 +1,6 @@
 ---
 /**
- * Split-flap-style countdown to QCMM's festival dates (matches the dates in Hero.astro).
+ * Split-flap-style countdown to the festival dates (matches the dates in Hero.astro).
  * Rendered once at build time so there's a sensible value before JS runs, then corrected
  * client-side on load in case the static page has been live a while since its last build.
  */
@@ -29,14 +29,14 @@ const digits = days
   .split("")
   .map((digit, i) => (i < 2 && digit === "0" ? RUNE_ZERO[i] : digit));
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief & Magic`;
+const daysLabel = `${days} day${days === 1 ? "" : "s"} until Magical Event`;
 ---
 
 <div
   class:list={["countdown", className]}
   data-countdown
-  data-festival-start="2026-09-26T00:00:00"
-  data-festival-end="2026-09-28T00:00:00"
+  data-festival-start="2026-11-26T00:00:00"
+  data-festival-end="2026-11-27T00:00:00"
   data-start-delay={startDelayMs}
 >
   <div
@@ -74,8 +74,8 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
 </div>
 
 <script>
-  const FESTIVAL_START = "2026-09-26T00:00:00";
-  const FESTIVAL_END = "2026-09-28T00:00:00";
+  const FESTIVAL_START = "2026-11-26T00:00:00";
+  const FESTIVAL_END = "2026-11-27T00:00:00";
   const MS_PER_DAY = 1000 * 60 * 60 * 24;
   const COUNT_UP_MS = 2200;
 
@@ -105,7 +105,7 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
   }
 
   const initializeCountdowns = () => {
-    const returningHome = sessionStorage.getItem("qcmm-home-visited") === "true";
+    const returningHome = sessionStorage.getItem("home-visited") === "true";
 
     document.querySelectorAll<HTMLElement>("[data-countdown]").forEach((root) => {
     if (root.dataset.countdownInitialized === "true") return;
@@ -134,7 +134,7 @@ const daysLabel = `${days} day${days === 1 ? "" : "s"} until Queen City Mischief
 
     root
       .querySelector("[data-countdown-digits]")
-      ?.setAttribute("aria-label", `${days} day${days === 1 ? "" : "s"} until Queen City Mischief & Magic`);
+      ?.setAttribute("aria-label", `${days} day${days === 1 ? "" : "s"} until Magical Event`);
 
     if (reducedMotionQuery.matches) {
       // Build-time markup already renders the correct final digits — nothing to animate.

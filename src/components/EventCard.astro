@@ -4,10 +4,10 @@ import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { CalendarDays, ExternalLink, MapPin } from "@lucide/astro";
-import fireboltFlyer from "@/assets/images/events/firebolt-5k-flyer.jpg";
-import ghostTour from "@/assets/images/events/ghost-tour.jpg";
-import puffsAudition from "@/assets/images/events/puffs-audition.jpeg";
-import stauntonFlyer from "@/assets/images/events/staunton-flyer.jpg";
+import magicBook from "@/assets/images/gallery/magic-book.jpg";
+import magicPotions from "@/assets/images/gallery/magic-potions.jpg";
+import magicTown from "@/assets/images/gallery/magic-town.jpg";
+import magicWandKid from "@/assets/images/gallery/magic-wand-kid.jpg";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Button from "@/components/Button.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -25,10 +25,10 @@ const isPast = data.status === "past";
 const isExternal = data.primaryLink?.url.startsWith("http") ?? false;
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const image = {
-  "firebolt-5k-flyer": fireboltFlyer,
-  "ghost-tour": ghostTour,
-  "puffs-audition": puffsAudition,
-  "staunton-flyer": stauntonFlyer,
+  "magic-book": magicBook,
+  "magic-potions": magicPotions,
+  "magic-town": magicTown,
+  "magic-wand-kid": magicWandKid,
 }[data.image ?? ""];
 ---
 

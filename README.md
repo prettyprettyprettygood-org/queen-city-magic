@@ -1,1 +1,1 @@
-# queen-city-magic
+# magic-festival

@@ -13,8 +13,8 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
   <HeroParallaxImage class="hero__parallax" />
 
   <div class="hero__content">
-    <h1 class="hero__heading">Queen City Mischief &amp; Magic</h1>
-    <p class="hero__dates">September 26&ndash;27, 2026 &middot; Staunton, VA</p>
+    <h1 class="hero__heading">Magical Event</h1>
+    <p class="hero__dates">November 26, 2026</p>
     <EventCountdown class="hero__countdown" startDelayMs={1200} />
     <HandwritingReveal class="hero__eyebrow" waitForEvent="countdown-complete" startDelayMs={150} />
     <button
@@ -235,7 +235,7 @@ import HeroParallaxImage from "@/components/HeroParallaxImage.astro";
 
 <script>
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const HOME_VISITED_KEY = "qcmm-home-visited";
+  const HOME_VISITED_KEY = "home-visited";
 
   const initializeHeroScrollCues = () => {
     const returningHome = sessionStorage.getItem(HOME_VISITED_KEY) === "true";

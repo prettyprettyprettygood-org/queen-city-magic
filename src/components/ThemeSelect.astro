@@ -1,6 +1,6 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { Shield, ShieldQuestionMark } from "@lucide/astro";
+import { Shield, ShieldQuestionMark, Volume2, VolumeX } from "@lucide/astro";
 
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const themes = [
@@ -68,7 +68,7 @@ const themes = [
             <label class="option-label">
               <input
                 type="radio"
-                name="qcmm-theme"
+                name="theme"
                 class="option-radio"
                 value={theme.value}
                 checked={theme.value === "twilight"}
@@ -89,6 +89,10 @@ const themes = [
       </fieldset>
       <div class="sound-divider" aria-hidden="true" role="presentation"></div>
       <button type="button" class="option-label sound-toggle focus-glow" data-sound-toggle aria-pressed="false">
+        <span class="option-icon-chip">
+          <Volume2 class="option-icon sound-icon-on" size={14} stroke-width={1.5} aria-hidden="true" focusable="false" />
+          <VolumeX class="option-icon sound-icon-off" size={14} stroke-width={1.5} aria-hidden="true" focusable="false" />
+        </span>
         <span class="option-text">Sound: Off</span>
       </button>
     </div>
@@ -208,6 +212,18 @@ const themes = [
     background-color: var(--color-surface-border);
   }
 
+  .sound-icon-on {
+    display: none;
+  }
+
+  .sound-toggle[aria-pressed="true"] .sound-icon-on {
+    display: block;
+  }
+
+  .sound-toggle[aria-pressed="true"] .sound-icon-off {
+    display: none;
+  }
+
   .option-radio {
     position: absolute;
     width: 1px;
@@ -249,7 +265,7 @@ const themes = [
 </style>
 
 <script>
-  const STORAGE_KEY = "qcmm-theme";
+  const STORAGE_KEY = "theme";
 
   const initializeThemeSelects = () => document.querySelectorAll<HTMLElement>("[data-theme-select]").forEach((select) => {
     if (select.dataset.themeInitialized === "true") return;

@@ -1,12 +1,12 @@
 ---
-title: "Queen City Mischief & Magic"
+title: "Magical Event"
 category: "Festival"
 status: "upcoming"
-dateLabel: "Sept 26–27, 2026"
-location: "Staunton, VA"
-description: "The flagship Queen City Mischief & Magic festival returns to downtown Staunton for a weekend of magical encounters, themed events, hands-on activities, and mischief for all ages."
+dateLabel: "November 26, 2026"
+location: "Lorem Ipsum, VA"
+description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim veniam quis nostrud exercitation."
 primaryLink:
-  label: "Plan your QCMM visit"
+  label: "Plan your visit"
   url: "/"
-image: "staunton-flyer"
+image: "magic-town"
 ---

@@ -24,7 +24,7 @@ const currentPath = Astro.url.pathname.replace(/(.)\/$/, "$1");
     <source src="/audio/geoffharvey-let-the-mystery-unfold-122118-128k.mp3" type="audio/mpeg" />
   </audio>
   <div class="navbar__inner">
-    <a href="/" class="navbar__wordmark focus-glow">Queen City Magic</a>
+    <a href="/" class="navbar__wordmark focus-glow">Magical Event</a>
 
     <div class="navbar__end">
       <ul class="navbar__links navbar__links--desktop">
@@ -311,15 +311,15 @@ const currentPath = Astro.url.pathname.replace(/(.)\/$/, "$1");
     });
   });
 
-  const SOUND_STORAGE_KEY = "qcmm-sound";
+  const SOUND_STORAGE_KEY = "sound-enabled";
   const audio = document.querySelector<HTMLAudioElement>("[data-sound-audio]");
   const soundPrefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const soundWindow = window as typeof window & {
-    __qcmmSoundController?: { sync: () => void };
+    __soundController?: { sync: () => void };
   };
 
-  if (soundWindow.__qcmmSoundController) {
-    soundWindow.__qcmmSoundController.sync();
+  if (soundWindow.__soundController) {
+    soundWindow.__soundController.sync();
   } else if (audio) {
     let soundEnabled = localStorage.getItem(SOUND_STORAGE_KEY) === "on";
     let fadeFrame = 0;
@@ -440,7 +440,7 @@ const currentPath = Astro.url.pathname.replace(/(.)\/$/, "$1");
       }).catch((error: unknown) => {
         audio.pause();
         audio.muted = true;
-        console.warn("Queen City Magic sound could not start.", error);
+        console.warn("Magical Event sound could not start.", error);
       });
     };
 
@@ -493,7 +493,7 @@ const currentPath = Astro.url.pathname.replace(/(.)\/$/, "$1");
     });
 
     syncSoundToggles();
-    soundWindow.__qcmmSoundController = { sync: syncSoundToggles };
+    soundWindow.__soundController = { sync: syncSoundToggles };
     document.addEventListener("click", (event) => {
       const toggle = (event.target as Element).closest<HTMLButtonElement>("[data-sound-toggle]");
       if (!toggle) return;

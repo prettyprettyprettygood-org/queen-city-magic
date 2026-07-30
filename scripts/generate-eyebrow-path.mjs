@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import opentype from "opentype.js";
 import wawoff2 from "wawoff2";
 
-const TEXT = "You belong here";
+const TEXT = "You Are Welcome Here";
 const PADDING = 40;
 
 const root = path.dirname(fileURLToPath(import.meta.url));

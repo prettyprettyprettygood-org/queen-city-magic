@@ -1,9 +1,5 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { Image } from "astro:assets";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import youBelongWall from "@/assets/images/disclaimer/you-belong-wall.jpg";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import PageHeader from "@/components/PageHeader.astro";
@@ -21,23 +17,21 @@ const attributionHtml = attribution
   .join("");
 ---
 
-<BaseLayout title="Legal & Attributions — Queen City Magic">
+<BaseLayout title="Legal & Attributions — Magical Event">
   <PageHeader width="wide">Legal &amp; Attributions</PageHeader>
 
   <Section width="wide">
     <Card>
       <h2 slot="title">Disclaimer</h2>
       <p>
-        Queen City Mischief &amp; Magic (QCMM) is an independent, volunteer-run community
-        festival celebrating magic and fandom broadly, including themes inspired by the
-        Wizarding World created by J.K. Rowling.
+        Magical Event is an independent, volunteer-run community event celebrating magic and
+        fandom broadly, including themes inspired by popular wizarding-world fiction.
       </p>
       <p>
-        We are not affiliated with, endorsed by, or sponsored by Warner Bros. Entertainment,
-        J.K. Rowling, Pottermore/Wizarding World Digital, or any other rights holder connected
-        to the Harry Potter franchise or any other franchise referenced during the festival.
-        Any resemblance to copyrighted characters, settings, or terminology is offered in the
-        spirit of fan celebration, not commercial exploitation.
+        We are not affiliated with, endorsed by, or sponsored by any rights holder connected
+        to any franchise referenced by our theming. Any resemblance to copyrighted characters,
+        settings, or terminology is offered in the spirit of fan celebration, not commercial
+        exploitation.
       </p>
       <p>
         All event names, character portrayals, and thematic elements are created and
@@ -47,14 +41,6 @@ const attributionHtml = attribution
     </Card>
 
     <Card class="commitment-card">
-      <Image
-        slot="media"
-        src={youBelongWall}
-        alt="A community wall reading 'You Belong Here'"
-        width={1239}
-        height={575}
-        class="commitment-card__banner"
-      />
       <h2 slot="title">Our Commitment</h2>
       <p>
         As we listen more thoughtfully than ever to our LGBTQIA+ fans and community members of
@@ -62,8 +48,8 @@ const attributionHtml = attribution
         believe it is worth it. We stand for inclusivity and equal rights.
       </p>
       <p>
-        QCMM loves and values all people in its magical community. We support trans/non-binary
-        bodies, the LGBTQIA+ community, and believe that Black Lives Matter.
+        Magical Event loves and values all people in its community. We support
+        trans/non-binary bodies, the LGBTQIA+ community, and believe that Black Lives Matter.
       </p>
     </Card>
 
@@ -92,15 +78,6 @@ const attributionHtml = attribution
 
   p:last-child {
     margin-bottom: 0;
-  }
-
-  .commitment-card__banner {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 1;
-    object-fit: cover;
-    border-radius: var(--radius-control);
   }
 
   .attributions {

@@ -18,73 +18,36 @@ interface PressLink {
   url: string;
 }
 
-// History facts sourced from the press coverage below (DCist 2019, WHSV 2023/2025, Arlington
-// Magazine) — not from content.md, since no About copy exists in the client's source content.
+// Placeholder press mentions — swap for real coverage once there is any.
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const pressLinks: PressLink[] = [
   {
-    publication: "Arlington Magazine",
-    title: "Have Yourself a Wizarding Weekend",
-    url: "https://www.arlingtonmagazine.com/mischief-magic-festival-harry-potter-staunton-virginia/",
+    publication: "Lorem Ipsum Weekly",
+    title: "Lorem Ipsum Dolor Sit Amet Consectetur",
+    url: "#",
   },
   {
-    publication: "DCist",
-    title:
-      "This Virginia Town Turns Into a 'Harry Potter'-Themed World for One Weekend",
-    url: "https://dcist.com/story/19/09/26/this-virginia-town-turns-into-a-harry-potter-themed-world-for-one-weekend/",
+    publication: "The Dolor Gazette",
+    title: "Adipiscing Elit Sed Do Eiusmod Tempor",
+    url: "#",
   },
   {
-    publication: "WHSV",
-    title:
-      "The 10th Annual Queen City Mischief & Magic Festival Returns to Staunton",
-    url: "https://www.whsv.com/2025/09/28/10th-annual-queen-city-mischief-magic-returns-staunton/",
-  },
-  {
-    publication: "WHSV",
-    title: "Queen City Mischief and Magic Returns to Staunton",
-    url: "https://www.whsv.com/2023/09/20/queen-city-mischief-magic-returns-staunton/",
-  },
-  {
-    publication: "Visit Staunton",
-    title:
-      "Staunton's Queen City Mischief & Magic Festival Welcomes Magic and Fantasy Lovers",
-    url: "https://visitstaunton.com/stauntons-queen-city-mischief-magic-festival-qcmm-welcomes-magic-and-fantasy-lovers/",
-  },
-  {
-    publication: "Visit Staunton",
-    title: "Staunton Is Made of Magic",
-    url: "https://visitstaunton.com/staunton-is-made-of-magic/",
-  },
-  {
-    publication: "Visit Staunton",
-    title: "Queen City Mischief and Magic — Event Guide",
-    url: "https://visitstaunton.com/event/queen-city-mischief-and-magic/",
-  },
-  {
-    publication: "Visit Shenandoah Valley",
-    title: "Queen City Mischief & Magic Festival",
-    url: "https://visitshenandoah.org/epic-100/queen-city-mischief-magic-festival/",
-  },
-  {
-    publication: "Virginia Tourism Corporation",
-    title: "Queen City Mischief & Magic — Event Listing",
-    url: "https://www.virginia.org/event/queen-city-mischief-%26-magic/20515/",
+    publication: "Consectetur Times",
+    title: "Incididunt Ut Labore Et Dolore Magna",
+    url: "#",
   },
 ];
 ---
 
-<BaseLayout title="About — Queen City Magic">
+<BaseLayout title="About — Magical Event">
   <PageHeader width="wide">How it all started</PageHeader>
 
   <Section width="wide">
     <Card>
       <p>
-        Queen City Mischief & Magic started small in 2016, when Staunton local Sarah Lynch —
-        owner of Baja Bean — realized her own historic downtown looked a lot like Hogsmeade.
-        She teamed up with Pufferbellies Toys & Books to throw a midnight release party for{" "}
-        <em>Harry Potter and the Cursed Child</em>, and asked nearby shops to dress up for the
-        occasion. Word moved fast: a single Facebook post two weeks out picked up 25,000
-        shares, and the city closed streets downtown to make room for what was coming.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       </p>
       <div class="about-card-divider" role="presentation" aria-hidden="true">
         <span class="about-card-divider__line about-card-divider__line--start"></span>
@@ -92,12 +55,9 @@ const pressLinks: PressLink[] = [
         <span class="about-card-divider__line about-card-divider__line--end"></span>
       </div>
       <p>
-        What began with around 30 participating businesses has grown into a two-day,
-        block-by-block transformation of downtown Staunton — each street sorted into its own
-        Hogwarts house — with well over a hundred organizations involved and more than 20,000
-        visitors making the trip most years. It's still free to attend, still run almost
-        entirely by volunteers, and still one of the biggest fundraising weekends of the year
-        for Staunton's small nonprofits.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+        nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+        officia deserunt mollit anim id est laborum.
       </p>
       <div class="about-card-divider" role="presentation" aria-hidden="true">
         <span class="about-card-divider__line about-card-divider__line--start"></span>
@@ -105,10 +65,9 @@ const pressLinks: PressLink[] = [
         <span class="about-card-divider__line about-card-divider__line--end"></span>
       </div>
       <p>
-        QCMM isn't affiliated with Warner Bros. or J.K. Rowling — it's a homegrown fan
-        celebration, built by this town, for anyone who wants to spend a weekend somewhere a
-        little more magical. 2025 marked its tenth year; here's what people have been saying
-        about it along the way.
+        Magical Event is a homegrown celebration, built for anyone who wants to spend a day
+        somewhere a little more magical. Here's what people have been saying about it along
+        the way.
       </p>
     </Card>
 

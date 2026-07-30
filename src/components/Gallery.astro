@@ -4,89 +4,24 @@ import { Image } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { Maximize2 } from "@lucide/astro";
 
-import book from "@/assets/images/gallery/book.jpg";
-import cityStreet from "@/assets/images/gallery/city-street.jpg";
-import games from "@/assets/images/gallery/games.jpg";
-import groupStreet from "@/assets/images/gallery/group-street.jpg";
-import groupStreet2 from "@/assets/images/gallery/group-street-2.jpg";
-import love from "@/assets/images/gallery/love.jpg";
-import moody from "@/assets/images/gallery/moody.jpg";
-import musicSign from "@/assets/images/gallery/music-sign.jpg";
-import notNamed from "@/assets/images/gallery/not-named.jpg";
-import owls from "@/assets/images/gallery/owls.jpg";
-import phoneboothProfessor from "@/assets/images/gallery/phonebooth-professor.jpg";
-import plushToysWand from "@/assets/images/gallery/plush-toys-wand.jpg";
-import professor from "@/assets/images/gallery/professor.jpg";
-import professorUmbrella from "@/assets/images/gallery/professor-umbrella.jpg";
-import trainStation from "@/assets/images/gallery/train-station.jpg";
-import wandExperience from "@/assets/images/gallery/wand-experience.jpg";
-import wizardWithCat from "@/assets/images/gallery/wizard-with-cat.jpg";
-import youBelongHere from "@/assets/images/gallery/you-belong-here.jpg";
+import magicBook from "@/assets/images/gallery/magic-book.jpg";
+import magicPotions from "@/assets/images/gallery/magic-potions.jpg";
+import magicTown from "@/assets/images/gallery/magic-town.jpg";
+import magicWandKid from "@/assets/images/gallery/magic-wand-kid.jpg";
+import wizardBook from "@/assets/images/gallery/wizard-book.jpg";
 
 interface Photo {
-  image: typeof cityStreet;
+  image: typeof magicBook;
   alt: string;
 }
 
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const photos: Photo[] = [
-  { image: cityStreet, alt: "A magical-looking street in downtown Staunton" },
-  {
-    image: book,
-    alt: "A young festival-goer signing a guestbook with a quill",
-  },
-  { image: games, alt: "Festival games waiting for visitors" },
-  {
-    image: groupStreet,
-    alt: "A group in wizarding costumes posing with wands raised on a downtown street",
-  },
-  {
-    image: groupStreet2,
-    alt: "A group of festival-goers in Hogwarts house robes posing together downtown",
-  },
-  {
-    image: love,
-    alt: "Staunton's LOVE sculpture decorated with round glasses for the festival",
-  },
-  {
-    image: moody,
-    alt: "Two festival-goers in costume, one as a wizard with a magical eye, posing downtown",
-  },
-  { image: musicSign, alt: "A music-themed sign at the festival" },
-  {
-    image: notNamed,
-    alt: "A costumed villain greeting delighted festival visitors",
-  },
-  {
-    image: owls,
-    alt: "Two festival volunteers holding live owls under an archway",
-  },
-  { image: phoneboothProfessor, alt: "A professor beside a red phone booth" },
-  {
-    image: plushToysWand,
-    alt: "A child holding a wand between two plush creature toys",
-  },
-  { image: professor, alt: "A festival professor posing for a picture" },
-  {
-    image: professorUmbrella,
-    alt: "A festival-goer dressed as Professor Sprout holding a yellow umbrella",
-  },
-  {
-    image: trainStation,
-    alt: "Staunton's historic train station during the festival",
-  },
-  {
-    image: wandExperience,
-    alt: "A rain-dotted sign for the festival's Wand Experience Queue",
-  },
-  {
-    image: wizardWithCat,
-    alt: "A wizard character carrying a lantern and a plush cat down a downtown street",
-  },
-  {
-    image: youBelongHere,
-    alt: "A sign reminding visitors that they belong here",
-  },
+  { image: magicTown, alt: "A magical-looking town street, placeholder photo" },
+  { image: magicBook, alt: "An open spellbook, placeholder photo" },
+  { image: magicPotions, alt: "A shelf of potion bottles, placeholder photo" },
+  { image: magicWandKid, alt: "A child holding a wand, placeholder photo" },
+  { image: wizardBook, alt: "A wizard reading a book, placeholder photo" },
 ];
 ---
 

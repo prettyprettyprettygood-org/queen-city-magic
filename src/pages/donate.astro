@@ -1,8 +1,6 @@
 ---
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import { Image } from "astro:assets";
-// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-import qrCode from "@/assets/images/qr-code.png";
+import Button from "@/components/Button.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Card from "@/components/Card.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -15,17 +13,16 @@ import SocialLinks from "@/components/SocialLinks.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Donate — Queen City Magic">
+<BaseLayout title="Donate — Magical Event">
   <PageHeader width="wide">Help us make the magic!</PageHeader>
 
   <Section width="wide" class="donate-section">
     <Card class="donate-card">
       <div class="donate-intro">
-        <p>We need your help to continue making the magic, year after year!</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         <p>
-          Queen City Mischief & Magic is free to attend and run almost entirely by volunteers
-          — but putting on a two-day, city-wide festival takes real resources, and every
-          donation helps make it happen.
+          Magical Event is free to attend and run almost entirely by volunteers — but putting
+          on an event like this takes real resources, and every donation helps make it happen.
         </p>
         <p>
           Please donate today to keep us going. We depend on our volunteers and generous
@@ -33,23 +30,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
         </p>
       </div>
 
-      <div class="venmo">
-        <Image
-          src={qrCode}
-          alt="QR code linking to the QCMM Venmo account, @qcmmsva"
-          width={260}
-          height={260}
-          class="venmo__qr"
-        />
-        <p class="venmo__fallback">
-          Scan this code, or visit{" "}
-          <a
-            href="https://venmo.com/qcmmsva"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="focus-glow">@qcmmsva</a
-          > on Venmo.
-        </p>
+      <div class="ko-fi">
+        <Button href="https://ko-fi.com/prettyprettyprettygood" external>Donate on Ko-fi</Button>
       </div>
 
       <div class="donate-socials">
@@ -86,25 +68,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     gap: 0.75rem;
   }
 
-  .venmo {
+  .ko-fi {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    max-width: 24rem;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .venmo__qr {
-    width: 260px;
-    height: 260px;
-    border-radius: calc(var(--radius-control) - 0.15rem);
-  }
-
-  .venmo__fallback {
-    font-size: 1.05rem;
-    margin: 0;
+    justify-content: center;
   }
 
   .donate-socials {

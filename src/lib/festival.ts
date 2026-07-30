@@ -1,5 +1,5 @@
-export const FESTIVAL_START = "2026-09-26T00:00:00";
-export const FESTIVAL_END = "2026-09-28T00:00:00";
+export const FESTIVAL_START = "2026-11-26T00:00:00";
+export const FESTIVAL_END = "2026-11-27T00:00:00";
 export const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export type FestivalStatus = "upcoming" | "live" | "past";

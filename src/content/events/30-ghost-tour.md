@@ -1,12 +1,12 @@
 ---
-title: "Queen City Ghost Tour"
+title: "Lorem Ipsum Ghost Tour"
 category: "Side Event"
 status: "upcoming"
-dateLabel: "Fri, Sept 25 & Sat, Sept 26, 2026"
-location: "Johnson & New Street, Staunton, VA"
-description: "Join Ghosts of Staunton for a haunted tour of four of the Queen City's favorite haunts: Western State Lunatic Asylum, the Charlotte Coffman House, White Star Flour Mill, and the American Hotel. Tours run every 30 minutes, with Friday tours from 7–9:30pm and Saturday tours from 6:30–9:30pm."
+dateLabel: "November 26, 2026"
+location: "Lorem Ipsum, VA"
+description: "Join a local guide for a haunted tour. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 primaryLink:
-  label: "Get Ghost Tour tickets"
-  url: "https://www.eventbrite.com/e/queen-city-ghost-tour-qcmm-weekend-26-tickets-1983654377642?aff=oddtdtcreator"
-image: "ghost-tour"
+  label: "More info"
+  url: "/"
+image: "magic-potions"
 ---

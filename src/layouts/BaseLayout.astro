@@ -2,7 +2,7 @@
 import { getImage } from "astro:assets";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import { ClientRouter } from "astro:transitions";
-import ogImageSource from "@/assets/images/og-landing.png";
+import ogImageSource from "@/assets/images/gallery/magic-book.jpg";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 import Footer from "@/components/Footer.astro";
 // biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -20,10 +20,10 @@ const {
   // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
   title,
   // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
-  description = "Queen City Mischief & Magic — a free, volunteer-run magic festival in downtown Staunton, VA.",
+  description = "Magical Event — a free, volunteer-run community festival.",
 } = Astro.props;
 
-const ogImage = await getImage({ src: ogImageSource, format: "png" });
+const ogImage = await getImage({ src: ogImageSource, format: "jpeg" });
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
 const ogImageUrl = new URL(ogImage.src, Astro.site).toString();
 // biome-ignore lint/correctness/noUnusedVariables: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
@@ -40,7 +40,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
     <title>{title}</title>
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Queen City Mischief & Magic" />
+    <meta property="og:site_name" content="Magical Event" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
@@ -70,7 +70,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
     />
     <script is:inline>
       (function () {
-        var stored = localStorage.getItem("qcmm-theme");
+        var stored = localStorage.getItem("theme");
         if (stored && stored !== "twilight") {
           document.documentElement.dataset.theme = stored;
         }
@@ -78,7 +78,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
         // Client-side navigation swaps in a new document shell. Preserve the
         // user's theme on that shell before Astro applies the swap.
         document.addEventListener("astro:before-swap", function (event) {
-          var theme = localStorage.getItem("qcmm-theme") || document.documentElement.dataset.theme;
+          var theme = localStorage.getItem("theme") || document.documentElement.dataset.theme;
           if (theme) {
             event.newDocument.documentElement.dataset.theme = theme;
           }

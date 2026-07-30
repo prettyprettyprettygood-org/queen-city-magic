@@ -88,7 +88,7 @@ const { class: className, startDelayMs = 0, waitForEvent } = Astro.props;
   const handwritingCleanups = new Set<() => void>();
 
   const initializeHandwritingReveals = () => {
-    const returningHome = sessionStorage.getItem("qcmm-home-visited") === "true";
+    const returningHome = sessionStorage.getItem("home-visited") === "true";
 
     document.querySelectorAll<HTMLElement>("[data-handwriting]").forEach((wrapper) => {
     if (wrapper.dataset.handwritingInitialized === "true") return;
