@@ -6,37 +6,37 @@ import { Shield, ShieldQuestionMark, Volume2, VolumeX } from "@lucide/astro";
 const themes = [
   {
     value: "twilight",
-    label: "House Color",
+    label: "Mood",
     color: "var(--color-twilight-shield)",
     bg: "var(--color-twilight-950)",
     icon: "shield-question",
   },
   {
-    value: "daring",
-    label: "Daring Red",
-    color: "var(--color-daring-primary)",
-    bg: "var(--color-daring-bg)",
+    value: "ember",
+    label: "Ember Red",
+    color: "var(--color-ember-primary)",
+    bg: "var(--color-ember-bg)",
     icon: "shield",
   },
   {
-    value: "ambitious",
-    label: "Ambitious Green",
-    color: "var(--color-ambitious-primary)",
-    bg: "var(--color-ambitious-bg)",
+    value: "fern",
+    label: "Fern Green",
+    color: "var(--color-fern-primary)",
+    bg: "var(--color-fern-bg)",
     icon: "shield",
   },
   {
-    value: "clever",
-    label: "Clever Blue",
-    color: "var(--color-clever-primary)",
-    bg: "var(--color-clever-bg)",
+    value: "tide",
+    label: "Tide Blue",
+    color: "var(--color-tide-primary)",
+    bg: "var(--color-tide-bg)",
     icon: "shield",
   },
   {
-    value: "loyal",
-    label: "Loyal Yellow",
-    color: "var(--color-loyal-primary)",
-    bg: "var(--color-loyal-bg)",
+    value: "meadow",
+    label: "Meadow Yellow",
+    color: "var(--color-meadow-primary)",
+    bg: "var(--color-meadow-bg)",
     icon: "shield",
   },
 ] as const;
@@ -45,7 +45,7 @@ const themes = [
 <div class="select" data-theme-select>
   <details class="select-details">
     <summary class="select-trigger focus-glow">
-      <span class="select-trigger-label">House Color</span>
+      <span class="select-trigger-label">Mood</span>
       <svg
         class="select-chevron"
         viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ const themes = [
     </summary>
     <div class="select-options">
       <fieldset class="select-fieldset">
-        <legend class="sr-only">Choose a color theme</legend>
+        <legend class="sr-only">Choose a mood</legend>
         {
           themes.map((theme) => (
             <label class="option-label">

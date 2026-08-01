@@ -24,10 +24,6 @@ const attributionHtml = attribution
     <Card>
       <h2 slot="title">Disclaimer</h2>
       <p>
-        Magical Event is an independent, volunteer-run community event celebrating magic and
-        fandom broadly, including themes inspired by popular wizarding-world fiction.
-      </p>
-      <p>
         We are not affiliated with, endorsed by, or sponsored by any rights holder connected
         to any franchise referenced by our theming. Any resemblance to copyrighted characters,
         settings, or terminology is offered in the spirit of fan celebration, not commercial
@@ -43,11 +39,6 @@ const attributionHtml = attribution
     <Card class="commitment-card">
       <h2 slot="title">Our Commitment</h2>
       <p>
-        As we listen more thoughtfully than ever to our LGBTQIA+ fans and community members of
-        color, we are changed. The road ahead is long, challenging, and not soon over. But we
-        believe it is worth it. We stand for inclusivity and equal rights.
-      </p>
-      <p>
         Magical Event loves and values all people in its community. We support
         trans/non-binary bodies, the LGBTQIA+ community, and believe that Black Lives Matter.
       </p>
@@ -56,9 +47,6 @@ const attributionHtml = attribution
     <Card>
       <h2 slot="title">Attributions</h2>
       <div class="attributions" set:html={attributionHtml} />
-      <p class="attributions__note">
-        House icons are used under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer" class="focus-glow">CC BY 3.0</a> and have not been modified.
-      </p>
     </Card>
   </Section>
 </BaseLayout>
@@ -86,13 +74,8 @@ const attributionHtml = attribution
     gap: 1rem;
   }
 
-  .attributions :global(a),
-  .attributions__note a {
+  .attributions :global(a) {
     color: inherit;
     text-decoration: underline;
-  }
-
-  .attributions__note {
-    margin: 0;
   }
 </style>

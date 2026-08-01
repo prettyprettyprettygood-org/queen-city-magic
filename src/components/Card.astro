@@ -15,7 +15,7 @@ interface Props {
   class?: string;
   /**
    * Persistent themed outline + an ambient animated aura for a card that should stand out
-   * from its siblings (e.g. a featured CTA). Uses --color-surface-featured (each house's own
+   * from its siblings (e.g. a featured CTA). Uses --color-surface-featured (each mood's own
    * hue), not the site-wide gold every heading already uses, so it reads as distinct.
    */
   featured?: boolean;
@@ -117,7 +117,7 @@ const motes: Mote[] = Array.from({ length: MOTE_COUNT }, () => {
     gap: 1rem;
     padding: 1.75rem;
     border-radius: calc(var(--radius-control) * 2);
-    /* Card color is a house token, so light and house-tinted dark cards need no component overrides. */
+    /* Card color is a mood token, so light and mood-tinted dark cards need no component overrides. */
     background-color: var(--color-surface-card);
     color: var(--color-surface-card-text);
     /* Descendants keep using the same semantic roles, but resolve them for this card surface. */

@@ -1,0 +1,57 @@
+---
+// Each mood's icon remains in the DOM so switching `data-theme` is immediate, without a
+// client-side icon re-render.
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import dropletIcon from "@/assets/icons/droplet-icon.svg?url";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import flameIcon from "@/assets/icons/flame-icon.svg?url";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import flowerIcon from "@/assets/icons/flower-icon.svg?url";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import leafIcon from "@/assets/icons/leaf-icon.svg?url";
+// biome-ignore lint/correctness/noUnusedImports: used in the template below; Biome's Astro frontmatter analysis doesn't see markup usage.
+import moonIcon from "@/assets/icons/moon-icon.svg?url";
+---
+
+<span class="mood-section-icon" aria-hidden="true">
+  <img data-mood-icon="twilight" src={moonIcon} alt="" />
+  <img data-mood-icon="ember" src={flameIcon} alt="" />
+  <img data-mood-icon="fern" src={leafIcon} alt="" />
+  <img data-mood-icon="tide" src={dropletIcon} alt="" />
+  <img data-mood-icon="meadow" src={flowerIcon} alt="" />
+</span>
+
+<style>
+  .mood-section-icon {
+    display: inline-flex;
+  }
+
+  .mood-section-icon img {
+    display: none;
+    width: 4rem;
+    height: 4rem;
+    object-fit: contain;
+    filter: invert(1);
+  }
+
+</style>
+
+<script>
+  const syncMoodSectionIcons = () => {
+    const theme = document.documentElement.dataset.theme ?? "twilight";
+
+    document.querySelectorAll<HTMLElement>(".mood-section-icon").forEach((container) => {
+      container.querySelectorAll<HTMLImageElement>("img[data-mood-icon]").forEach((icon) => {
+        icon.style.display = icon.dataset.moodIcon === theme ? "block" : "none";
+      });
+    });
+  };
+
+  syncMoodSectionIcons();
+
+  const themeObserver = new MutationObserver(syncMoodSectionIcons);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+</script>

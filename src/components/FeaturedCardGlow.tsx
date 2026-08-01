@@ -45,7 +45,7 @@ const makeBlob = (): Blob => ({
  * "breathe" — several softly-lit blobs drift along independent two-frequency (Lissajous-like)
  * paths and pulse at their own uncorrelated rate, so the composite reads as a living, shifting
  * glow rather than one shape pulsing in and out. Color follows `--color-surface-featured`
- * (each house's own hue; the default Twilight theme's own violet rather than the site-wide
+ * (each mood's own hue; the default Twilight theme's own violet rather than the site-wide
  * gold), re-sampled on theme switch the same way Starfield.tsx re-samples starlight colors.
  * Sized exactly to the card (not bled past its edges) with the card's own border-radius, so a
  * blob drifting toward an edge is clipped by that rounded corner — it reads as passing behind

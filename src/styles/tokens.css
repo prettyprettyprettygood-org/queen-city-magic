@@ -6,12 +6,12 @@
      and checked against WCAG 2.2 in docs/prds/archive/02-design-tokens-typography.md.
   2. Semantic "surface" tokens (--surface-*) — what components should actually reference.
      Defaults to the site's own "twilight" identity; [data-theme="…"] below re-points every
-     --surface-* var to one of four house-inspired themes, so a single ThemeSwitcher toggle
+     --surface-* var to one of four selectable mood themes, so a single ThemeSwitcher toggle
      re-skins every component built against --surface-* with no per-component theme logic.
 
-  Page backgrounds stay independent from the house treatments below. Each house maps its
+  Page backgrounds stay independent from the mood treatments below. Each mood maps its
   heading, card, small accent, and secondary accent once; components consume those semantic
-  roles rather than carrying house-specific overrides.
+  roles rather than carrying mood-specific overrides.
 */
 
 @font-face {
@@ -98,18 +98,18 @@
   --surface-parallax-tint: none;
   --surface-parallax-opacity: 0.85;
   --surface-parallax-ground: var(--surface-bg);
-  /* Shared gold for text and ornamental marks that stay gold across every house theme. */
+  /* Shared gold for text and ornamental marks that stay gold across every mood theme. */
   --surface-gold: var(--color-magic-gold);
   /*
     Interactive gold (nav hover/active, FAQ hover/open) — deliberately brighter than
     --surface-gold and, like it, theme-invariant: a hovered/active nav item
-    should read as "lit up gold" on every house theme, not that theme's own accent hue.
+    should read as "lit up gold" on every mood theme, not that theme's own accent hue.
   */
   --surface-gold-active: var(--color-magic-gold-active);
   /*
     Featured-card emphasis (currently just the schedule page's 2026 CTA) — deliberately the
-    OPPOSITE of --surface-gold/--surface-primary: this should read as "this house's own living
-    color," not the site-wide gold every heading already uses. Twilight has no house color of
+    OPPOSITE of --surface-gold/--surface-primary: this should read as "this mood's own living
+    color," not the site-wide gold every heading already uses. Twilight has no mood color of
     its own (it's the de-canoned default), so it borrows the theme-picker swatch's violet
     rather than falling back to amber, which would just look like --surface-gold again.
   */
@@ -124,65 +124,65 @@
   --shadow-panel: 0 8px 24px rgb(0 0 0 / 35%);
 }
 
-[data-theme="daring"] {
-  /* Gryffindor / Daring Red: gold titles, red only for compact interactive accents. */
-  --surface-bg: var(--color-daring-bg);
-  --surface-panel: var(--color-daring-panel);
+[data-theme="ember"] {
+  /* Ember Red: gold titles, red only for compact interactive accents. */
+  --surface-bg: var(--color-ember-bg);
+  --surface-panel: var(--color-ember-panel);
   --surface-text: var(--color-parchment-50);
-  --surface-primary: var(--color-daring-heading);
+  --surface-primary: var(--color-ember-heading);
   --surface-on-primary: var(--color-ink-900);
-  --surface-accent: var(--color-daring-accent);
-  --surface-secondary: var(--color-daring-secondary);
-  --surface-card: var(--color-daring-card);
+  --surface-accent: var(--color-ember-accent);
+  --surface-secondary: var(--color-ember-secondary);
+  --surface-card: var(--color-ember-card);
   --surface-card-text: var(--color-parchment-50);
-  --surface-card-heading: var(--color-daring-heading);
-  --surface-glow: var(--color-daring-primary);
-  --surface-featured: var(--color-daring-primary);
+  --surface-card-heading: var(--color-ember-heading);
+  --surface-glow: var(--color-ember-primary);
+  --surface-featured: var(--color-ember-primary);
 }
-[data-theme="ambitious"] {
-  /* Slytherin / Ambitious Green: dark green cards with silver detail. */
-  --surface-bg: var(--color-ambitious-bg);
-  --surface-panel: var(--color-ambitious-panel);
+[data-theme="fern"] {
+  /* Fern Green: dark green cards with silver detail. */
+  --surface-bg: var(--color-fern-bg);
+  --surface-panel: var(--color-fern-panel);
   --surface-text: var(--color-parchment-50);
-  --surface-primary: var(--color-ambitious-primary);
+  --surface-primary: var(--color-fern-primary);
   --surface-on-primary: var(--color-ink-900);
-  --surface-accent: var(--color-ambitious-accent);
-  --surface-secondary: var(--color-ambitious-secondary);
-  --surface-card: var(--color-ambitious-card);
+  --surface-accent: var(--color-fern-accent);
+  --surface-secondary: var(--color-fern-secondary);
+  --surface-card: var(--color-fern-card);
   --surface-card-text: var(--color-parchment-50);
-  --surface-card-heading: var(--color-ambitious-primary);
-  --surface-glow: var(--color-ambitious-primary);
-  --surface-featured: var(--color-ambitious-primary);
+  --surface-card-heading: var(--color-fern-primary);
+  --surface-glow: var(--color-fern-primary);
+  --surface-featured: var(--color-fern-primary);
 }
-[data-theme="clever"] {
-  /* Ravenclaw / Clever Blue: dark blue cards with bronze detail. */
-  --surface-bg: var(--color-clever-bg);
-  --surface-panel: var(--color-clever-panel);
+[data-theme="tide"] {
+  /* Tide Blue: dark blue cards with bronze detail. */
+  --surface-bg: var(--color-tide-bg);
+  --surface-panel: var(--color-tide-panel);
   --surface-text: var(--color-parchment-50);
-  --surface-primary: var(--color-clever-primary);
+  --surface-primary: var(--color-tide-primary);
   --surface-on-primary: var(--color-ink-900);
-  --surface-accent: var(--color-clever-accent);
-  --surface-secondary: var(--color-clever-secondary);
-  --surface-card: var(--color-clever-card);
+  --surface-accent: var(--color-tide-accent);
+  --surface-secondary: var(--color-tide-secondary);
+  --surface-card: var(--color-tide-card);
   --surface-card-text: var(--color-parchment-50);
-  --surface-card-heading: var(--color-clever-primary);
-  --surface-glow: var(--color-clever-primary);
-  --surface-featured: var(--color-clever-primary);
+  --surface-card-heading: var(--color-tide-primary);
+  --surface-glow: var(--color-tide-primary);
+  --surface-featured: var(--color-tide-primary);
 }
-[data-theme="loyal"] {
-  /* Hufflepuff / Loyal Yellow: dark gold-tinted cards with the existing gold treatment. */
-  --surface-bg: var(--color-loyal-bg);
-  --surface-panel: var(--color-loyal-panel);
+[data-theme="meadow"] {
+  /* Meadow Yellow: dark gold-tinted cards with the existing gold treatment. */
+  --surface-bg: var(--color-meadow-bg);
+  --surface-panel: var(--color-meadow-panel);
   --surface-text: var(--color-parchment-50);
-  --surface-primary: var(--color-loyal-primary);
+  --surface-primary: var(--color-meadow-primary);
   --surface-on-primary: var(--color-ink-900);
-  --surface-accent: var(--color-loyal-accent);
-  --surface-secondary: var(--color-loyal-secondary);
-  --surface-card: var(--color-loyal-card);
+  --surface-accent: var(--color-meadow-accent);
+  --surface-secondary: var(--color-meadow-secondary);
+  --surface-card: var(--color-meadow-card);
   --surface-card-text: var(--color-parchment-50);
-  --surface-card-heading: var(--color-loyal-primary);
-  --surface-glow: var(--color-loyal-primary);
-  --surface-featured: var(--color-loyal-primary);
+  --surface-card-heading: var(--color-meadow-primary);
+  --surface-glow: var(--color-meadow-primary);
+  --surface-featured: var(--color-meadow-primary);
 }
 
 @theme {
@@ -198,7 +198,7 @@
   --color-twilight-950: #160f2e;
   --color-twilight-900: #1f1740;
   --color-twilight-800: #2c2258;
-  /* Bright violet accent used only for the theme-picker's House Color swatch icon — the amber accent below is already used as the default `--surface-primary`, so the swatch needs its own hue to read as "purple/twilight" rather than duplicating amber. */
+  /* Bright violet accent used only for the theme-picker's Mood swatch icon — the amber accent below is already used as the default `--surface-primary`, so the swatch needs its own hue to read as "purple/twilight" rather than duplicating amber. */
   --color-twilight-shield: #a78bfa;
   --color-plum-950: #2b1730;
   --color-plum-900: #3d2144;
@@ -244,7 +244,7 @@
 
   /*
     Starfield (Starfield.tsx) palette — theme-invariant like the eyebrow gold above: real
-    starlight doesn't re-tint per house theme. Mostly cool white with a slight blue or warm
+    starlight doesn't re-tint per mood theme. Mostly cool white with a slight blue or warm
     variance per star (real stars do vary by color temperature), not a single flat white —
     that reads as more textured/realistic than a uniform dot grid.
   */
@@ -262,55 +262,55 @@
     Near-black with a faint cool-violet undertone — deliberately distinct from --color-ink-900
     (a warm brown-black, which read as a muddy "plum" once alpha-blended with this site's cool
     violet/indigo backdrops) and from --color-plum-900/950 (an actual warm plum hue). Used for
-    panel surfaces that need to read as neutral near-black regardless of the active house theme.
+    panel surfaces that need to read as neutral near-black regardless of the active mood theme.
   */
   --color-obsidian-950: #120c1f;
 
   /*
-    House-inspired switchable themes — de-canoned, original names, own contrast pass.
+    Selectable mood themes — original names, own contrast pass.
     bg/panel are deliberately low-saturation (~6-13%) tints at each theme's hue: a "subtle
     color that compliments the theme," not the saturated brand color itself. primary is that
     saturated brand color, used for headings/links/icon tints and reused as the focus-ring
     color (verified 3:1+ against both bg and panel for every theme).
   */
-  --color-daring-bg: #221111;
-  --color-daring-panel: #321a1b;
-  /* Lightened for the theme picker icon and focus ring on --color-daring-bg. */
-  --color-daring-primary: #d97880;
-  --color-daring-heading: #d3a625;
+  --color-ember-bg: #221111;
+  --color-ember-panel: #321a1b;
+  /* Lightened for the theme picker icon and focus ring on --color-ember-bg. */
+  --color-ember-primary: #d97880;
+  --color-ember-heading: #d3a625;
   /* Clears the 3:1 non-text boundary target when used for themed borders. */
-  --color-daring-accent: #c95762;
-  --color-daring-secondary: #d3a625;
-  --color-daring-card: #190a0b;
+  --color-ember-accent: #c95762;
+  --color-ember-secondary: #d3a625;
+  --color-ember-card: #190a0b;
 
-  --color-ambitious-bg: #131c18;
-  --color-ambitious-panel: #1d2923;
+  --color-fern-bg: #131c18;
+  --color-fern-panel: #1d2923;
   /* Clears 4.5:1 text and 3:1 focus-ring contrast on both panel and card surfaces. */
-  --color-ambitious-primary: #5aa47b;
-  --color-ambitious-accent: #75786e;
-  --color-ambitious-secondary: #c4c7c3;
-  /* Deliberately darker than #131c18 (the Ambitious page background). */
-  --color-ambitious-card: #0b1510;
+  --color-fern-primary: #5aa47b;
+  --color-fern-accent: #75786e;
+  --color-fern-secondary: #c4c7c3;
+  /* Deliberately darker than #131c18 (the Fern page background). */
+  --color-fern-card: #0b1510;
 
-  --color-clever-bg: #111522;
-  --color-clever-panel: #1a2132;
+  --color-tide-bg: #111522;
+  --color-tide-panel: #1a2132;
   /* Keeps card headings above the 4.5:1 text threshold in every theme state. */
-  --color-clever-primary: #6b8fdf;
-  --color-clever-accent: #bf8c4a;
-  --color-clever-secondary: #bf8c4a;
+  --color-tide-primary: #6b8fdf;
+  --color-tide-accent: #bf8c4a;
+  --color-tide-secondary: #bf8c4a;
   /*
-    Deliberately darker than #111522 (the Clever page background) — the previous #17243a was
+    Deliberately darker than #111522 (the Tide page background) — the previous #17243a was
     lighter than the bg it sits on, the only theme where the card stood out as a pale mismatched
-    box instead of reading as a recessed dark panel like every other house's card.
+    box instead of reading as a recessed dark panel like every other theme's card.
   */
-  --color-clever-card: #0c1220;
+  --color-tide-card: #0c1220;
 
-  --color-loyal-bg: #1e1a10;
-  --color-loyal-panel: #2e2819;
-  --color-loyal-primary: #e2bb50;
-  --color-loyal-accent: #d39a45;
-  --color-loyal-secondary: #d39a45;
-  --color-loyal-card: #15120a;
+  --color-meadow-bg: #1e1a10;
+  --color-meadow-panel: #2e2819;
+  --color-meadow-primary: #e2bb50;
+  --color-meadow-accent: #d39a45;
+  --color-meadow-secondary: #d39a45;
+  --color-meadow-card: #15120a;
 
   /* semantic aliases — components should reach for these, not the raw scale above */
   --color-surface-bg: var(--surface-bg);
